@@ -1,0 +1,40 @@
+[
+  {
+    "ticker": "AAGYO",
+    "sirketAdi": "Ağaoğlu Avrasya Gayrimenkul Yatırım Ortaklığı A.Ş.",
+    "durum": "yaklasan",
+    "sektor": "Gayrimenkul",
+    "talepBaslangic": "2026-04-01",
+    "talepBitis": "2026-04-03",
+    "arsFiyatiAlt": 21.1,
+    "arsFiyatiUst": 21.1,
+    "lotBuyuklugu": 100,
+    "araciKurum": "İnfo yatırım Menkul Değerler A.Ş. - Vakıf Yatırım Menkul Değerler A.Ş.",
+    "toplamArzLot": 105652000,
+    "bireyselPayYuzde": 25,
+    "kapLinki": "",
+    "aciklama": "Ağaoğlu Avrasya Gayrimenkul Yatırım Ortaklığı A.Ş.\nAğaoğlu Avrasya GYO, 1981 yılından bu yana Türkiye inşaat ve gayrimenkul sektörünün öncü kurumlarından biri olan Ağaoğlu Şirketler Grubu bünyesinde faaliyet gösteren bir yatırım ortaklığıdır. Grubun 44 yılı aşkın sektörel deneyimi, 45.000’den fazla konut ve ticari ünite üretimi ile 7 milyon metrekareyi aşan proje geliştirme birikimi, şirketin kurumsal stratejisinin temelini oluşturmaktadır.  Portföy Yapısı ve Varlık Yönetimi\nAğaoğlu GYO, İstanbul’un gelişim potansiyeli yüksek akslarında stratejik bir portföy yönetmektedir. Şirketin varlık yapısı; Ataşehir, Çekmeköy, Sarıyer, Ümraniye, Bahçelievler, Başakşehir ve Üsküdar gibi bölgelerde yoğunlaşan konut ve ticari nitelikli ünitelerden oluşmaktadır. Güncel portföy verileri şöyledir: \n- Proje Sayısı:4 farklı gayrimenkul projesi. \n- Bağımsız Bölüm:Toplam 368 adet bağımsız bölüm. \n- Toplam Alan: 157 bin m²’yi aşan, düzenli ve öngörülebilir kira geliri üreten portföy büyüklüğü.Yatırım Stratejisi ve Kurumsal İlkeler\nŞirketin portföy yönetim yaklaşımı; doğru lokasyon seçimi, varlık kalitesinin korunması, kira gelirlerinin sürdürülebilirliği ve risk dağılımı prensipleri çerçevesinde şekillenmektedir. Ağaoğlu markasının temsil ettiği mühendislik disiplini ve kalite anlayışını tüm operasyonlarına yansıtan şirket, farklı piyasa koşullarında istikrarlı büyüme ve değer artışı sağlamayı hedeflemektedir.",
+    "id": "aagyo",
+    "slug": "aagyo",
+    "piyasaDegeri": 50,
+    "pazar": "Yıldız Pazar",
+    "dagitimYontemi": "Eşit Dağıtım",
+    "halkaAciklik": 25.11,
+    "ozetBolumler": [
+      {
+        "baslik": "Halka arz şekli",
+        "icerik": "Sermaye Artırımı : 105.652.000 Lot\nOrtak Satışı : 70.348.000 Lot (Ali İbrahimağaoğlu)"
+      },
+      {
+        "baslik": "Tahsilat Grupları",
+        "icerik": "110.880.000 Lot (%63) Yurt İçi Bireysel Yatırımcı\n3.520.000 Lot(%2) Şirket Çalışanları\n44.000.000 Lot (%25) Yurt İçi Kurumsal Yatırımcı\n17.600.000 Lot (%10) Yurt Dışı Kurumsal Yatırımcı"
+      },
+      {
+        "baslik": "Dağıtılacak Pay Miktarlarına Göre Örnek Senaryo",
+        "icerik": "-150.000 katılım = 739 Lot = 15.592 TL\n-500.000 katılım = 443 Lot = 9347 TL\n-700.000 katılım = 158 Lot = 3333 TL\n-1.600.000 katılım = 69 Lot = 1455 TL\n-2.200.000 katılım = 50 Lot = 1055 TL \n\nT1-T2 Bakiyeleri Kullanılamaz.\nKatılım Endeksine uygun."
+      }
+    ],
+    "halkaArzIskontosu": 20,
+    "halkaArzBuyklugu": "3.7 Milyar TL"
+  }
+]
