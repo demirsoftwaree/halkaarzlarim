@@ -51,6 +51,6 @@ export async function GET() {
       });
     }
 
-    return NextResponse.json({ members: [], count: 0, error: String(err) }, { status: 500 });
+    return NextResponse.json({ members: [], count: 0, error: "Veri alınamadı" }, { status: 500 });
   }
 }

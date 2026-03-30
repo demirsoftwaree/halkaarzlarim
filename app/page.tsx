@@ -16,7 +16,7 @@ const araclar = [
   { icon: Crown,       baslik: "Tavan Getiri Raporu",     aciklama: "10 günlük tavan senaryosu — PDF olarak indir.", href: "/araclar/tavan-raporu",      renk: "text-yellow-400", bg: "bg-yellow-500/10",  premium: true },
 ];
 
-const spkAgent = new Agent({ connect: { rejectUnauthorized: false } });
+const spkAgent = new Agent({ connect: { rejectUnauthorized: true } });
 
 
 function formatDate(dateStr: string) {
@@ -115,24 +115,45 @@ export default async function AnaSayfa() {
             <div className="space-y-3">
               {yaklasanArzlar.map(arz => {
                 const days = daysLeft(arz.talepBaslangic);
+                const ilkKurum = (arz.araciKurum || "").split(/[,·\-–]/)[0].trim();
+                const fiyat = arz.arsFiyatiAlt > 0
+                  ? arz.arsFiyatiAlt === arz.arsFiyatiUst
+                    ? `${arz.arsFiyatiUst.toFixed(2)} ₺`
+                    : `${arz.arsFiyatiAlt.toFixed(2)}–${arz.arsFiyatiUst.toFixed(2)} ₺`
+                  : "Fiyat bekleniyor";
                 return (
                   <Link key={arz.id} href={`/halka-arz/${arz.slug}`}>
-                    <div className="bg-slate-800/40 border border-slate-700/50 rounded-xl px-5 py-4 flex items-center gap-4 hover:border-blue-500/30 transition-all group">
+                    <div className="bg-slate-800/40 border border-slate-700/50 rounded-xl px-4 py-3.5 flex items-center gap-3 hover:border-blue-500/30 transition-all group">
+                      {/* İkon */}
                       <div className="w-10 h-10 rounded-xl flex items-center justify-center text-blue-400 font-bold text-xs flex-shrink-0" style={{ background: "rgba(59,130,246,0.1)" }}>
                         {(arz.ticker || "??").slice(0, 2)}
                       </div>
+
+                      {/* Orta: ticker + şirket adı + tarih */}
                       <div className="flex-1 min-w-0">
-                        <div className="font-semibold text-white text-sm">{arz.ticker} — {arz.sirketAdi}</div>
-                        <div className="text-slate-400 text-xs mt-0.5">
-                          {formatDate(arz.talepBaslangic)} – {formatDate(arz.talepBitis)} • {arz.araciKurum}
+                        <div className="flex items-center gap-2 mb-0.5">
+                          <span className="font-bold text-blue-400 text-sm shrink-0">{arz.ticker}</span>
+                          <span className="text-white text-sm font-medium truncate">{arz.sirketAdi}</span>
+                        </div>
+                        <div className="flex items-center gap-2 text-xs text-slate-500">
+                          <span className="shrink-0">{formatDate(arz.talepBaslangic)} – {formatDate(arz.talepBitis)}</span>
+                          {ilkKurum && (
+                            <>
+                              <span className="text-slate-700">·</span>
+                              <span className="truncate">{ilkKurum}</span>
+                            </>
+                          )}
                         </div>
                       </div>
+
+                      {/* Sağ: fiyat + gün */}
                       <div className="text-right flex-shrink-0">
                         <div className="text-blue-400 font-bold text-sm">{days > 0 ? `${days} gün` : "Başladı"}</div>
-                        <div className="text-slate-500 text-xs">{arz.arsFiyatiAlt > 0 ? `${arz.arsFiyatiAlt.toFixed(2)}–${arz.arsFiyatiUst.toFixed(2)} ₺` : "Fiyat bekleniyor"}</div>
+                        <div className="text-slate-500 text-xs">{fiyat}</div>
                       </div>
+
                       <WatchlistButton slug={arz.slug} sirketAdi={arz.sirketAdi} ticker={arz.ticker} />
-                      <ArrowRight size={16} className="text-slate-600 group-hover:text-blue-400 transition-colors flex-shrink-0" />
+                      <ArrowRight size={15} className="text-slate-600 group-hover:text-blue-400 transition-colors flex-shrink-0" />
                     </div>
                   </Link>
                 );

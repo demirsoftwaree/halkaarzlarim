@@ -5,7 +5,7 @@
 import { NextResponse } from "next/server";
 import { Agent, fetch as undiciFetch } from "undici";
 
-const spkAgent = new Agent({ connect: { rejectUnauthorized: false } });
+const spkAgent = new Agent({ connect: { rejectUnauthorized: true } });
 
 export async function GET(
   _req: Request,
@@ -43,6 +43,7 @@ export async function GET(
       },
     });
   } catch (err) {
-    return NextResponse.json({ error: String(err) }, { status: 500 });
+    console.error("SPK duyuru hatası:", err);
+    return NextResponse.json({ error: "Belge yüklenemedi" }, { status: 500 });
   }
 }

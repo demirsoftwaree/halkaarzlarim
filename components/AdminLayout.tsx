@@ -2,12 +2,13 @@
 
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
-import { TrendingUp, ListOrdered, Users, LogOut, ExternalLink, ChevronRight, Newspaper } from "lucide-react";
+import { TrendingUp, ListOrdered, Users, LogOut, ExternalLink, ChevronRight, Newspaper, LayoutDashboard } from "lucide-react";
 
 const navItems = [
-  { href: "/admin/arzlar",      label: "Arz Yönetimi",   icon: ListOrdered, desc: "Arz ekle, düzenle" },
-  { href: "/admin/kullanicilar", label: "Üye Yönetimi",  icon: Users,       desc: "Üyeler & premium" },
-  { href: "/admin/haberler",    label: "Haber Yönetimi", icon: Newspaper,   desc: "Manuel haberler" },
+  { href: "/admin",              label: "Dashboard",      icon: LayoutDashboard, desc: "Genel bakış",    exact: true },
+  { href: "/admin/arzlar",      label: "Arz Yönetimi",   icon: ListOrdered,     desc: "Arz ekle, düzenle" },
+  { href: "/admin/kullanicilar", label: "Üye Yönetimi",  icon: Users,           desc: "Üyeler & premium" },
+  { href: "/admin/haberler",    label: "Haber Yönetimi", icon: Newspaper,       desc: "Manuel haberler" },
 ];
 
 interface Props {
@@ -34,12 +35,12 @@ export default function AdminLayout({ children, title, subtitle, actions }: Prop
         {/* Logo */}
         <div className="px-5 py-5 border-b border-white/[0.06]">
           <div className="flex items-center gap-2.5">
-            <div className="w-8 h-8 bg-emerald-500 rounded-lg flex items-center justify-center flex-shrink-0">
-              <TrendingUp size={16} className="text-white" />
+            <div className="w-8 h-8 bg-gradient-to-br from-emerald-500 to-emerald-600 rounded-lg flex items-center justify-center flex-shrink-0 shadow-lg shadow-emerald-500/20">
+              <TrendingUp size={16} className="text-white" strokeWidth={2.5} />
             </div>
             <div>
               <div className="font-bold text-sm text-white leading-tight">
-                Arz<span className="text-emerald-400">Takip</span>
+                Halka <span className="text-emerald-400">Arzlarım</span>
               </div>
               <div className="text-[10px] text-slate-500 leading-tight">Admin Paneli</div>
             </div>
@@ -49,8 +50,8 @@ export default function AdminLayout({ children, title, subtitle, actions }: Prop
         {/* Nav */}
         <nav className="flex-1 px-3 py-4 space-y-1 overflow-y-auto">
           <p className="text-[10px] font-semibold text-slate-600 uppercase tracking-wider px-3 mb-2">Yönetim</p>
-          {navItems.map(({ href, label, icon: Icon, desc }) => {
-            const active = pathname === href || pathname.startsWith(href + "/");
+          {navItems.map(({ href, label, icon: Icon, desc, exact }) => {
+            const active = exact ? pathname === href : (pathname === href || pathname.startsWith(href + "/"));
             return (
               <Link
                 key={href}

@@ -46,7 +46,7 @@ function detectKategori(text: string): string {
 }
 
 // ── SPK ──────────────────────────────────────────────────────────────────
-const spkAgent = new Agent({ connect: { rejectUnauthorized: false } });
+const spkAgent = new Agent({ connect: { rejectUnauthorized: true } });
 
 interface SpkDuyuru {
   id: number;
