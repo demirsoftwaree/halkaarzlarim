@@ -12,9 +12,13 @@ function fmtTarih(dateStr: string) {
 }
 
 function daysLeft(dateStr: string) {
-  const end = new Date(dateStr);
-  end.setHours(23, 59, 59, 999);
-  return Math.floor((end.getTime() - Date.now()) / 86400000);
+  // Türkiye saati UTC+3 — sunucu UTC'de çalıştığı için offset ekliyoruz
+  const nowTR = new Date(Date.now() + 3 * 60 * 60 * 1000);
+  const todayStr = nowTR.toISOString().slice(0, 10); // YYYY-MM-DD
+  if (dateStr < todayStr) return -1;
+  if (dateStr === todayStr) return 0;
+  const diff = new Date(dateStr + "T00:00:00Z").getTime() - new Date(todayStr + "T00:00:00Z").getTime();
+  return Math.round(diff / 86400000);
 }
 
 // İlk aracı kurumu kısalt

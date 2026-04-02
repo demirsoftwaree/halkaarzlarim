@@ -22,19 +22,9 @@ export default function AdBanner({ slot, className = "" }: AdBannerProps) {
   // Premium kullanıcıya reklam gösterme
   if (isPremium) return null;
 
-  // AdSense henüz yapılandırılmamış — placeholder göster
+  // AdSense henüz yapılandırılmamış — gizle
   if (!ADSENSE_CLIENT || !SLOT_IDS[slot]) {
-    return (
-      <div
-        className={`flex items-center justify-center bg-slate-800/30 border border-dashed border-slate-700/50 rounded-xl text-slate-600 text-xs ${
-          slot === "horizontal" ? "w-full h-16 sm:h-20 2xl:hidden" :
-          slot === "square"     ? "w-full h-48 sm:w-[300px] sm:h-[250px]" :
-                                  "w-full h-16"
-        } ${className}`}
-      >
-        Reklam Alanı
-      </div>
-    );
+    return null;
   }
 
   // AdSense aktif olduğunda bu kısım devreye girer
