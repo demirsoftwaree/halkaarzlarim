@@ -12,7 +12,9 @@ function fmtTarih(dateStr: string) {
 }
 
 function daysLeft(dateStr: string) {
-  return Math.ceil((new Date(dateStr).getTime() - Date.now()) / 86400000);
+  const end = new Date(dateStr);
+  end.setHours(23, 59, 59, 999);
+  return Math.floor((end.getTime() - Date.now()) / 86400000);
 }
 
 // İlk aracı kurumu kısalt
@@ -109,9 +111,9 @@ export default function ArzCard({ arz }: Props) {
             {ilkAraciKurum(arz.araciKurum || "")}
           </span>
 
-          {isActive && days > 0 ? (
+          {isActive && days >= 0 ? (
             <span className="text-xs font-semibold text-amber-400 bg-amber-400/10 border border-amber-400/20 px-2 py-0.5 rounded-full shrink-0">
-              {days} gün kaldı
+              {days === 0 ? "Son gün!" : `${days} gün kaldı`}
             </span>
           ) : isDone ? (
             <span className="text-xs text-slate-500 shrink-0 flex items-center gap-1">

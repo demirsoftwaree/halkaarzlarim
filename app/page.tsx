@@ -41,17 +41,10 @@ export default async function AnaSayfa() {
     .filter(a => a.durum === "tamamlandi")
     .sort((a, b) => (b.borsadaIslemGormeTarihi || b.talepBitis || "").localeCompare(a.borsadaIslemGormeTarihi || a.talepBitis || ""))
     .slice(0, 5);
-  const guncelleme     = new Date().toLocaleTimeString("tr-TR", { hour: "2-digit", minute: "2-digit" });
-
   return (
     <div className="min-h-screen flex flex-col">
       <Navbar />
       <TickerBar />
-
-      {/* Son güncelleme */}
-      <div className="bg-slate-800/30 border-b border-slate-800 px-4 py-1 text-center">
-        <span className="text-xs text-slate-500">Son güncelleme: {guncelleme}</span>
-      </div>
 
       {/* Hero */}
       <section className="bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 border-b border-slate-800 py-20 px-4 relative overflow-hidden">
