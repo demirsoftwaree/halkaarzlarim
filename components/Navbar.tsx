@@ -157,24 +157,40 @@ export default function Navbar() {
           </Link>
           <div className="pt-3 border-t border-slate-800 mt-2">
             {user ? (
-              <div className="flex items-center justify-between">
-                <div className="flex items-center gap-2 text-sm text-slate-300">
-                  {user.photoURL ? (
-                    // eslint-disable-next-line @next/next/no-img-element
-                    <img src={user.photoURL} alt="" className="w-8 h-8 rounded-full" referrerPolicy="no-referrer" />
-                  ) : (
-                    <div className="w-8 h-8 rounded-full bg-emerald-500/20 border border-emerald-500/30 flex items-center justify-center">
-                      <User size={15} className="text-emerald-400" />
-                    </div>
-                  )}
-                  <span className="max-w-[160px] truncate">{user.displayName || user.email?.split("@")[0]}</span>
+              <div className="space-y-1">
+                <div className="flex items-center justify-between px-3 py-2">
+                  <div className="flex items-center gap-2 text-sm text-slate-300">
+                    {user.photoURL ? (
+                      // eslint-disable-next-line @next/next/no-img-element
+                      <img src={user.photoURL} alt="" className="w-8 h-8 rounded-full" referrerPolicy="no-referrer" />
+                    ) : (
+                      <div className="w-8 h-8 rounded-full bg-emerald-500/20 border border-emerald-500/30 flex items-center justify-center">
+                        <User size={15} className="text-emerald-400" />
+                      </div>
+                    )}
+                    <span className="max-w-[160px] truncate">{user.displayName || user.email?.split("@")[0]}</span>
+                  </div>
+                  <button
+                    onClick={handleSignOut}
+                    className="flex items-center gap-1.5 text-slate-400 hover:text-white text-sm transition-colors px-2 py-1"
+                  >
+                    <LogOut size={15} /> Çıkış
+                  </button>
                 </div>
-                <button
-                  onClick={handleSignOut}
-                  className="flex items-center gap-1.5 text-slate-400 hover:text-white text-sm transition-colors px-3 py-2"
+                <Link
+                  href="/hesabim/takip-listem"
+                  onClick={() => setMenuOpen(false)}
+                  className="flex items-center gap-2 text-slate-300 hover:text-amber-400 hover:bg-slate-800 px-3 py-2.5 rounded-lg transition-colors text-sm"
                 >
-                  <LogOut size={15} /> Çıkış
-                </button>
+                  <Star size={15} /> Takip Listem
+                </Link>
+                <Link
+                  href="/hesabim/portfoy"
+                  onClick={() => setMenuOpen(false)}
+                  className="flex items-center gap-2 text-slate-300 hover:text-white hover:bg-slate-800 px-3 py-2.5 rounded-lg transition-colors text-sm"
+                >
+                  <BarChart2 size={15} /> Portföy
+                </Link>
               </div>
             ) : (
               <div className="flex gap-3">

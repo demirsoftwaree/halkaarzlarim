@@ -207,26 +207,26 @@ export default function PortfoyPage() {
       <main className="flex-1 max-w-4xl mx-auto w-full px-4 sm:px-6 py-10">
 
         {/* Başlık */}
-        <div className="flex items-center justify-between mb-8">
-          <div className="flex items-center gap-3">
-            <div className="w-10 h-10 rounded-xl bg-emerald-500/10 flex items-center justify-center">
+        <div className="flex items-center justify-between mb-8 gap-3">
+          <div className="flex items-center gap-3 min-w-0">
+            <div className="w-10 h-10 rounded-xl bg-emerald-500/10 flex items-center justify-center shrink-0">
               <TrendingUp size={20} className="text-emerald-400" />
             </div>
-            <div>
-              <div className="flex items-center gap-2">
+            <div className="min-w-0">
+              <div className="flex items-center gap-2 flex-wrap">
                 <h1 className="text-xl font-bold text-white">Portföy Takibi</h1>
                 <span className="text-xs px-2 py-0.5 rounded-full bg-amber-500/15 border border-amber-500/30 text-amber-400 font-medium flex items-center gap-1">
                   <Crown size={10} /> Premium
                 </span>
               </div>
-              <p className="text-slate-400 text-sm">Halka arz yatırımlarını takip et, kâr/zarar hesapla.</p>
+              <p className="text-slate-400 text-sm hidden sm:block">Halka arz yatırımlarını takip et, kâr/zarar hesapla.</p>
             </div>
           </div>
           <button
             onClick={() => modalAc()}
-            className="flex items-center gap-2 px-4 py-2 bg-emerald-500 hover:bg-emerald-400 text-white rounded-xl text-sm font-medium transition-colors"
+            className="flex items-center gap-2 px-4 py-2 bg-emerald-500 hover:bg-emerald-400 text-white rounded-xl text-sm font-medium transition-colors shrink-0"
           >
-            <PlusCircle size={16} /> Ekle
+            <PlusCircle size={16} /> <span className="hidden sm:inline">Ekle</span><span className="sm:hidden">+</span>
           </button>
         </div>
 
@@ -271,59 +271,59 @@ export default function PortfoyPage() {
               const { maliyet, satisGeliri, karZarar, karZararYuzde } = hesapla(k);
               const pozitif = karZarar !== null ? karZarar >= 0 : null;
               return (
-                <div key={k.id} className="bg-slate-800/60 border border-slate-700/50 rounded-2xl p-5">
-                  <div className="flex items-start justify-between gap-4">
-                    <div className="flex-1">
-                      <div className="flex items-center gap-2 mb-1">
-                        <span className="font-bold text-white">{k.ticker}</span>
-                        <span className="text-slate-400 text-sm">{k.sirketAdi}</span>
-                        {k.satisFiyati ? (
-                          <span className="text-xs px-2 py-0.5 rounded-full bg-slate-700 text-slate-400">Satıldı</span>
-                        ) : (
-                          <span className="text-xs px-2 py-0.5 rounded-full bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">Elde</span>
-                        )}
-                      </div>
-                      <div className="flex flex-wrap gap-x-5 gap-y-1 text-xs text-slate-400 mt-2">
-                        <span>{k.lotSayisi} lot</span>
-                        <span>Alış: <span className="text-white">{fmt(k.alisFiyati)} ₺</span></span>
-                        <span>Maliyet: <span className="text-white">{fmt(maliyet)} ₺</span></span>
-                        {k.satisFiyati && (
-                          <>
-                            <span>Satış: <span className="text-white">{fmt(k.satisFiyati)} ₺</span></span>
-                            {satisGeliri && <span>Gelir: <span className="text-white">{fmt(satisGeliri)} ₺</span></span>}
-                          </>
-                        )}
-                      </div>
-                    </div>
-
-                    <div className="flex items-center gap-3">
-                      {karZarar !== null && (
-                        <div className={`text-right ${pozitif ? "text-emerald-400" : "text-red-400"}`}>
-                          <div className="font-bold text-base flex items-center gap-1 justify-end">
-                            {pozitif ? <TrendingUp size={14} /> : <TrendingDown size={14} />}
-                            {pozitif ? "+" : ""}{fmt(karZarar)} ₺
-                          </div>
-                          <div className="text-xs font-medium">
-                            {pozitif ? "+" : ""}{fmt(karZararYuzde ?? 0, 1)}%
-                          </div>
-                        </div>
+                <div key={k.id} className="bg-slate-800/60 border border-slate-700/50 rounded-2xl p-4">
+                  {/* Üst satır: ticker + durum + butonlar */}
+                  <div className="flex items-center justify-between gap-2 mb-2">
+                    <div className="flex items-center gap-2 min-w-0 flex-wrap">
+                      <span className="font-bold text-white">{k.ticker}</span>
+                      <span className="text-slate-400 text-sm truncate max-w-[140px] sm:max-w-none">{k.sirketAdi}</span>
+                      {k.satisFiyati ? (
+                        <span className="text-xs px-2 py-0.5 rounded-full bg-slate-700 text-slate-400 shrink-0">Satıldı</span>
+                      ) : (
+                        <span className="text-xs px-2 py-0.5 rounded-full bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 shrink-0">Elde</span>
                       )}
-                      <div className="flex items-center gap-1">
-                        <button
-                          onClick={() => modalAc(k)}
-                          className="p-2 text-slate-500 hover:text-white transition-colors rounded-lg hover:bg-slate-700"
-                        >
-                          <Pencil size={14} />
-                        </button>
-                        <button
-                          onClick={() => sil(k.id)}
-                          disabled={silinenId === k.id}
-                          className="p-2 text-slate-500 hover:text-red-400 transition-colors rounded-lg hover:bg-red-500/10"
-                        >
-                          <Trash2 size={14} />
-                        </button>
-                      </div>
                     </div>
+                    <div className="flex items-center gap-1 shrink-0">
+                      <button
+                        onClick={() => modalAc(k)}
+                        className="p-2 text-slate-500 hover:text-white transition-colors rounded-lg hover:bg-slate-700"
+                      >
+                        <Pencil size={14} />
+                      </button>
+                      <button
+                        onClick={() => sil(k.id)}
+                        disabled={silinenId === k.id}
+                        className="p-2 text-slate-500 hover:text-red-400 transition-colors rounded-lg hover:bg-red-500/10"
+                      >
+                        <Trash2 size={14} />
+                      </button>
+                    </div>
+                  </div>
+
+                  {/* Alt satır: bilgiler + kar/zarar */}
+                  <div className="flex items-end justify-between gap-2">
+                    <div className="flex flex-wrap gap-x-4 gap-y-1 text-xs text-slate-400">
+                      <span>{k.lotSayisi} lot</span>
+                      <span>Alış: <span className="text-white">{fmt(k.alisFiyati)} ₺</span></span>
+                      <span>Maliyet: <span className="text-white">{fmt(maliyet)} ₺</span></span>
+                      {k.satisFiyati && (
+                        <>
+                          <span>Satış: <span className="text-white">{fmt(k.satisFiyati)} ₺</span></span>
+                          {satisGeliri && <span>Gelir: <span className="text-white">{fmt(satisGeliri)} ₺</span></span>}
+                        </>
+                      )}
+                    </div>
+                    {karZarar !== null && (
+                      <div className={`text-right shrink-0 ${pozitif ? "text-emerald-400" : "text-red-400"}`}>
+                        <div className="font-bold text-sm flex items-center gap-1 justify-end">
+                          {pozitif ? <TrendingUp size={13} /> : <TrendingDown size={13} />}
+                          {pozitif ? "+" : ""}{fmt(karZarar)} ₺
+                        </div>
+                        <div className="text-xs font-medium">
+                          {pozitif ? "+" : ""}{fmt(karZararYuzde ?? 0, 1)}%
+                        </div>
+                      </div>
+                    )}
                   </div>
                 </div>
               );
@@ -334,9 +334,9 @@ export default function PortfoyPage() {
 
       {/* Modal */}
       {modalAcik && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center px-4">
+        <div className="fixed inset-0 z-50 flex items-end sm:items-center justify-center px-0 sm:px-4">
           <div className="absolute inset-0 bg-black/60 backdrop-blur-sm" onClick={modalKapat} />
-          <div className="relative bg-slate-800 border border-slate-700 rounded-2xl p-6 w-full max-w-md shadow-2xl">
+          <div className="relative bg-slate-800 border border-slate-700 rounded-t-2xl sm:rounded-2xl p-6 w-full max-w-md shadow-2xl max-h-[90vh] overflow-y-auto">
             <div className="flex items-center justify-between mb-5">
               <h3 className="text-white font-semibold">{duzenlenen ? "Kaydı Düzenle" : "Yeni Kayıt Ekle"}</h3>
               <button onClick={modalKapat} className="text-slate-400 hover:text-white"><X size={18} /></button>
