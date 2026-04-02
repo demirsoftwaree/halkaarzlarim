@@ -15,6 +15,13 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="tr" className="h-full">
+      <head>
+        <script
+          async
+          src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-2543281289393255"
+          crossOrigin="anonymous"
+        />
+      </head>
       <body className="min-h-full flex flex-col bg-slate-900 text-slate-100">
         <AuthProvider>
           {children}
