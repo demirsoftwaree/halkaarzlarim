@@ -7,8 +7,51 @@ import AdBanner from "@/components/AdBanner";
 import StockChart from "@/components/StockChart";
 import { durumRenk, durumEtiket } from "@/lib/mock-data";
 import { getArzlar } from "@/lib/arz-utils";
+import type { Metadata } from "next";
 
 export const dynamicParams = true;
+
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ slug: string }>;
+}): Promise<Metadata> {
+  const { slug } = await params;
+  const { arzlar } = await getArzlar();
+  const arz = arzlar.find((a) => a.slug === slug);
+
+  if (!arz) return { title: "Halka Arz Bulunamadı" };
+
+  const sirketAdi = arz.sirketAdi;
+  const ticker = arz.ticker ? ` (${arz.ticker})` : "";
+  const fiyat = arz.arsFiyatiAlt ? `${arz.arsFiyatiAlt}₺` : arz.arsFiyatiUst ? `${arz.arsFiyatiUst}₺` : "";
+  const sektor = arz.sektor || "";
+
+  const title = `${sirketAdi}${ticker} Halka Arz`;
+  const description = [
+    `${sirketAdi} halka arz detayları, tavan simülatörü ve lot hesaplama.`,
+    fiyat && `Halka arz fiyatı: ${fiyat}.`,
+    sektor && `Sektör: ${sektor}.`,
+    "HalkaArzlarım ile yatırım kararını ver.",
+  ]
+    .filter(Boolean)
+    .join(" ");
+
+  const url = `https://www.halkaarzlarim.com/halka-arz/${slug}`;
+
+  return {
+    title,
+    description,
+    keywords: [sirketAdi, ticker.replace(/[()]/g, "").trim(), "halka arz", sektor, "tavan simülatörü", "BIST"].filter(Boolean),
+    openGraph: {
+      title,
+      description,
+      url,
+      type: "article",
+    },
+    alternates: { canonical: url },
+  };
+}
 
 export async function generateStaticParams() {
   const { arzlar } = await getArzlar();

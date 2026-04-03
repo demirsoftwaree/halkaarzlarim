@@ -7,6 +7,7 @@ import { slugOlustur, type ManuelHaber } from "@/lib/haberler-service";
 import { Pencil, Trash2, Eye, EyeOff, PlusCircle, X, Check } from "lucide-react";
 
 const KATEGORİLER = [
+  { value: "blog",          label: "📝 Blog Yazısı" },
   { value: "halka-arz",     label: "Halka Arz" },
   { value: "borsa",         label: "Borsa" },
   { value: "sermaye",       label: "Sermaye" },

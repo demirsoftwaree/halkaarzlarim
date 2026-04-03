@@ -65,6 +65,9 @@ export default function Navbar() {
           <Link href="/haberler" className="text-slate-300 hover:text-white text-sm font-medium transition-colors">
             Haberler
           </Link>
+          <Link href="/blog" className="text-slate-300 hover:text-white text-sm font-medium transition-colors">
+            Blog
+          </Link>
           <Link href="/premium" className="flex items-center gap-1.5 text-amber-400 hover:text-amber-300 text-sm font-medium transition-colors">
             <Star size={14} fill="currentColor" />
             Premium
@@ -138,6 +141,7 @@ export default function Navbar() {
             { href: "/araclar/kar-hesaplama", label: "💰 Net Kâr" },
             { href: "/hisseler", label: "📊 Hisseler" },
             { href: "/haberler", label: "📰 Haberler" },
+            { href: "/blog", label: "📝 Blog" },
           ].map(({ href, label }) => (
             <Link
               key={href}

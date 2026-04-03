@@ -32,6 +32,31 @@ function daysLeft(dateStr: string) {
   return Math.ceil((target.getTime() - now.getTime()) / (1000 * 60 * 60 * 24));
 }
 
+const jsonLd = {
+  "@context": "https://schema.org",
+  "@type": "WebSite",
+  name: "HalkaArzlarım",
+  url: "https://www.halkaarzlarim.com",
+  description: "Türkiye'nin halka arz takip platformu. Aktif arzlar, tavan simülatörü, lot hesaplama ve AI destekli yatırım asistanı.",
+  potentialAction: {
+    "@type": "SearchAction",
+    target: {
+      "@type": "EntryPoint",
+      urlTemplate: "https://www.halkaarzlarim.com/halka-arzlar?q={search_term_string}",
+    },
+    "query-input": "required name=search_term_string",
+  },
+  publisher: {
+    "@type": "Organization",
+    name: "HalkaArzlarım",
+    url: "https://www.halkaarzlarim.com",
+    logo: {
+      "@type": "ImageObject",
+      url: "https://www.halkaarzlarim.com/logo/halkaarzlarim-logo-full.svg",
+    },
+  },
+};
+
 export default async function AnaSayfa() {
   const { arzlar } = await getArzlar();
 
@@ -43,6 +68,10 @@ export default async function AnaSayfa() {
     .slice(0, 5);
   return (
     <div className="min-h-screen flex flex-col">
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+      />
       <Navbar />
       <TickerBar />
 
