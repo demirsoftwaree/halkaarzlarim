@@ -130,7 +130,7 @@ async function fetchManuelHaberler(): Promise<Haber[]> {
       .get();
 
     return snap.docs
-      .filter(d => d.data().yayinda === true)
+      .filter(d => d.data().yayinda === true && d.data().kategori !== "blog")
       .map(d => {
         const data = d.data();
         return {
