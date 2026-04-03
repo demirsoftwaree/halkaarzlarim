@@ -8,6 +8,7 @@ import { NextResponse } from "next/server";
 import { Agent, fetch as undiciFetch } from "undici";
 
 export const revalidate = 0; // her zaman güncel
+export const preferredRegion = "fra1"; // Frankfurt — Türk API'lerine daha yakın
 
 export interface Haber {
   id: string;

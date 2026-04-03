@@ -8,6 +8,7 @@ import { NextResponse } from "next/server";
 import { getKapMembers, type KapMember } from "@/lib/kap-service";
 
 export const revalidate = 86400; // 24 saat ISR cache
+export const preferredRegion = "fra1";
 
 // Sunucu restart'a kadar yaşayan bellek cache'i
 let memCache: { members: KapMember[]; at: number } | null = null;
