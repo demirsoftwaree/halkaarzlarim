@@ -4,14 +4,19 @@ import { getArzlar } from "@/lib/arz-utils";
 const BASE_URL = "https://www.halkaarzlarim.com";
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
-  const { arzlar } = await getArzlar();
+  let arzPages: MetadataRoute.Sitemap = [];
 
-  const arzPages: MetadataRoute.Sitemap = arzlar.map((arz) => ({
-    url: `${BASE_URL}/halka-arz/${arz.slug}`,
-    lastModified: new Date(),
-    changeFrequency: "daily",
-    priority: 0.8,
-  }));
+  try {
+    const { arzlar } = await getArzlar();
+    arzPages = arzlar.map((arz) => ({
+      url: `${BASE_URL}/halka-arz/${arz.slug}`,
+      lastModified: new Date(),
+      changeFrequency: "daily" as const,
+      priority: 0.8,
+    }));
+  } catch {
+    // Arz verisi alınamazsa sadece statik sayfalarla devam et
+  }
 
   const staticPages: MetadataRoute.Sitemap = [
     { url: BASE_URL,                                          lastModified: new Date(), changeFrequency: "daily",   priority: 1.0 },
