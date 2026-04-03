@@ -76,25 +76,29 @@ export default async function AnaSayfa() {
       <TickerBar />
 
       {/* Hero */}
-      <section className="bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 border-b border-slate-800 py-20 px-4 relative overflow-hidden">
+      <section className="bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 border-b border-slate-800 py-12 px-4 relative overflow-hidden">
         <div className="absolute inset-0" style={{ background: "radial-gradient(ellipse at top right, rgba(16,185,129,0.08), transparent 60%)" }} />
         <div className="max-w-7xl mx-auto text-center relative">
-          <div className="inline-flex items-center gap-2 text-emerald-400 text-xs font-medium px-3 py-1.5 rounded-full mb-6 border border-emerald-500/20" style={{ background: "rgba(16,185,129,0.1)" }}>
+          <div className="inline-flex items-center gap-2 text-emerald-400 text-xs font-medium px-3 py-1.5 rounded-full mb-4 border border-emerald-500/20" style={{ background: "rgba(16,185,129,0.1)" }}>
             <span className="w-1.5 h-1.5 bg-emerald-400 rounded-full animate-pulse" />
             Şu an {aktifArzlar.length} aktif halka arz var
           </div>
-          <h1 className="text-4xl sm:text-5xl md:text-6xl font-extrabold text-white mb-4 leading-tight">
+          <h1 className="text-3xl sm:text-4xl md:text-5xl font-extrabold text-white mb-3 leading-tight">
             Halka Arzı Takip Et,<br />
             <span className="text-emerald-400">Kazancını Hesapla.</span>
           </h1>
-          <p className="text-slate-400 text-lg max-w-2xl mx-auto mb-8">
-            Türkiye&apos;nin halka arz takvimi, tavan simülatörü ve lot hesaplama araçları — hepsi bir arada.
+          <p className="text-slate-400 text-base max-w-2xl mx-auto mb-3">
+            Takvim, tavan simülatörü ve lot hesaplama araçları — hepsi bir arada.
           </p>
-          <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <Link href="/halka-arzlar" className="bg-emerald-500 hover:bg-emerald-400 text-white font-semibold px-8 py-3.5 rounded-xl transition-colors flex items-center gap-2 justify-center">
+          <div className="inline-flex items-center gap-2 bg-violet-500/10 border border-violet-500/20 text-violet-300 text-xs font-medium px-3 py-1.5 rounded-full mb-6">
+            <span>✨</span>
+            Yapay Zeka Asistan ile sorularını anında yanıtla — sağ alttaki butona tıkla
+          </div>
+          <div className="flex flex-col sm:flex-row gap-3 justify-center">
+            <Link href="/halka-arzlar" className="bg-emerald-500 hover:bg-emerald-400 text-white font-semibold px-8 py-3 rounded-xl transition-colors flex items-center gap-2 justify-center">
               Takvimi Gör <ArrowRight size={18} />
             </Link>
-            <Link href="/araclar/tavan-simulatoru" className="bg-slate-700 hover:bg-slate-600 text-white font-semibold px-8 py-3.5 rounded-xl transition-colors">
+            <Link href="/araclar/tavan-simulatoru" className="bg-slate-700 hover:bg-slate-600 text-white font-semibold px-8 py-3 rounded-xl transition-colors">
               Araçları Dene
             </Link>
           </div>
