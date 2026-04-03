@@ -1,0 +1,18 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" fill="none">
+  <defs>
+    <linearGradient id="iconGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#10b981"/>
+      <stop offset="100%" stop-color="#059669"/>
+    </linearGradient>
+    <filter id="glow">
+      <feDropShadow dx="0" dy="3" stdDeviation="5" flood-color="#10b981" flood-opacity="0.4"/>
+    </filter>
+  </defs>
+
+  <!-- Rounded square background -->
+  <rect x="2" y="2" width="96" height="96" rx="24" fill="url(#iconGrad)" filter="url(#glow)"/>
+
+  <!-- TrendingUp icon (centered) -->
+  <polyline points="14,72 32,50 46,62 78,26" stroke="white" stroke-width="7" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+  <polyline points="62,26 78,26 78,42" stroke="white" stroke-width="7" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+</svg>
