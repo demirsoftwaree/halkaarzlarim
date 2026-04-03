@@ -35,11 +35,11 @@ export default async function BlogPage() {
     const snap = await adminDb
       .collection("haberler")
       .where("kategori", "==", "blog")
-      .orderBy("tarih", "desc")
       .get();
     yazilar = snap.docs
       .map((d) => ({ id: d.id, ...d.data() } as BlogYazisi))
-      .filter((y) => y.yayinda === true);
+      .filter((y) => y.yayinda === true)
+      .sort((a, b) => b.tarih.localeCompare(a.tarih));
   } catch (err) {
     console.error("Blog fetch error:", err);
     yazilar = [];
