@@ -92,9 +92,7 @@ async function fetchKapHaberler(): Promise<Haber[]> {
   const { getRecentDisclosuresWithDetail } = await import("@/lib/kap-service");
   const details = await getRecentDisclosuresWithDetail(30);
 
-  const thisYear = new Date().getFullYear().toString();
-  const currentYearData = details.filter(d => d.time && d.time.includes(thisYear.slice(2)));
-  if (currentYearData.length < 3) throw new Error("KAP sandbox verisi — güncel değil");
+  if (details.length === 0) throw new Error("KAP veri dönmedi");
 
   return details.map(d => {
     const baslik = d.subject?.tr ?? "(Başlık yok)";
