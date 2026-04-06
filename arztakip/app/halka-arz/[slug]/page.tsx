@@ -196,8 +196,11 @@ export default async function ArzDetayPage({ params }: { params: Promise<{ slug:
                   <InfoRow label="Pazar" value={arz.pazar} />
                 )}
 
-                {arz.borsadaIslemGormeTarihi && arz.talepBaslangic && (
-                  <InfoRow label="BIST İlk İşlem Tarihi" value={fmt(arz.borsadaIslemGormeTarihi)} />
+                {arz.talepBaslangic && (
+                  <InfoRow
+                    label="BIST İlk İşlem Tarihi"
+                    value={arz.borsadaIslemGormeTarihi ? fmt(arz.borsadaIslemGormeTarihi) : "Belirlenmedi"}
+                  />
                 )}
               </div>
             </div>
