@@ -20,6 +20,7 @@ export default function TavanRaporuPage() {
   const [arzlar, setArzlar] = useState<Arz[]>([]);
   const [seciliSlug, setSeciliSlug] = useState("");
   const [lotSayisi, setLotSayisi] = useState("100");
+  const [loaded, setLoaded] = useState(false);
   const printRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -27,12 +28,13 @@ export default function TavanRaporuPage() {
       .then(r => r.json())
       .then(d => {
         const liste = (d.arzlar || []).filter(
-          (a: Arz) => a.durum === "aktif" || a.durum === "yaklasan" || a.durum === "basvuru-surecinde"
+          (a: Arz) => a.durum !== "ertelendi"
         );
         setArzlar(liste);
         if (liste.length > 0) setSeciliSlug(liste[0].slug);
       })
-      .catch(() => {});
+      .catch(() => {})
+      .finally(() => setLoaded(true));
   }, []);
 
   const secili = arzlar.find(a => a.slug === seciliSlug);
@@ -167,7 +169,8 @@ export default function TavanRaporuPage() {
                     onChange={e => setSeciliSlug(e.target.value)}
                     className="w-full bg-slate-900 border border-slate-700 rounded-xl px-4 py-3 text-white text-sm focus:outline-none focus:border-amber-500 transition-colors"
                   >
-                    {arzlar.length === 0 && <option value="">Yükleniyor...</option>}
+                    {!loaded && <option value="">Yükleniyor...</option>}
+                    {loaded && arzlar.length === 0 && <option value="">Aktif arz bulunamadı</option>}
                     {arzlar.map(a => (
                       <option key={a.slug} value={a.slug}>
                         {a.ticker} — {a.sirketAdi}

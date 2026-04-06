@@ -57,6 +57,8 @@ const jsonLd = {
   },
 };
 
+export const revalidate = 3600; // 1 saatte bir yenile — arz durumları güncel kalsın
+
 export default async function AnaSayfa() {
   const { arzlar } = await getArzlar();
 
