@@ -2,10 +2,11 @@
   {
     "ticker": "AAGYO",
     "sirketAdi": "Ağaoğlu Avrasya Gayrimenkul Yatırım Ortaklığı A.Ş.",
-    "durum": "aktif",
+    "durum": "tamamlandi",
     "sektor": "Gayrimenkul",
     "talepBaslangic": "2026-04-01",
     "talepBitis": "2026-04-03",
+    "borsadaIslemGormeTarihi": "2026-04-08",
     "arsFiyatiAlt": 21.1,
     "arsFiyatiUst": 21.1,
     "lotBuyuklugu": 100,
@@ -20,6 +21,12 @@
     "pazar": "Yıldız Pazar",
     "dagitimYontemi": "Eşit Dağıtım",
     "halkaAciklik": 25.11,
+    "tahsisatSonuclari": [
+      { "grup": "Yurt İçi Bireysel", "kisi": 917000, "lot": 110880000, "oran": 63 },
+      { "grup": "Şirket Çalışanları", "kisi": 173, "lot": 3520000, "oran": 2 },
+      { "grup": "Yurt İçi Kurumsal", "kisi": 227, "lot": 44000000, "oran": 25 },
+      { "grup": "Yurt Dışı Kurumsal", "kisi": 13, "lot": 17600000, "oran": 10 }
+    ],
     "ozetBolumler": [
       {
         "baslik": "Halka arz şekli",

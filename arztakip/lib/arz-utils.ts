@@ -30,13 +30,31 @@ export async function getArzlar(): Promise<{ arzlar: Arz[]; source: string }> {
   const tsArzlar = yaklasanArzlar;
   const tumYaklasan = [...jsonArzlar, ...tsArzlar];
   const gorulenSluglar = new Set<string>();
+
+  // SPK'da olmayan arzlar → ekstra olarak eklenir
   const ekstra = tumYaklasan.filter(a => {
     if (spkSluglar.has(a.slug) || gorulenSluglar.has(a.slug)) return false;
     gorulenSluglar.add(a.slug);
     return true;
   });
 
-  const tumu = [...ekstra, ...(spkArzlar.length > 0 ? spkArzlar : mockArzlar)];
+  // SPK arzlarına JSON'dan ek alanları (tahsisat, özet, tavan vb.) merge et
+  const manuelMap = new Map(tumYaklasan.map(a => [a.slug, a]));
+  const spkMerged = spkArzlar.map(a => {
+    const manuel = manuelMap.get(a.slug);
+    if (!manuel) return a;
+    return {
+      ...a,
+      tahsisatSonuclari: manuel.tahsisatSonuclari?.length ? manuel.tahsisatSonuclari : a.tahsisatSonuclari,
+      ozetBolumler:       manuel.ozetBolumler?.length       ? manuel.ozetBolumler       : a.ozetBolumler,
+      tavanSayisi:        manuel.tavanSayisi                ?? a.tavanSayisi,
+      borsadaIslemGormeTarihi: manuel.borsadaIslemGormeTarihi || a.borsadaIslemGormeTarihi,
+      sirketHakkinda:     manuel.sirketHakkinda              || a.sirketHakkinda,
+      logo:               manuel.logo                        || a.logo,
+    };
+  });
+
+  const tumu = [...ekstra, ...(spkMerged.length > 0 ? spkMerged : mockArzlar)];
 
   // Tarihe göre otomatik durum düzeltme
   const bugun = new Date();
