@@ -14,11 +14,12 @@ export interface Haber {
   tarih: string;
   saat?: string;
   kategori: string;
-  kaynak: "manuel";
+  kaynak: string;
   link: string;
   icerik?: string;
   gorsel?: string;
   ticker?: string;
+  originalLinki?: string;
 }
 
 async function fetchManuelHaberler(): Promise<Haber[]> {

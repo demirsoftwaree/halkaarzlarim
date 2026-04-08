@@ -64,4 +64,10 @@ export interface Haber {
   yayinTarihi: string;
   kategori: string;
   ilgiliArzId?: string;
+  kaynak?: string;
+  sirket?: string;
+  icerik?: string;
+  originalLinki?: string;
+  tarih?: string;
+  yayinda?: boolean;
 }
