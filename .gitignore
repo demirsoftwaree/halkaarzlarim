@@ -41,3 +41,11 @@ yarn-error.log*
 next-env.d.ts
 
 .vercel
+
+# Yerel araç dosyaları — repo'ya girmemeli
+screenshots/
+mobil-screenshots/
+sosyal-medya-gorselleri/
+halkaarzlarim-video/
+package-lock.json.bak
+package.json.bak
