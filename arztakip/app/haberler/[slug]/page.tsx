@@ -149,7 +149,7 @@ export default function HaberDetayPage() {
               <div className="bg-slate-800/50 border border-slate-700/50 rounded-2xl p-6">
                 <p className="text-slate-400 text-sm leading-7 mb-5">
                   Bu duyuru <strong className="text-white">{haber.sirket}</strong> tarafından{" "}
-                  {haber.kaynak === "kap" ? "KAP" : "SPK"} aracılığıyla yayımlanmıştır.
+                  {(haber.kaynak as string) === "kap" ? "KAP" : "SPK"} aracılığıyla yayımlanmıştır.
                   Tam belge içeriğini görüntülemek için aşağıdaki butonu kullanabilirsiniz.
                 </p>
                 {haber.originalLinki && (
