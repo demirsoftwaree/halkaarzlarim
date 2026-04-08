@@ -12,7 +12,7 @@ export async function PUT(req: NextRequest, { params }: { params: Promise<{ id: 
   if (!(await isAuthed())) return NextResponse.json({ error: "Yetkisiz" }, { status: 401 });
   const { id } = await params;
   const body = await req.json();
-  const updated = updateArzEntry(id, body);
+  const updated = await updateArzEntry(id, body);
   if (!updated) return NextResponse.json({ error: "Bulunamadı" }, { status: 404 });
   return NextResponse.json(updated);
 }
@@ -20,7 +20,7 @@ export async function PUT(req: NextRequest, { params }: { params: Promise<{ id: 
 export async function DELETE(_req: NextRequest, { params }: { params: Promise<{ id: string }> }) {
   if (!(await isAuthed())) return NextResponse.json({ error: "Yetkisiz" }, { status: 401 });
   const { id } = await params;
-  const ok = deleteArzEntry(id);
+  const ok = await deleteArzEntry(id);
   if (!ok) return NextResponse.json({ error: "Bulunamadı" }, { status: 404 });
   return NextResponse.json({ ok: true });
 }

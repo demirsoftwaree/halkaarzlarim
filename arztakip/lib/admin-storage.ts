@@ -1,8 +1,10 @@
-import fs from "fs";
-import path from "path";
-import type { Arz } from "./types";
+/**
+ * Arz depolama — Firestore tabanlı
+ * Koleksiyon: "arzlar-manuel"
+ * Vercel read-only filesystem nedeniyle JSON dosyası yerine Firestore kullanılır.
+ */
 
-const DATA_FILE = path.join(process.cwd(), "data", "yaklasan-arzlar.json");
+import type { Arz } from "./types";
 
 function slugify(s: string): string {
   return s
@@ -12,43 +14,41 @@ function slugify(s: string): string {
     .replace(/[^a-z0-9]/g, "-").replace(/-+/g, "-").replace(/^-|-$/g, "");
 }
 
-export function readYaklasanArzlar(): Arz[] {
+const COL = "arzlar-manuel";
+
+export async function readYaklasanArzlar(): Promise<Arz[]> {
   try {
-    const raw = fs.readFileSync(DATA_FILE, "utf-8");
-    return JSON.parse(raw) as Arz[];
+    const { adminDb } = await import("./firebase-admin");
+    const snap = await adminDb.collection(COL).get();
+    return snap.docs.map(d => ({ ...d.data(), id: d.id, slug: d.id } as Arz));
   } catch {
     return [];
   }
 }
 
-export function writeYaklasanArzlar(data: Arz[]): void {
-  fs.mkdirSync(path.dirname(DATA_FILE), { recursive: true });
-  fs.writeFileSync(DATA_FILE, JSON.stringify(data, null, 2), "utf-8");
-}
-
-export function addArzEntry(entry: Omit<Arz, "id" | "slug">): Arz {
-  const existing = readYaklasanArzlar();
+export async function addArzEntry(entry: Omit<Arz, "id" | "slug">): Promise<Arz> {
+  const { adminDb } = await import("./firebase-admin");
   const slug = slugify(entry.ticker || entry.sirketAdi);
   const newArz: Arz = { ...entry, id: slug, slug };
-  const filtered = existing.filter((a) => a.slug !== slug);
-  writeYaklasanArzlar([newArz, ...filtered]);
+  await adminDb.collection(COL).doc(slug).set(newArz);
   return newArz;
 }
 
-export function updateArzEntry(slug: string, updates: Partial<Omit<Arz, "id" | "slug">>): Arz | null {
-  const existing = readYaklasanArzlar();
-  const idx = existing.findIndex((a) => a.slug === slug);
-  if (idx === -1) return null;
-  const updated = { ...existing[idx], ...updates };
-  existing[idx] = updated;
-  writeYaklasanArzlar(existing);
+export async function updateArzEntry(slug: string, updates: Partial<Omit<Arz, "id" | "slug">>): Promise<Arz | null> {
+  const { adminDb } = await import("./firebase-admin");
+  const ref = adminDb.collection(COL).doc(slug);
+  const snap = await ref.get();
+  if (!snap.exists) return null;
+  const updated = { ...snap.data(), ...updates, id: slug, slug } as Arz;
+  await ref.set(updated);
   return updated;
 }
 
-export function deleteArzEntry(slug: string): boolean {
-  const existing = readYaklasanArzlar();
-  const next = existing.filter((a) => a.slug !== slug);
-  if (next.length === existing.length) return false;
-  writeYaklasanArzlar(next);
+export async function deleteArzEntry(slug: string): Promise<boolean> {
+  const { adminDb } = await import("./firebase-admin");
+  const ref = adminDb.collection(COL).doc(slug);
+  const snap = await ref.get();
+  if (!snap.exists) return false;
+  await ref.delete();
   return true;
 }

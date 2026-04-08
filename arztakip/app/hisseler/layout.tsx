@@ -1,13 +1,13 @@
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: "BIST Hisseler — Borsa İstanbul Şirket Listesi",
+  title: "Halka Arz Şirketleri — SPK Kayıtlı Şirket Listesi",
   description:
-    "Borsa İstanbul'da işlem gören tüm hisseleri ve KAP üyesi şirketleri listeleyin. Sektör filtresi, arama ve şirket bilgileri.",
-  keywords: ["BIST hisseler", "Borsa İstanbul hisse", "KAP şirketler", "borsa şirket listesi", "hisse senedi"],
+    "Türkiye'de halka arz yapan tüm şirketlerin listesi. Aktif, yaklaşan ve tamamlanan halka arzlar, sektör ve durum filtreleri.",
+  keywords: ["halka arz şirketleri", "SPK şirketler", "BIST halka arz", "halka arz listesi", "hisse senedi"],
   openGraph: {
-    title: "BIST Hisseler | HalkaArzlarım",
-    description: "Borsa İstanbul'da işlem gören tüm hisseler ve KAP üyesi şirketler.",
+    title: "Halka Arz Şirketleri | HalkaArzlarım",
+    description: "Türkiye'de halka arz yapan tüm şirketler. Aktif, yaklaşan ve tamamlanan arzlar.",
     url: "https://www.halkaarzlarim.com/hisseler",
   },
   alternates: { canonical: "https://www.halkaarzlarim.com/hisseler" },

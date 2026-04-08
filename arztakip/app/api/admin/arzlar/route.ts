@@ -10,12 +10,13 @@ async function isAuthed(): Promise<boolean> {
 
 export async function GET() {
   if (!(await isAuthed())) return NextResponse.json({ error: "Yetkisiz" }, { status: 401 });
-  return NextResponse.json(readYaklasanArzlar());
+  const arzlar = await readYaklasanArzlar();
+  return NextResponse.json(arzlar);
 }
 
 export async function POST(req: NextRequest) {
   if (!(await isAuthed())) return NextResponse.json({ error: "Yetkisiz" }, { status: 401 });
   const body = await req.json();
-  const created = addArzEntry(body);
+  const created = await addArzEntry(body);
   return NextResponse.json(created, { status: 201 });
 }
