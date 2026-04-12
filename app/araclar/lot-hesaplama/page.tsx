@@ -1,9 +1,17 @@
 "use client";
 import { useState } from "react";
+import Link from "next/link";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
-import { BarChart3 } from "lucide-react";
+import { TrendingUp, BarChart3, DollarSign, Crown, Medal } from "lucide-react";
 import AdBanner from "@/components/AdBanner";
+
+const arac_nav = [
+  { icon: TrendingUp, baslik: "Tavan Simülatörü",        href: "/araclar/tavan-simulatoru",  renk: "text-emerald-400", bg: "bg-emerald-500/10" },
+  { icon: DollarSign, baslik: "Net Kâr Hesaplayıcı",     href: "/araclar/kar-hesaplama",     renk: "text-amber-400",  bg: "bg-amber-500/10" },
+  { icon: Crown,      baslik: "Tavan Getiri Raporu",     href: "/araclar/tavan-raporu",      renk: "text-yellow-400", bg: "bg-yellow-500/10" },
+  { icon: Medal,      baslik: "Geçmiş Tavan Performansı",href: "/araclar/tavan-performansi", renk: "text-amber-400",  bg: "bg-amber-500/10" },
+];
 
 function fmt(n: number) {
   return new Intl.NumberFormat("tr-TR").format(n);
@@ -40,6 +48,25 @@ export default function LotHesaplamaPage() {
     <div className="min-h-screen flex flex-col">
       <Navbar />
       <main className="flex-1 max-w-2xl mx-auto w-full px-4 sm:px-6 py-10">
+
+        {/* Araç Navigasyonu */}
+        <div className="mb-8">
+          <h2 className="text-xs font-semibold text-slate-500 uppercase tracking-wider mb-3">Hesaplama Araçları</h2>
+          <div className="grid grid-cols-2 sm:grid-cols-4 gap-2">
+            <div className="bg-blue-500/10 border border-blue-500/30 rounded-xl p-3 flex items-center gap-2">
+              <BarChart3 size={16} className="text-blue-400 shrink-0" />
+              <span className="text-blue-400 text-xs font-medium truncate">Lot Dağıtım</span>
+            </div>
+            {arac_nav.map(({ icon: Icon, baslik, href, renk, bg }) => (
+              <Link key={href} href={href}>
+                <div className={`${bg} border border-slate-700/50 hover:border-slate-600 rounded-xl p-3 flex items-center gap-2 transition-all cursor-pointer`}>
+                  <Icon size={16} className={`${renk} shrink-0`} />
+                  <span className={`${renk} text-xs font-medium truncate`}>{baslik}</span>
+                </div>
+              </Link>
+            ))}
+          </div>
+        </div>
 
         <div className="flex items-center gap-3 mb-8">
           <div className="w-10 h-10 rounded-xl flex items-center justify-center" style={{ background: "rgba(59,130,246,0.1)" }}>

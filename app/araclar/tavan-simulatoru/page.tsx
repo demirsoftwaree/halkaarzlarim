@@ -1,9 +1,17 @@
 "use client";
 import { useState } from "react";
+import Link from "next/link";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
-import { TrendingUp } from "lucide-react";
+import { TrendingUp, BarChart3, DollarSign, Crown, Medal } from "lucide-react";
 import AdBanner from "@/components/AdBanner";
+
+const diger_araclar = [
+  { icon: BarChart3,  baslik: "Lot Dağıtım Hesaplayıcı",  href: "/araclar/lot-hesaplama",    renk: "text-blue-400",   bg: "bg-blue-500/10" },
+  { icon: DollarSign, baslik: "Net Kâr Hesaplayıcı",      href: "/araclar/kar-hesaplama",    renk: "text-amber-400",  bg: "bg-amber-500/10" },
+  { icon: Crown,      baslik: "Tavan Getiri Raporu",      href: "/araclar/tavan-raporu",     renk: "text-yellow-400", bg: "bg-yellow-500/10" },
+  { icon: Medal,      baslik: "Geçmiş Tavan Performansı", href: "/araclar/tavan-performansi", renk: "text-amber-400",  bg: "bg-amber-500/10" },
+];
 
 function formatMoney(n: number) {
   return new Intl.NumberFormat("tr-TR", { minimumFractionDigits: 2, maximumFractionDigits: 2 }).format(n);
@@ -31,6 +39,26 @@ export default function TavanSimulatoruPage() {
     <div className="min-h-screen flex flex-col">
       <Navbar />
       <main className="flex-1 max-w-3xl mx-auto w-full px-4 sm:px-6 py-10">
+
+        {/* Diğer Araçlar */}
+        <div className="mb-8">
+          <h2 className="text-xs font-semibold text-slate-500 uppercase tracking-wider mb-3">Hesaplama Araçları</h2>
+          <div className="grid grid-cols-2 sm:grid-cols-4 gap-2">
+            <div className="bg-emerald-500/10 border border-emerald-500/30 rounded-xl p-3 flex items-center gap-2">
+              <TrendingUp size={16} className="text-emerald-400 shrink-0" />
+              <span className="text-emerald-400 text-xs font-medium truncate">Tavan Simülatörü</span>
+            </div>
+            {diger_araclar.map(({ icon: Icon, baslik, href, renk, bg }) => (
+              <Link key={href} href={href}>
+                <div className={`${bg} border border-slate-700/50 hover:border-slate-600 rounded-xl p-3 flex items-center gap-2 transition-all cursor-pointer`}>
+                  <Icon size={16} className={`${renk} shrink-0`} />
+                  <span className={`${renk} text-xs font-medium truncate`}>{baslik}</span>
+                </div>
+              </Link>
+            ))}
+          </div>
+        </div>
+
         <div className="flex items-center gap-3 mb-8">
           <div className="w-10 h-10 bg-emerald-500/10 rounded-xl flex items-center justify-center">
             <TrendingUp size={20} className="text-emerald-400" />
