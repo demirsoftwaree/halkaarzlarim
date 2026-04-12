@@ -95,7 +95,7 @@ export default async function AnaSayfa() {
             <Link href="/halka-arzlar" className="bg-emerald-500 hover:bg-emerald-400 text-white font-semibold px-8 py-3.5 rounded-xl transition-colors flex items-center gap-2 justify-center">
               Takvimi Gör <ArrowRight size={18} />
             </Link>
-            <Link href="/araclar/tavan-simulatoru" className="bg-slate-700 hover:bg-slate-600 text-white font-semibold px-8 py-3.5 rounded-xl transition-colors">
+            <Link href="#hesaplama-araclari" className="bg-slate-700 hover:bg-slate-600 text-white font-semibold px-8 py-3.5 rounded-xl transition-colors">
               Araçları Dene
             </Link>
           </div>
@@ -235,12 +235,12 @@ export default async function AnaSayfa() {
         )}
 
         {/* Araçlar */}
-        <section>
+        <section id="hesaplama-araclari">
           <div className="mb-6">
             <h2 className="text-xl font-bold text-white">Hesaplama Araçları</h2>
             <p className="text-slate-400 text-sm mt-1">Halka arz kararlarını veriye dayalı al</p>
           </div>
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
             {araclar.map(({ icon: Icon, baslik, aciklama, href, renk, bg, ...rest }) => (
               <Link key={href} href={href}>
                 <div className="bg-slate-800/40 border border-slate-700/50 rounded-2xl p-5 h-full hover:border-slate-600 transition-all group cursor-pointer relative">
