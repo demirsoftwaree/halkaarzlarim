@@ -1,3 +1,4 @@
+"use client";
 import Link from "next/link";
 import { TrendingUp, BarChart3, DollarSign, Crown, Medal, ArrowRight } from "lucide-react";
 import Navbar from "@/components/Navbar";
