@@ -1,3 +1,5 @@
+export const revalidate = 0;
+
 import Link from "next/link";
 import { ArrowRight, Star, TrendingUp, BarChart3, DollarSign, Crown, Medal } from "lucide-react";
 import Navbar from "@/components/Navbar";
