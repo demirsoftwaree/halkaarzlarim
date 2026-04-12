@@ -41,9 +41,9 @@ export default function Navbar() {
             <BarChart2 size={14} /> Hisseler
           </Link>
 <div className="relative group">
-            <button className="flex items-center gap-1 text-slate-300 hover:text-white text-sm font-medium transition-colors">
+            <Link href="/araclar" className="flex items-center gap-1 text-slate-300 hover:text-white text-sm font-medium transition-colors">
               Araçlar <ChevronDown size={14} />
-            </button>
+            </Link>
             <div className="absolute top-full left-0 mt-2 w-52 bg-slate-800 border border-slate-700 rounded-xl shadow-xl opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all">
               <Link href="/araclar/tavan-simulatoru" className="block px-4 py-2.5 text-sm text-slate-300 hover:text-white hover:bg-slate-700 rounded-t-xl">
                 📈 Tavan Simülatörü
