@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { ArrowRight, Star, TrendingUp, BarChart3, DollarSign, Crown } from "lucide-react";
+import { ArrowRight, Star, TrendingUp, BarChart3, DollarSign, Crown, Medal } from "lucide-react";
 import Navbar from "@/components/Navbar";
 import TickerBar from "@/components/TickerBar";
 import Footer from "@/components/Footer";
@@ -10,10 +10,11 @@ import { getArzlar } from "@/lib/arz-utils";
 import { Agent, fetch as undiciFetch } from "undici";
 
 const araclar = [
-  { icon: TrendingUp,  baslik: "Tavan Simülatörü",       aciklama: "Kaç tavan giderse kaç ₺ kazanırsın?",          href: "/araclar/tavan-simulatoru",  renk: "text-emerald-400", bg: "bg-emerald-500/10" },
-  { icon: BarChart3,   baslik: "Lot Dağıtım Hesaplayıcı", aciklama: "Kaç kişi başvurursa kaç lot düşer?",           href: "/araclar/lot-hesaplama",     renk: "text-blue-400",   bg: "bg-blue-500/10"    },
-  { icon: DollarSign,  baslik: "Net Kâr Hesaplayıcı",     aciklama: "Komisyon dahil gerçek net kazancını hesapla.", href: "/araclar/kar-hesaplama",     renk: "text-amber-400",  bg: "bg-amber-500/10"   },
-  { icon: Crown,       baslik: "Tavan Getiri Raporu",     aciklama: "10 günlük tavan senaryosu — PDF olarak indir.", href: "/araclar/tavan-raporu",      renk: "text-yellow-400", bg: "bg-yellow-500/10",  premium: true },
+  { icon: TrendingUp,  baslik: "Tavan Simülatörü",          aciklama: "Kaç tavan giderse kaç ₺ kazanırsın?",          href: "/araclar/tavan-simulatoru",   renk: "text-emerald-400", bg: "bg-emerald-500/10" },
+  { icon: BarChart3,   baslik: "Lot Dağıtım Hesaplayıcı",   aciklama: "Kaç kişi başvurursa kaç lot düşer?",           href: "/araclar/lot-hesaplama",      renk: "text-blue-400",   bg: "bg-blue-500/10"    },
+  { icon: DollarSign,  baslik: "Net Kâr Hesaplayıcı",       aciklama: "Komisyon dahil gerçek net kazancını hesapla.", href: "/araclar/kar-hesaplama",      renk: "text-amber-400",  bg: "bg-amber-500/10"   },
+  { icon: Crown,       baslik: "Tavan Getiri Raporu",       aciklama: "10 günlük tavan senaryosu — PDF olarak indir.", href: "/araclar/tavan-raporu",       renk: "text-yellow-400", bg: "bg-yellow-500/10",  premium: true },
+  { icon: Medal,       baslik: "Geçmiş Tavan Performansı",  aciklama: "Tamamlanan arzlarda kaç tavan yapıldı?",       href: "/araclar/tavan-performansi",  renk: "text-amber-400",  bg: "bg-amber-500/10",   premium: true },
 ];
 
 const spkAgent = new Agent({ connect: { rejectUnauthorized: true } });

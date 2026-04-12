@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { TrendingUp, BarChart3, DollarSign, Crown, ArrowRight } from "lucide-react";
+import { TrendingUp, BarChart3, DollarSign, Crown, Medal, ArrowRight } from "lucide-react";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 
@@ -34,11 +34,21 @@ const araclar = [
   {
     icon: Crown,
     baslik: "Tavan Getiri Raporu",
-    aciklama: "10 günlük tavan senaryosu — PDF olarak indir. PRO özellik.",
+    aciklama: "10 günlük tavan senaryosu — PDF olarak indir.",
     href: "/araclar/tavan-raporu",
     renk: "text-yellow-400",
     bg: "bg-yellow-500/10",
     border: "hover:border-yellow-500/30",
+    premium: true,
+  },
+  {
+    icon: Medal,
+    baslik: "Geçmiş Tavan Performansı",
+    aciklama: "Tamamlanan arzlarda kaç tavan yapıldı, yatırımcıya ne kazandırdı?",
+    href: "/araclar/tavan-performansi",
+    renk: "text-amber-400",
+    bg: "bg-amber-500/10",
+    border: "hover:border-amber-500/30",
     premium: true,
   },
 ];

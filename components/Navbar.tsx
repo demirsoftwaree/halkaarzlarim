@@ -139,6 +139,8 @@ export default function Navbar() {
             { href: "/araclar/tavan-simulatoru", label: "📈 Tavan Simülatörü" },
             { href: "/araclar/lot-hesaplama", label: "🎯 Lot Dağıtım" },
             { href: "/araclar/kar-hesaplama", label: "💰 Net Kâr" },
+            { href: "/araclar/tavan-raporu", label: "👑 Tavan Getiri Raporu" },
+            { href: "/araclar/tavan-performansi", label: "🏆 Geçmiş Tavan Performansı" },
             { href: "/hisseler", label: "📊 Hisseler" },
             { href: "/haberler", label: "📰 Haberler" },
             { href: "/blog", label: "📝 Blog" },
