@@ -94,7 +94,7 @@ export default async function AnaSayfa() {
             <Link href="/halka-arzlar" className="bg-emerald-500 hover:bg-emerald-400 text-white font-semibold px-8 py-3.5 rounded-xl transition-colors flex items-center gap-2 justify-center">
               Takvimi Gör <ArrowRight size={18} />
             </Link>
-            <Link href="/araclar/tavan-simulatoru" className="bg-slate-700 hover:bg-slate-600 text-white font-semibold px-8 py-3.5 rounded-xl transition-colors">
+            <Link href="/araclar" className="bg-slate-700 hover:bg-slate-600 text-white font-semibold px-8 py-3.5 rounded-xl transition-colors">
               Araçları Dene
             </Link>
           </div>

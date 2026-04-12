@@ -49,3 +49,4 @@ sosyal-medya-gorselleri/
 halkaarzlarim-video/
 package-lock.json.bak
 package.json.bak
+.env*.local
