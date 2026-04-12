@@ -1,4 +1,5 @@
 export const revalidate = 0;
+export const dynamic = "force-dynamic";
 
 import Link from "next/link";
 import { ArrowRight, Star, TrendingUp, BarChart3, DollarSign, Crown, Medal } from "lucide-react";
@@ -97,7 +98,7 @@ export default async function AnaSayfa() {
             <Link href="/halka-arzlar" className="bg-emerald-500 hover:bg-emerald-400 text-white font-semibold px-8 py-3.5 rounded-xl transition-colors flex items-center gap-2 justify-center">
               Takvimi Gör <ArrowRight size={18} />
             </Link>
-            <Link href="#hesaplama-araclari" className="bg-slate-700 hover:bg-slate-600 text-white font-semibold px-8 py-3.5 rounded-xl transition-colors">
+            <Link href="#hesaplama-araclari" className="bg-slate-700 hover:bg-slate-600 text-white font-semibold px-8 py-3.5 rounded-xl transition-colors" data-build="v2">
               Araçları Dene
             </Link>
           </div>
