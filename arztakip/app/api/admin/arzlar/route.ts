@@ -3,7 +3,7 @@ import { cookies } from "next/headers";
 import { revalidatePath } from "next/cache";
 import { readYaklasanArzlar, addArzEntry } from "@/lib/admin-storage";
 import { adminAuth } from "@/lib/firebase-admin";
-import { sendEmail } from "@/lib/email";
+import { sendBatchEmail } from "@/lib/email";
 import { yeniArzDuyuruEmail } from "@/lib/email-templates";
 
 async function isAuthed(): Promise<boolean> {
@@ -24,35 +24,30 @@ async function tumKullanicilariDuyur(arz: {
         : `${arz.arsFiyatiAlt.toFixed(2)}–${arz.arsFiyatiUst.toFixed(2)} ₺`
       : "Fiyat bekleniyor";
 
+    // Tüm kullanıcı e-postalarını topla
+    const emails: string[] = [];
     let nextPageToken: string | undefined;
-    let toplam = 0;
     do {
       const result = await adminAuth.listUsers(1000, nextPageToken);
       for (const user of result.users) {
-        if (!user.email) continue;
-        try {
-          await sendEmail({
-            to: user.email,
-            subject: `📣 ${arz.ticker} Halka Arzı Sisteme Eklendi!`,
-            html: yeniArzDuyuruEmail(
-              arz.sirketAdi,
-              arz.ticker,
-              fiyat,
-              arz.talepBaslangic ?? "–",
-              arz.talepBitis ?? "–",
-              arz.slug,
-              arz.durum,
-            ),
-          });
-          toplam++;
-        } catch (e) {
-          console.error(`[duyuru] Hata uid=${user.uid}:`, e);
-        }
+        if (user.email) emails.push(user.email);
       }
       nextPageToken = result.pageToken;
     } while (nextPageToken);
 
-    console.log(`[duyuru] ${arz.ticker} için ${toplam} kullanıcıya bildirim gönderildi`);
+    // Batch gönderim — tek API isteği (100'er gruplarda)
+    const html = yeniArzDuyuruEmail(
+      arz.sirketAdi, arz.ticker, fiyat,
+      arz.talepBaslangic ?? "–", arz.talepBitis ?? "–",
+      arz.slug, arz.durum,
+    );
+    const { count } = await sendBatchEmail(
+      emails,
+      `📣 ${arz.ticker} Halka Arzı Sisteme Eklendi!`,
+      html,
+    );
+
+    console.log(`[duyuru] ${arz.ticker} için ${count ?? emails.length} kullanıcıya bildirim gönderildi`);
   } catch (e) {
     console.error("[duyuru] Genel hata:", e);
   }
