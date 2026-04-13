@@ -45,6 +45,8 @@ export async function getArzlar(): Promise<{ arzlar: Arz[]; source: string }> {
     if (!manuel) return a;
     return {
       ...a,
+      // Admin'den durum override varsa onu kullan
+      durum: manuel.durum || a.durum,
       tahsisatSonuclari: manuel.tahsisatSonuclari?.length ? manuel.tahsisatSonuclari : a.tahsisatSonuclari,
       ozetBolumler:       manuel.ozetBolumler?.length       ? manuel.ozetBolumler       : a.ozetBolumler,
       tavanSayisi:        manuel.tavanSayisi                ?? a.tavanSayisi,
@@ -57,9 +59,13 @@ export async function getArzlar(): Promise<{ arzlar: Arz[]; source: string }> {
   const tumu = [...ekstra, ...(spkMerged.length > 0 ? spkMerged : mockArzlar)];
 
   // Tarihe göre otomatik durum düzeltme
+  // Manuel override olan arzlar (Firestore'dan gelenler) tarihe göre ezilmez
+  const manuelSluglar = new Set(jsonArzlar.map(a => a.slug));
   const bugun = new Date();
   bugun.setHours(0, 0, 0, 0);
   const normalize = tumu.map(a => {
+    // Admin panelinden manuel durum girilmişse tarihe göre ezme
+    if (manuelSluglar.has(a.slug)) return a;
     if (!a.talepBaslangic || !a.talepBitis) return a;
     const baslangic = new Date(a.talepBaslangic);
     const bitis = new Date(a.talepBitis);
