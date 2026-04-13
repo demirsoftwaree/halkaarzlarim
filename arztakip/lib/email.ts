@@ -2,8 +2,7 @@ import { Resend } from "resend";
 
 const resend = new Resend(process.env.RESEND_API_KEY);
 
-// Domain doğrulandıktan sonra "bildirim@halkaarzlarim.com" yap
-const FROM = "HalkaArzlarım <onboarding@resend.dev>";
+const FROM = "HalkaArzlarım <bildirim@halkaarzlarim.com>";
 
 export type EmailPayload = {
   to: string | string[];
