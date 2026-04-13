@@ -46,6 +46,12 @@ export default function GirisPage() {
         if (displayName) {
           await updateProfile(cred.user, { displayName });
         }
+        // Hoş geldin maili — hata olsa da kayıt akışını bloklama
+        fetch("/api/email/hosgeldin", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ email, isim: displayName?.split(" ")[0] ?? "" }),
+        }).catch(() => {});
       }
       router.push("/");
     } catch (err: unknown) {
