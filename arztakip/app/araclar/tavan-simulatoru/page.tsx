@@ -5,6 +5,37 @@ import Footer from "@/components/Footer";
 import { TrendingUp } from "lucide-react";
 import AdBanner from "@/components/AdBanner";
 
+const faqJsonLd = {
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  mainEntity: [
+    {
+      "@type": "Question",
+      name: "Halka arz kaç gün tavan yapar?",
+      acceptedAnswer: {
+        "@type": "Answer",
+        text: "Halka arzlarda tavan gün sayısı şirketten şirkete değişir. Tarihsel verilere göre BIST'te halka arz olan hisseler ortalama 3–7 gün tavan yapabilir. Bazı arzlar yalnızca 1–2 tavan yaparken, talep fazlası yüksek arzlarda 10 güne kadar tavan görülebilir.",
+      },
+    },
+    {
+      "@type": "Question",
+      name: "Halka arz en fazla kaç tavan yapabilir?",
+      acceptedAnswer: {
+        "@type": "Answer",
+        text: "BIST'te teorik tavan sınırı yoktur. Pratikte en yüksek tavan sayısı 10 gün civarında gerçekleşmiştir. Geçmiş arzların tavan performansı piyasa koşullarına ve şirketin sektörüne bağlıdır.",
+      },
+    },
+    {
+      "@type": "Question",
+      name: "Halka arz tavan getirisi nasıl hesaplanır?",
+      acceptedAnswer: {
+        "@type": "Answer",
+        text: "Her tavan günü önceki kapanış fiyatının %10 üstünde oluşur. Arz fiyatı 100 ₺ ise: 1. tavan 110 ₺, 2. tavan 121 ₺, 3. tavan 133,1 ₺ şeklinde bileşik artar.",
+      },
+    },
+  ],
+};
+
 function formatMoney(n: number) {
   return new Intl.NumberFormat("tr-TR", { minimumFractionDigits: 2, maximumFractionDigits: 2 }).format(n);
 }
@@ -29,6 +60,10 @@ export default function TavanSimulatoruPage() {
 
   return (
     <div className="min-h-screen flex flex-col">
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(faqJsonLd) }}
+      />
       <Navbar />
       <main className="flex-1 max-w-3xl mx-auto w-full px-4 sm:px-6 py-10">
         <div className="flex items-center gap-3 mb-8">
@@ -161,6 +196,32 @@ export default function TavanSimulatoruPage() {
         <p className="text-xs text-slate-600 mt-3 text-center">
           ⚠️ Brüt kâr gösterilmektedir. Komisyon ve stopaj dahil değildir. Yatırım tavsiyesi değildir.
         </p>
+
+        {/* SEO / SSS Bloğu */}
+        <div className="mt-10 space-y-4">
+          <h2 className="text-lg font-bold text-white">Sık Sorulan Sorular</h2>
+          <div className="space-y-3">
+            {[
+              {
+                soru: "Halka arz kaç gün tavan yapar?",
+                cevap: "Halka arzlarda tavan gün sayısı şirketten şirkete değişir. Tarihsel verilere göre BIST'te halka arz olan hisseler ortalama 3–7 gün tavan yapabilir. Bazı arzlar yalnızca 1–2 tavan yaparken, talep fazlası yüksek arzlarda 10 güne kadar tavan görülebilir. Kesin bir sayı yoktur; piyasa koşulları, şirketin sektörü ve halka arz fiyatı belirleyicidir.",
+              },
+              {
+                soru: "Halka arz en fazla kaç tavan yapabilir?",
+                cevap: "BIST'te teorik sınır yoktur. Pratikte en yüksek tavan sayısı 10 gün civarında gerçekleşmiştir. Geçmiş arzların tavan performansını görmek için Geçmiş Tavan Performansı sayfamızı inceleyebilirsiniz.",
+              },
+              {
+                soru: "Halka arz tavan getirisi nasıl hesaplanır?",
+                cevap: "Her tavan günü önceki kapanış fiyatının %10 üstünde oluşur. Örneğin arz fiyatı 100 ₺ ise: 1. tavan 110 ₺, 2. tavan 121 ₺, 3. tavan 133,1 ₺ şeklinde bileşik olarak artar. Yukarıdaki simülatör bu hesabı otomatik yapar.",
+              },
+            ].map(({ soru, cevap }) => (
+              <div key={soru} className="bg-slate-800/40 border border-slate-700/50 rounded-xl p-4">
+                <h3 className="text-sm font-semibold text-white mb-2">{soru}</h3>
+                <p className="text-slate-400 text-sm leading-relaxed">{cevap}</p>
+              </div>
+            ))}
+          </div>
+        </div>
       </main>
       <div className="max-w-2xl mx-auto w-full px-4 sm:px-6 pb-6">
         <AdBanner slot="horizontal" />

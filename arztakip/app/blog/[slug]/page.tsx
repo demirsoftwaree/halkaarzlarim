@@ -39,7 +39,14 @@ export async function generateMetadata({
   const yazi = await getYazi(slug);
   if (!yazi) return { title: "Blog Yazısı Bulunamadı" };
 
-  const ozet = yazi.icerik.replace(/\n+/g, " ").trim().slice(0, 160);
+  // Markdown başlıklarını ve kısa satırları atla, ilk anlamlı paragrafı al
+  const ozet = yazi.icerik
+    .split(/\n\n+/)
+    .map(p => p.trim())
+    .filter(p => p.length > 60 && !p.startsWith("#") && !p.startsWith("-"))
+    .map(p => p.replace(/\n/g, " "))
+    .at(0)
+    ?.slice(0, 160) ?? yazi.baslik;
   const url = `https://www.halkaarzlarim.com/blog/${slug}`;
 
   return {

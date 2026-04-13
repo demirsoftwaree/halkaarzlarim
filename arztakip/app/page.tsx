@@ -41,10 +41,7 @@ const jsonLd = {
   description: "Türkiye'nin halka arz takip platformu. Aktif arzlar, tavan simülatörü, lot hesaplama ve AI destekli yatırım asistanı.",
   potentialAction: {
     "@type": "SearchAction",
-    target: {
-      "@type": "EntryPoint",
-      urlTemplate: "https://www.halkaarzlarim.com/halka-arzlar?q={search_term_string}",
-    },
+    target: "https://www.halkaarzlarim.com/halka-arzlar?q={search_term_string}",
     "query-input": "required name=search_term_string",
   },
   publisher: {
