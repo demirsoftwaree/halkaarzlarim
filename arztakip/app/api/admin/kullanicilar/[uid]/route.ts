@@ -1,7 +1,9 @@
 import { NextRequest, NextResponse } from "next/server";
 import { cookies } from "next/headers";
-import { adminDb } from "@/lib/firebase-admin";
+import { adminDb, adminAuth } from "@/lib/firebase-admin";
 import { Timestamp } from "firebase-admin/firestore";
+import { sendEmail } from "@/lib/email";
+import { premiumHosgeldinEmail } from "@/lib/email-templates";
 
 async function checkAdmin() {
   const jar = await cookies();
@@ -27,6 +29,24 @@ export async function PATCH(req: NextRequest, { params }: { params: Promise<{ ui
     { premium, premiumBitis: bitisTimestamp },
     { merge: true }
   );
+
+  // Premium verildiğinde kullanıcıya mail gönder
+  if (premium) {
+    try {
+      const user = await adminAuth.getUser(uid);
+      if (user.email) {
+        const isim = user.displayName || user.email.split("@")[0];
+        await sendEmail({
+          to: user.email,
+          subject: "⭐ Premium Üyeliğin Aktif!",
+          html: premiumHosgeldinEmail(isim),
+        });
+        console.log(`[premium] Mail gönderildi: ${user.email}`);
+      }
+    } catch (e) {
+      console.error("[premium] Mail hatası:", e);
+    }
+  }
 
   return NextResponse.json({ ok: true });
 }
