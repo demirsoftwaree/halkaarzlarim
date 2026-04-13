@@ -107,6 +107,48 @@ export function arzBasladiEmail(sirketAdi: string, ticker: string, fiyat: string
   `);
 }
 
+// ── Yeni Arz Duyurusu (tüm kullanıcılara) ─────────────────────────────────
+export function yeniArzDuyuruEmail(sirketAdi: string, ticker: string, fiyat: string, talepBaslangic: string, talepBitis: string, slug: string, durum: string) {
+  const durumLabel = durum === "aktif" ? "Başvuru Açık" : "Yakında Başlıyor";
+  const durumRenk  = durum === "aktif" ? "#10b981" : "#f59e0b";
+  return wrapper(`
+    <div style="background:${durumRenk};border-radius:8px;padding:6px 12px;display:inline-block;margin:0 0 20px 0;">
+      <span style="color:white;font-size:12px;font-weight:600;">📣 YENİ HALKA ARZ — ${durumLabel.toUpperCase()}</span>
+    </div>
+    <h1 style="color:white;font-size:20px;font-weight:700;margin:0 0 8px 0;">
+      ${sirketAdi} (${ticker}) Halka Arzı!
+    </h1>
+    <p style="color:#94a3b8;font-size:15px;line-height:1.6;margin:0 0 24px 0;">
+      <strong style="color:white;">${ticker}</strong> halka arzı sisteme eklendi.
+      ${durum === "aktif"
+        ? `Son başvuru tarihi: <strong style="color:#f59e0b;">${talepBitis}</strong>`
+        : `Başvuru tarihi: <strong style="color:#f59e0b;">${talepBaslangic}</strong>`}
+    </p>
+    <table width="100%" cellpadding="0" cellspacing="0" style="background:#0f172a;border:1px solid #334155;border-radius:12px;margin:0 0 24px 0;">
+      <tr>
+        <td style="padding:16px 20px;border-right:1px solid #334155;">
+          <div style="color:#64748b;font-size:11px;margin-bottom:4px;">ARZ FİYATI</div>
+          <div style="color:${durumRenk};font-weight:700;font-size:18px;">${fiyat}</div>
+        </td>
+        <td style="padding:16px 20px;border-right:1px solid #334155;">
+          <div style="color:#64748b;font-size:11px;margin-bottom:4px;">BAŞVURU BAŞLANGIÇ</div>
+          <div style="color:white;font-weight:700;font-size:15px;">${talepBaslangic}</div>
+        </td>
+        <td style="padding:16px 20px;">
+          <div style="color:#64748b;font-size:11px;margin-bottom:4px;">SON BAŞVURU</div>
+          <div style="color:white;font-weight:700;font-size:15px;">${talepBitis}</div>
+        </td>
+      </tr>
+    </table>
+    <a href="${BASE}/halka-arz/${slug}" style="display:inline-block;background:${durumRenk};color:white;font-weight:600;font-size:14px;padding:12px 28px;border-radius:12px;text-decoration:none;margin-right:12px;">
+      Arza Git →
+    </a>
+    <a href="${BASE}/araclar/tavan-simulatoru" style="display:inline-block;background:#1e293b;border:1px solid #334155;color:#94a3b8;font-weight:600;font-size:14px;padding:12px 28px;border-radius:12px;text-decoration:none;">
+      Tavan Simülatörü
+    </a>
+  `);
+}
+
 // ── Premium Hoş Geldin ──────────────────────────────────────────────────────
 export function premiumHosgeldinEmail(isim: string) {
   return wrapper(`
