@@ -125,6 +125,65 @@ function mapToArz(item: SpkIpo): Arz {
   };
 }
 
+// ── İstatistik tipleri ──────────────────────────────────────────────────────
+
+export interface SpkIpoSayisi {
+  ay: number;
+  donem: string;
+  borsadaIslemGormeyeBaslayanSirketSayisi: number;
+  halkaAcilmaIhracTutariBinTl: number;
+  borsadaIslemGorenSirketSayisi: number;
+  toplamBorsaSirketiSayisi: number;
+}
+
+export interface SpkYatirimci {
+  ay: number;
+  donem: string;
+  yerliYatirimciSayisi: number;
+  yabanciYatirimciSayisi: number;
+  toplamYatirimciSayisi: number;
+  borsaSirketlerininHalkaAcikBolumlerininPiyasaDegerinegoreYerliOrani: number;
+  borsaSirketlerininHalkaAcikBolumlerininPiyasaDegerinegoreYabanciOrani: number;
+}
+
+export interface SpkPiyasaDegeri {
+  ay: number;
+  donem: string;
+  borsaSirketSayisi: number;
+  borsaSirketlerininToplamPiyasaDegeriMilyonTl: number;
+  borsaSirketlerininToplamPiyasaDegeriMilyonUsd: number;
+  borsaSirketlerininHalkaAcikKisimlarininPiyasaDegeriAcikKisimMilyonTl: number;
+}
+
+async function spkGet<T>(path: string): Promise<T[]> {
+  const res = await undiciFetch(`${SPK_BASE}${path}`, {
+    dispatcher: spkAgent,
+    headers: { Accept: "application/json" },
+  });
+  if (!res.ok) throw new Error(`SPK API ${res.status}: ${path}`);
+  return res.json() as Promise<T[]>;
+}
+
+export async function fetchIpoSayisi(yil: number): Promise<SpkIpoSayisi[]> {
+  return spkGet<SpkIpoSayisi>(
+    `/BorclanmaAraclari/api/GetHalkaAcilanSirketSayisi?yil=${yil}`
+  );
+}
+
+export async function fetchYatirimciSayilari(yil: number): Promise<SpkYatirimci[]> {
+  return spkGet<SpkYatirimci>(
+    `/BorclanmaAraclari/api/GetBakiyeliPaySenediYatiricimSayisiVeOranlari?yil=${yil}`
+  );
+}
+
+export async function fetchPiyasaDegerleri(yil: number): Promise<SpkPiyasaDegeri[]> {
+  return spkGet<SpkPiyasaDegeri>(
+    `/BorclanmaAraclari/api/PaylariBorsadaIslemGorenSirketlerinPiyasaDegeriBilgileri?yil=${yil}`
+  );
+}
+
+// ── Mevcut IPO verisi ───────────────────────────────────────────────────────
+
 export async function fetchSpkIpoData(year = 2026): Promise<Arz[]> {
   const url = `${SPK_BASE}/BorclanmaAraclari/api/IlkHalkaArzVerileri?yil=${year}`;
 

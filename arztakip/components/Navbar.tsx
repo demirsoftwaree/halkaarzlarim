@@ -62,6 +62,9 @@ export default function Navbar() {
               </Link>
             </div>
           </div>
+          <Link href="/istatistikler" className="text-slate-300 hover:text-white text-sm font-medium transition-colors">
+            İstatistikler
+          </Link>
           <Link href="/haberler" className="text-slate-300 hover:text-white text-sm font-medium transition-colors">
             Haberler
           </Link>
@@ -140,6 +143,7 @@ export default function Navbar() {
             { href: "/araclar/lot-hesaplama", label: "🎯 Lot Dağıtım" },
             { href: "/araclar/kar-hesaplama", label: "💰 Net Kâr" },
             { href: "/hisseler", label: "📊 Hisseler" },
+            { href: "/istatistikler", label: "📈 İstatistikler" },
             { href: "/haberler", label: "📰 Haberler" },
             { href: "/blog", label: "📝 Blog" },
           ].map(({ href, label }) => (
