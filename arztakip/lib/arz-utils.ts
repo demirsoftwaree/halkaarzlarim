@@ -1,5 +1,4 @@
 import { Arz } from "./types";
-import { mockArzlar } from "./mock-data";
 import { fetchSpkIpoData } from "./spk-service";
 import { yaklasanArzlar } from "./yaklasan-arzlar";
 import { readYaklasanArzlar } from "./admin-storage";
@@ -7,11 +6,12 @@ import { readYaklasanArzlar } from "./admin-storage";
 /**
  * Tüm halka arz verisini döndürür:
  *  - SPK API: tamamlanan 2026 arzları
- *  - yaklasan-arzlar.ts: manuel girilen aktif/yaklaşan arzlar
+ *  - Firestore + yaklasan-arzlar.ts: manuel girilen aktif/yaklaşan arzlar
+ *  SPK düşerse mock yerine Firestore verisi kullanılır.
  */
 export async function getArzlar(): Promise<{ arzlar: Arz[]; source: string }> {
   let spkArzlar: Arz[] = [];
-  let source = "mock";
+  let source = "firestore";
 
   try {
     const data = await fetchSpkIpoData(2026);
@@ -20,7 +20,8 @@ export async function getArzlar(): Promise<{ arzlar: Arz[]; source: string }> {
       source = "spk.gov.tr";
     }
   } catch {
-    // SPK erişilemezse mock ile devam et
+    // SPK erişilemezse Firestore verisiyle devam et
+    console.warn("[arz-utils] SPK API erişilemedi, Firestore fallback kullanılıyor");
   }
 
   const spkSluglar = new Set(spkArzlar.map(a => a.slug));
@@ -56,7 +57,8 @@ export async function getArzlar(): Promise<{ arzlar: Arz[]; source: string }> {
     };
   });
 
-  const tumu = [...ekstra, ...(spkMerged.length > 0 ? spkMerged : mockArzlar)];
+  // SPK düşerse mock yerine Firestore/manuel verisi kullanılır
+  const tumu = [...ekstra, ...(spkMerged.length > 0 ? spkMerged : tumYaklasan)];
 
   // Tarihe göre otomatik durum düzeltme
   // Manuel override olan arzlar (Firestore'dan gelenler) tarihe göre ezilmez
