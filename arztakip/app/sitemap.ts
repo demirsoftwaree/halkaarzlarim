@@ -25,6 +25,24 @@ export default function sitemap(): MetadataRoute.Sitemap {
       priority: 0.9,
     },
     {
+      url: `${BASE_URL}/halka-arz-nasil-yapilir`,
+      lastModified: "2026-04-20",
+      changeFrequency: "monthly",
+      priority: 0.9,
+    },
+    {
+      url: `${BASE_URL}/tavan-nedir`,
+      lastModified: "2026-04-20",
+      changeFrequency: "monthly",
+      priority: 0.8,
+    },
+    {
+      url: `${BASE_URL}/halka-arz-takvimi-2026`,
+      lastModified: bugun,
+      changeFrequency: "daily",
+      priority: 0.9,
+    },
+    {
       url: `${BASE_URL}/istatistikler`,
       lastModified: bugun,
       changeFrequency: "weekly",

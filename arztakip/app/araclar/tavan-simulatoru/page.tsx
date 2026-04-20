@@ -33,6 +33,30 @@ const faqJsonLd = {
         text: "Her tavan günü önceki kapanış fiyatının %10 üstünde oluşur. Arz fiyatı 100 ₺ ise: 1. tavan 110 ₺, 2. tavan 121 ₺, 3. tavan 133,1 ₺ şeklinde bileşik artar.",
       },
     },
+    {
+      "@type": "Question",
+      name: "5 tavan yapan hisse ne kadar kazandırır?",
+      acceptedAnswer: {
+        "@type": "Answer",
+        text: "5 tavan yapan bir hisse, arz fiyatının %61,1 üstünde kapanır. Örneğin 100 TL'den alınan hisse 5 tavanda 161,05 TL değerine ulaşır. Brüt kâr 61,05 TL / lot'tur.",
+      },
+    },
+    {
+      "@type": "Question",
+      name: "10 tavan yapan hisse kaç kat kazandırır?",
+      acceptedAnswer: {
+        "@type": "Answer",
+        text: "10 tavan yapan bir hisse arz fiyatının 2,59 katına çıkar, yani %159,4 brüt getiri sağlar. 100 TL'den alınan hisse 10 tavanda 259,37 TL değerine ulaşır.",
+      },
+    },
+    {
+      "@type": "Question",
+      name: "Tavan simülatörü komisyon hesaplıyor mu?",
+      acceptedAnswer: {
+        "@type": "Answer",
+        text: "Tavan simülatörü brüt kâr göstermektedir. Komisyon ve stopaj hesaplamak için HalkaArzlarım'ın Net Kâr Hesaplayıcı aracını kullanabilirsiniz.",
+      },
+    },
   ],
 };
 
@@ -214,12 +238,46 @@ export default function TavanSimulatoruPage() {
                 soru: "Halka arz tavan getirisi nasıl hesaplanır?",
                 cevap: "Her tavan günü önceki kapanış fiyatının %10 üstünde oluşur. Örneğin arz fiyatı 100 ₺ ise: 1. tavan 110 ₺, 2. tavan 121 ₺, 3. tavan 133,1 ₺ şeklinde bileşik olarak artar. Yukarıdaki simülatör bu hesabı otomatik yapar.",
               },
+              {
+                soru: "5 tavan yapan hisse ne kadar kazandırır?",
+                cevap: "5 tavan yapan bir hisse arz fiyatının %61,1 üstünde kapanır. 100 TL'den alınan 10 hisse için brüt kâr = 610,51 TL'dir. Simülatöre 100 TL ve 10 hisse girip kaydırıcıyı 5 tavan konumuna getirerek görebilirsin.",
+              },
+              {
+                soru: "10 tavan yapan hisse kaç kat kazandırır?",
+                cevap: "10 tavan yapan bir hisse arz fiyatının 2,59 katına çıkar — yani %159,4 brüt getiri. 100 TL'den alınan hisse 10 tavanda 259,37 TL değerine ulaşır.",
+              },
+              {
+                soru: "Tavan simülatörü komisyon hesaplıyor mu?",
+                cevap: "Simülatör yalnızca brüt kâr göstermektedir. Komisyon ve %10 stopaj dahil net kazancınızı hesaplamak için Net Kâr Hesaplayıcı aracımızı kullanabilirsiniz.",
+              },
             ].map(({ soru, cevap }) => (
               <div key={soru} className="bg-slate-800/40 border border-slate-700/50 rounded-xl p-4">
                 <h3 className="text-sm font-semibold text-white mb-2">{soru}</h3>
                 <p className="text-slate-400 text-sm leading-relaxed">{cevap}</p>
               </div>
             ))}
+          </div>
+
+          {/* İlgili sayfalar */}
+          <div className="mt-6 pt-6 border-t border-slate-800">
+            <p className="text-slate-500 text-xs font-medium uppercase tracking-widest mb-3">İlgili Rehberler</p>
+            <div className="flex flex-wrap gap-2">
+              {[
+                { href: "/tavan-nedir", label: "Tavan Nedir?" },
+                { href: "/ipo-nedir", label: "IPO Nedir?" },
+                { href: "/araclar/kar-hesaplama", label: "Net Kâr Hesaplayıcı" },
+                { href: "/araclar/tavan-performansi", label: "Geçmiş Tavan Performansı" },
+                { href: "/halka-arz-nasil-yapilir", label: "Halka Arza Nasıl Katılınır?" },
+              ].map(({ href, label }) => (
+                <a
+                  key={href}
+                  href={href}
+                  className="text-xs text-slate-400 hover:text-emerald-400 border border-slate-700/50 hover:border-emerald-500/30 px-3 py-1.5 rounded-full transition-all"
+                >
+                  {label}
+                </a>
+              ))}
+            </div>
           </div>
         </div>
       </main>
