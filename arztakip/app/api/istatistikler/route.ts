@@ -10,7 +10,8 @@ import {
 
 export const revalidate = 3600; // 1 saatte bir yenile
 
-const YILLAR = [2020, 2021, 2022, 2023, 2024, 2025, 2026];
+const IPO_YILLAR   = [2022, 2023, 2024, 2025, 2026]; // SPK 2020-2021 için bu endpoint'i tutmuyor
+const GRAFIK_YILLAR = [2024, 2025, 2026];            // Aylık grafikler için son 3 yıl
 
 export interface YillikIpo {
   yil: number;
@@ -55,15 +56,15 @@ async function safePiyasa(yil: number): Promise<SpkPiyasaDegeri[]> {
 }
 
 export async function GET() {
-  // Tüm yıllar için paralel fetch
+  // Paralel fetch — sadece gerekli yıllar
   const [ipoSonuclar, yatirimciSonuclar, piyasaSonuclar] = await Promise.all([
-    Promise.all(YILLAR.map(y => safeIpo(y))),
-    Promise.all(YILLAR.map(y => safeYatirimci(y))),
-    Promise.all(YILLAR.map(y => safePiyasa(y))),
+    Promise.all(IPO_YILLAR.map(y => safeIpo(y))),
+    Promise.all(GRAFIK_YILLAR.map(y => safeYatirimci(y))),
+    Promise.all(GRAFIK_YILLAR.map(y => safePiyasa(y))),
   ]);
 
   // Yıllık IPO özeti
-  const yillikIpo: YillikIpo[] = YILLAR.map((yil, i) => {
+  const yillikIpo: YillikIpo[] = IPO_YILLAR.map((yil, i) => {
     const aylar = ipoSonuclar[i];
     const toplamIpo = aylar.reduce((s, a) => s + (a.borsadaIslemGormeyeBaslayanSirketSayisi || 0), 0);
     const toplamTutar = aylar.reduce((s, a) => s + (a.halkaAcilmaIhracTutariBinTl || 0), 0);
@@ -74,13 +75,12 @@ export async function GET() {
       toplamTutarMilyarTl: Math.round(toplamTutar / 1_000_000 * 100) / 100,
       sonBorsaSirketSayisi: sonAy?.toplamBorsaSirketiSayisi ?? 0,
     };
-  }).filter(y => y.toplamIpo > 0 || y.yil === new Date().getFullYear());
+  });
 
-  // Aylık yatırımcı (son 3 yıl yeterli)
+  // Aylık yatırımcı (son 3 yıl)
   const aylikYatirimci: AylikYatirimci[] = [];
-  YILLAR.slice(-3).forEach((yil, i) => {
-    const idx = YILLAR.length - 3 + i;
-    yatirimciSonuclar[idx].forEach(a => {
+  GRAFIK_YILLAR.forEach((yil, i) => {
+    yatirimciSonuclar[i].forEach(a => {
       aylikYatirimci.push({
         donem: `${yil}/${String(a.ay).padStart(2, "0")}`,
         yil,
@@ -94,9 +94,8 @@ export async function GET() {
 
   // Aylık piyasa değeri (son 3 yıl)
   const aylikPiyasa: AylikPiyasa[] = [];
-  YILLAR.slice(-3).forEach((yil, i) => {
-    const idx = YILLAR.length - 3 + i;
-    piyasaSonuclar[idx].forEach(a => {
+  GRAFIK_YILLAR.forEach((yil, i) => {
+    piyasaSonuclar[i].forEach(a => {
       aylikPiyasa.push({
         donem: `${yil}/${String(a.ay).padStart(2, "0")}`,
         yil,
