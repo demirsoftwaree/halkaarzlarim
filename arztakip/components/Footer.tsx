@@ -59,7 +59,7 @@ export default function Footer() {
             <h4 className="text-white font-semibold text-sm mb-4">Rehber & Yasal</h4>
             <ul className="space-y-2.5">
               {[
-                ["IPO Nedir?", "/ipo-nedir"],
+                ["Sık Sorulan Sorular (SSS)", "/sss"],
                 ["Blog", "/blog"],
                 ["İstatistikler", "/istatistikler"],
                 ["İletişim", "/iletisim"],

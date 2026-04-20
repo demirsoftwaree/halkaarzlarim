@@ -25,6 +25,12 @@ export default function sitemap(): MetadataRoute.Sitemap {
       priority: 0.9,
     },
     {
+      url: `${BASE_URL}/sss`,
+      lastModified: "2026-04-20",
+      changeFrequency: "monthly" as const,
+      priority: 0.8,
+    },
+    {
       url: `${BASE_URL}/halka-arz-nasil-yapilir`,
       lastModified: "2026-04-20",
       changeFrequency: "monthly",
