@@ -1,8 +1,10 @@
+"use client";
 import Link from "next/link";
 import { TrendingUp } from "lucide-react";
 import { Arz } from "@/lib/types";
 import { durumRenk, durumEtiket } from "@/lib/mock-data";
 import WatchlistButton from "./WatchlistButton";
+import { useState } from "react";
 
 interface Props { arz: Arz }
 
@@ -28,6 +30,25 @@ function ilkAraciKurum(araciKurum: string): string {
   return ilk.length > 28 ? ilk.slice(0, 26) + "…" : ilk;
 }
 
+function ArzIkon({ logo, ticker, isDone }: { logo?: string; ticker: string; isDone: boolean }) {
+  const [err, setErr] = useState(false);
+  if (logo && !err) {
+    return (
+      <div className="w-10 h-10 rounded-xl overflow-hidden shrink-0 bg-slate-700/50 flex items-center justify-center">
+        {/* eslint-disable-next-line @next/next/no-img-element */}
+        <img src={logo} alt={ticker} className="w-full h-full object-contain" onError={() => setErr(true)} />
+      </div>
+    );
+  }
+  return (
+    <div className={`w-10 h-10 rounded-xl flex items-center justify-center font-bold text-xs shrink-0 ${
+      isDone ? "bg-slate-700/50 text-slate-400" : "bg-gradient-to-br from-emerald-500/20 to-slate-700 text-emerald-400"
+    }`}>
+      {(ticker || "").slice(0, 2).toUpperCase()}
+    </div>
+  );
+}
+
 export default function ArzCard({ arz }: Props) {
   const days      = daysLeft(arz.talepBitis);
   const isDone    = arz.durum === "tamamlandi";
@@ -46,14 +67,8 @@ export default function ArzCard({ arz }: Props) {
 
         {/* ── Üst satır: ikon + şirket + durum + watchlist ── */}
         <div className="flex items-center gap-3 mb-3">
-          {/* Ticker ikonu */}
-          <div className={`w-10 h-10 rounded-xl flex items-center justify-center font-bold text-xs shrink-0 ${
-            isDone
-              ? "bg-slate-700/50 text-slate-400"
-              : "bg-gradient-to-br from-emerald-500/20 to-slate-700 text-emerald-400"
-          }`}>
-            {(arz.ticker || arz.sirketAdi).slice(0, 2).toUpperCase()}
-          </div>
+          {/* Ticker / Logo ikonu */}
+          <ArzIkon logo={arz.logo} ticker={arz.ticker || arz.sirketAdi} isDone={isDone} />
 
           {/* Şirket bilgisi */}
           <div className="flex-1 min-w-0">
