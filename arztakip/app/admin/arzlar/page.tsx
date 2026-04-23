@@ -14,8 +14,17 @@ const DURUMLAR: { value: ArzDurum; label: string }[] = [
   { value: "aktif", label: "Aktif (Talep topluyor)" },
   { value: "yaklasan", label: "Yaklaşan" },
   { value: "basvuru-surecinde", label: "Başvuru Sürecinde" },
+  { value: "tamamlandi", label: "Tamamlandı" },
   { value: "ertelendi", label: "Ertelendi" },
 ];
+
+const DURUM_LABEL: Record<string, string> = {
+  aktif: "Aktif",
+  yaklasan: "Yaklaşan",
+  "basvuru-surecinde": "Başvuru Sürecinde",
+  tamamlandi: "Tamamlandı",
+  ertelendi: "Ertelendi",
+};
 
 const PAZARLAR = ["Ana Pazar", "Yıldız Pazar", "Gelişen İşletmeler Pazarı", "Yakın İzleme Pazarı"];
 const DAGITIM = ["Eşit Dağıtım", "Orantılı Dağıtım", "Karma"];
@@ -48,6 +57,7 @@ const EMPTY: Omit<Arz, "id" | "slug"> = {
   ozetBolumler: [],
   tahsisatSonuclari: [],
   tavanSayisi: undefined,
+  logo: "",
 };
 
 export default function AdminArzlarPage() {
@@ -270,6 +280,9 @@ export default function AdminArzlarPage() {
                   <Field label="Pay (Lot Adedi)">
                     <input type="number" min={0} value={form.toplamArzLot || ""} onChange={e => set("toplamArzLot", e.target.value)} className={input} placeholder="18900000" />
                   </Field>
+                  <Field label="Logo URL" className="md:col-span-2">
+                    <input value={form.logo || ""} onChange={e => set("logo", e.target.value)} className={input} placeholder="https://..." />
+                  </Field>
                   <Field label="KAP Linki" className="md:col-span-2">
                     <input value={form.kapLinki} onChange={e => set("kapLinki", e.target.value)} className={input} placeholder="https://www.kap.org.tr/..." />
                   </Field>
@@ -432,7 +445,7 @@ export default function AdminArzlarPage() {
                     )}
                     <span className="font-semibold text-white truncate">{arz.sirketAdi}</span>
                     <span className={`text-xs px-2 py-0.5 rounded-full ${durumRenk[arz.durum] || "bg-gray-500/20 text-gray-400"}`}>
-                      {DURUMLAR.find(d => d.value === arz.durum)?.label.split(" ")[0] || arz.durum}
+                      {DURUM_LABEL[arz.durum] || arz.durum}
                     </span>
                   </div>
                   <div className="text-sm text-gray-400 flex flex-wrap gap-x-4 gap-y-1">
