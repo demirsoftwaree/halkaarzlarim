@@ -48,6 +48,7 @@ const EMPTY: Omit<Arz, "id" | "slug"> = {
   ozetBolumler: [],
   tahsisatSonuclari: [],
   tavanSayisi: undefined,
+  logo: "",
 };
 
 export default function AdminArzlarPage() {
@@ -269,6 +270,9 @@ export default function AdminArzlarPage() {
                   </Field>
                   <Field label="Pay (Lot Adedi)">
                     <input type="number" min={0} value={form.toplamArzLot || ""} onChange={e => set("toplamArzLot", e.target.value)} className={input} placeholder="18900000" />
+                  </Field>
+                  <Field label="Logo URL" className="md:col-span-2">
+                    <input value={form.logo || ""} onChange={e => set("logo", e.target.value)} className={input} placeholder="https://..." />
                   </Field>
                   <Field label="KAP Linki" className="md:col-span-2">
                     <input value={form.kapLinki} onChange={e => set("kapLinki", e.target.value)} className={input} placeholder="https://www.kap.org.tr/..." />
