@@ -278,7 +278,7 @@ export default function AdminArzlarPage() {
                     <input value={form.araciKurum} onChange={e => set("araciKurum", e.target.value)} className={input} placeholder="Garanti Yatırım" />
                   </Field>
                   <Field label="Halka Arz Oranı — Bireysel (%)">
-                    <input type="number" min={0} max={100} value={form.bireyselPayYuzde || ""} onChange={e => set("bireyselPayYuzde", e.target.value)} className={input} placeholder="25" />
+                    <input type="number" min={0} max={100} step={0.01} value={form.bireyselPayYuzde || ""} onChange={e => set("bireyselPayYuzde", e.target.value)} className={input} placeholder="25.00" />
                   </Field>
                   <Field label="Pay (Lot Adedi)">
                     <input type="number" min={0} value={form.toplamArzLot || ""} onChange={e => set("toplamArzLot", e.target.value)} className={input} placeholder="18900000" />
