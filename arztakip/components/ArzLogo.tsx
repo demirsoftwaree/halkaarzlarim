@@ -9,9 +9,9 @@ interface ArzLogoProps {
 }
 
 const SIZE = {
-  sm: { outer: "w-9 h-9",  text: "text-[10px]", padding: "p-1"   },
-  md: { outer: "w-11 h-11", text: "text-xs",     padding: "p-1.5" },
-  lg: { outer: "w-14 h-14", text: "text-sm",     padding: "p-2"   },
+  sm: { outer: "w-11 h-11", text: "text-xs",  padding: "p-1.5" },
+  md: { outer: "w-12 h-12", text: "text-sm",  padding: "p-2"   },
+  lg: { outer: "w-16 h-16", text: "text-base", padding: "p-2.5" },
 };
 
 export default function ArzLogo({ logo, ticker, isDone = false, size = "md" }: ArzLogoProps) {
