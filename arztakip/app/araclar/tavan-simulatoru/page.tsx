@@ -266,7 +266,6 @@ export default function TavanSimulatoruPage() {
                 { href: "/tavan-nedir", label: "Tavan Nedir?" },
                 { href: "/ipo-nedir", label: "IPO Nedir?" },
                 { href: "/araclar/kar-hesaplama", label: "Net Kâr Hesaplayıcı" },
-                { href: "/araclar/tavan-performansi", label: "Geçmiş Tavan Performansı" },
                 { href: "/halka-arz-nasil-yapilir", label: "Halka Arza Nasıl Katılınır?" },
               ].map(({ href, label }) => (
                 <a

@@ -9,7 +9,6 @@ const araclar = [
   { icon: BarChart3, baslik: "Lot Dağıtım Hesaplayıcı", aciklama: "Kaç kişi başvurursa kaç lot düşer?", href: "/araclar/lot-hesaplama", renk: "text-blue-400", bg: "bg-blue-500/10", border: "hover:border-blue-500/30" },
   { icon: DollarSign, baslik: "Net Kâr Hesaplayıcı", aciklama: "Komisyon ve vergiler dahil gerçek net kazancını hesapla.", href: "/araclar/kar-hesaplama", renk: "text-amber-400", bg: "bg-amber-500/10", border: "hover:border-amber-500/30" },
   { icon: Crown, baslik: "Tavan Getiri Raporu", aciklama: "10 günlük tavan senaryosu — PDF olarak indir.", href: "/araclar/tavan-raporu", renk: "text-yellow-400", bg: "bg-yellow-500/10", border: "hover:border-yellow-500/30", premium: true },
-  { icon: Medal, baslik: "Geçmiş Tavan Performansı", aciklama: "Tamamlanan arzlarda kaç tavan yapıldı?", href: "/araclar/tavan-performansi", renk: "text-amber-400", bg: "bg-amber-500/10", border: "hover:border-amber-500/30", premium: true },
 ];
 
 export default function AraclarPage() {

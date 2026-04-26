@@ -164,7 +164,6 @@ export function premiumHosgeldinEmail(isim: string) {
     </p>
     <table width="100%" cellpadding="0" cellspacing="0" style="margin:0 0 28px 0;">
       ${[
-        ["🥇", "Geçmiş Tavan Performansı", "Hangi arz kaç tavan yaptı?", "/araclar/tavan-performansi"],
         ["📄", "Tavan Getiri Raporu", "PDF rapor indir", "/araclar/tavan-raporu"],
         ["⭐", "Sınırsız Takip", "İstediğin kadar arz takip et", "/hesabim/takip-listem"],
       ].map(([icon, baslik, aciklama, href]) => `

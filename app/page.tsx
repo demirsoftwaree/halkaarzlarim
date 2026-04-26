@@ -17,7 +17,6 @@ const araclar = [
   { icon: BarChart3,   baslik: "Lot Dağıtım Hesaplayıcı",   aciklama: "Kaç kişi başvurursa kaç lot düşer?",           href: "/araclar/lot-hesaplama",      renk: "text-blue-400",   bg: "bg-blue-500/10"    },
   { icon: DollarSign,  baslik: "Net Kâr Hesaplayıcı",       aciklama: "Komisyon dahil gerçek net kazancını hesapla.", href: "/araclar/kar-hesaplama",      renk: "text-amber-400",  bg: "bg-amber-500/10"   },
   { icon: Crown,       baslik: "Tavan Getiri Raporu",       aciklama: "10 günlük tavan senaryosu — PDF olarak indir.", href: "/araclar/tavan-raporu",       renk: "text-yellow-400", bg: "bg-yellow-500/10",  premium: true },
-  { icon: Medal,       baslik: "Geçmiş Tavan Performansı",  aciklama: "Tamamlanan arzlarda kaç tavan yapıldı?",       href: "/araclar/tavan-performansi",  renk: "text-amber-400",  bg: "bg-amber-500/10",   premium: true },
 ];
 
 const spkAgent = new Agent({ connect: { rejectUnauthorized: true } });

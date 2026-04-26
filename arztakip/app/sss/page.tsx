@@ -141,7 +141,7 @@ const KATEGORILER = [
       {
         soru: "Halka arz kaç gün tavan yapar?",
         cevap: "Kesin bir sayı yoktur. Tarihsel verilere göre BIST'te ortalama 3–7 gün tavan yapılmaktadır. Düşük talep → 1–2 tavan, yüksek talep → 7–10+ tavan. Geçmiş arzların tavan gün sayısını Geçmiş Tavan Performansı sayfasında görebilirsin.",
-        link: { href: "/araclar/tavan-performansi", text: "Geçmiş tavan verileri →" },
+        link: { href: "/araclar/tavan-simulatoru", text: "Tavan simülatörü →" },
       },
       {
         soru: "Tavan getirisi nasıl hesaplanır?",

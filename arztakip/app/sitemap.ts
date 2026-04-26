@@ -85,12 +85,6 @@ export default function sitemap(): MetadataRoute.Sitemap {
       priority: 0.7,
     },
     {
-      url: `${BASE_URL}/araclar/tavan-performansi`,
-      lastModified: bugun,
-      changeFrequency: "weekly",
-      priority: 0.7,
-    },
-    {
       url: `${BASE_URL}/premium`,
       lastModified: "2026-01-01",
       changeFrequency: "monthly",

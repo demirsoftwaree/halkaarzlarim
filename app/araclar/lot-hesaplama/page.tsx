@@ -10,7 +10,6 @@ const arac_nav = [
   { icon: TrendingUp, baslik: "Tavan Simülatörü",        href: "/araclar/tavan-simulatoru",  renk: "text-emerald-400", bg: "bg-emerald-500/10" },
   { icon: DollarSign, baslik: "Net Kâr Hesaplayıcı",     href: "/araclar/kar-hesaplama",     renk: "text-amber-400",  bg: "bg-amber-500/10" },
   { icon: Crown,      baslik: "Tavan Getiri Raporu",     href: "/araclar/tavan-raporu",      renk: "text-yellow-400", bg: "bg-yellow-500/10" },
-  { icon: Medal,      baslik: "Geçmiş Tavan Performansı",href: "/araclar/tavan-performansi", renk: "text-amber-400",  bg: "bg-amber-500/10" },
 ];
 
 function fmt(n: number) {

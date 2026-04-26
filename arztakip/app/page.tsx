@@ -14,7 +14,6 @@ const araclar = [
   { icon: TrendingUp,  baslik: "Tavan Simülatörü",          aciklama: "Kaç tavan giderse kaç ₺ kazanırsın?",           href: "/araclar/tavan-simulatoru",   renk: "text-emerald-400", bg: "bg-emerald-500/10" },
   { icon: BarChart3,   baslik: "Lot Dağıtım Hesaplayıcı",   aciklama: "Kaç kişi başvurursa kaç lot düşer?",            href: "/araclar/lot-hesaplama",      renk: "text-blue-400",    bg: "bg-blue-500/10"    },
   { icon: DollarSign,  baslik: "Net Kâr Hesaplayıcı",       aciklama: "Komisyon dahil gerçek net kazancını hesapla.",  href: "/araclar/kar-hesaplama",      renk: "text-amber-400",   bg: "bg-amber-500/10"   },
-  { icon: Medal,       baslik: "Geçmiş Tavan Performansı",  aciklama: "Tamamlanan arzlarda kaç tavan, ne kadar getiri?", href: "/araclar/tavan-performansi", renk: "text-rose-400",    bg: "bg-rose-500/10",    premium: true },
   { icon: Crown,       baslik: "Tavan Getiri Raporu",       aciklama: "10 günlük tavan senaryosu — PDF olarak indir.", href: "/araclar/tavan-raporu",       renk: "text-yellow-400",  bg: "bg-yellow-500/10",  premium: true },
 ];
 

@@ -10,7 +10,6 @@ const diger_araclar = [
   { icon: BarChart3,  baslik: "Lot Dağıtım Hesaplayıcı",  href: "/araclar/lot-hesaplama",    renk: "text-blue-400",   bg: "bg-blue-500/10" },
   { icon: DollarSign, baslik: "Net Kâr Hesaplayıcı",      href: "/araclar/kar-hesaplama",    renk: "text-amber-400",  bg: "bg-amber-500/10" },
   { icon: Crown,      baslik: "Tavan Getiri Raporu",      href: "/araclar/tavan-raporu",     renk: "text-yellow-400", bg: "bg-yellow-500/10" },
-  { icon: Medal,      baslik: "Geçmiş Tavan Performansı", href: "/araclar/tavan-performansi", renk: "text-amber-400",  bg: "bg-amber-500/10" },
 ];
 
 function formatMoney(n: number) {

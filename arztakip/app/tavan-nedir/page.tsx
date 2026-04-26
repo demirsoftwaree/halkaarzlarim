@@ -319,19 +319,6 @@ export default function TavanNedirPage() {
                 Hesapla <ArrowRight size={14} />
               </span>
             </Link>
-            <Link
-              href="/araclar/tavan-performansi"
-              className="group bg-slate-800/50 border border-slate-700/40 hover:border-slate-600 rounded-2xl p-6 transition-all"
-            >
-              <TrendingUp size={20} className="text-amber-400 mb-3" />
-              <h3 className="text-white font-bold text-base mb-2">Geçmiş Tavan Performansı</h3>
-              <p className="text-slate-400 text-sm mb-4">
-                Daha önce halka arz olan hisselerin tavan gün sayısını gör.
-              </p>
-              <span className="flex items-center gap-1 text-amber-400 text-sm font-medium group-hover:gap-2 transition-all">
-                İncele <ArrowRight size={14} />
-              </span>
-            </Link>
           </div>
         </main>
 

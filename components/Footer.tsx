@@ -45,7 +45,6 @@ export default function Footer() {
                 ["Lot Dağıtım", "/araclar/lot-hesaplama"],
                 ["Net Kâr Hesaplayıcı", "/araclar/kar-hesaplama"],
                 ["Tavan Getiri Raporu", "/araclar/tavan-raporu"],
-                ["Geçmiş Tavan Performansı", "/araclar/tavan-performansi"],
               ].map(([label, href]) => (
                 <li key={href}>
                   <Link href={href} className="text-slate-400 hover:text-white text-sm transition-colors">{label}</Link>

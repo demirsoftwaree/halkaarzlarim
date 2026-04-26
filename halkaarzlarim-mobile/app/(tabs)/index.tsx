@@ -13,7 +13,7 @@ import { colors, s } from "@/lib/styles";
 interface Arz {
   id: string; slug: string; sirketAdi: string; ticker: string;
   arsFiyatiAlt: number; arsFiyatiUst: number; durum: string;
-  talepBaslangic?: string; talepBitis?: string; logo?: string;
+  talepBaslangic?: string; talepBitis?: string; borsadaIslemGormeTarihi?: string; logo?: string;
 }
 interface TickerItem { symbol: string; value: string; change: string; positive: boolean; }
 interface ChatMsg { role: "user" | "assistant"; content: string; }
@@ -227,12 +227,16 @@ function ArzIcon({ logo, ticker }: { logo?: string; ticker: string }) {
   );
 }
 
+const BADGE_LABEL: Record<string, string> = { aktif: "Aktif", yaklasan: "Yaklaşan", "basvuru-surecinde": "Başvuru" };
+const BADGE_COLOR: Record<string, string> = { aktif: colors.green, yaklasan: colors.blue, "basvuru-surecinde": colors.blue };
+
 // ─── ArzKart ──────────────────────────────────────────────────
 function ArzKart({ arz, onPress }: { arz: Arz; onPress: () => void }) {
-  const isAktif = arz.durum === "aktif";
   const fiyat = arz.arsFiyatiAlt || arz.arsFiyatiUst
     ? arz.arsFiyatiAlt === arz.arsFiyatiUst ? `₺${arz.arsFiyatiUst}` : `₺${arz.arsFiyatiAlt} – ₺${arz.arsFiyatiUst}`
     : "";
+  const badgeLabel = BADGE_LABEL[arz.durum];
+  const badgeColor = BADGE_COLOR[arz.durum];
   return (
     <TouchableOpacity onPress={onPress} style={[s.card, s.mb3]}>
       <View style={[s.row, { justifyContent: "space-between", marginBottom: fiyat ? 8 : 0 }]}>
@@ -243,9 +247,11 @@ function ArzKart({ arz, onPress }: { arz: Arz; onPress: () => void }) {
             <Text style={s.caption}>{arz.ticker}</Text>
           </View>
         </View>
-        <View style={[s.badge, !isAktif && { backgroundColor: colors.border }]}>
-          <Text style={[s.badgeText, !isAktif && { color: colors.muted }]}>{isAktif ? "Aktif" : arz.durum}</Text>
-        </View>
+        {badgeLabel && (
+          <View style={[s.badge, { backgroundColor: `${badgeColor}20` }]}>
+            <Text style={[s.badgeText, { color: badgeColor }]}>{badgeLabel}</Text>
+          </View>
+        )}
       </View>
       {fiyat ? (
         <View style={[s.row, { justifyContent: "space-between" }]}>
@@ -273,11 +279,16 @@ export default function AnaSayfa() {
       const json = await res.json();
       const SIRALAMA: Record<string, number> = { aktif: 0, yaklasan: 1, "basvuru-surecinde": 1, tamamlandi: 2, ertelendi: 3 };
       const all: Arz[] = (json.arzlar || [])
-        .map((a: any) => ({ ...a, id: a.id || a.slug }))
-        .sort((a: Arz, b: Arz) => {
+        .map((a: any, i: number) => ({ ...a, id: a.id || a.slug, _idx: i }))
+        .sort((a: any, b: any) => {
           const sd = (SIRALAMA[a.durum] ?? 9) - (SIRALAMA[b.durum] ?? 9);
           if (sd !== 0) return sd;
-          return (b.talepBitis || "").localeCompare(a.talepBitis || "");
+          const dA = a.talepBitis || a.borsadaIslemGormeTarihi || a.talepBaslangic || "";
+          const dB = b.talepBitis || b.borsadaIslemGormeTarihi || b.talepBaslangic || "";
+          if (!dA && !dB) return a._idx - b._idx; // ikisi de tarih yok → API sırası
+          if (!dA) return -1; // tarih yok → en başa (manuel eklenen yeni arz)
+          if (!dB) return 1;
+          return dB.localeCompare(dA); // yeniden eskiye
         });
       setAktif(all.filter(a => a.durum === "aktif"));
       setSon(all.filter(a => a.durum !== "aktif").slice(0, 8));

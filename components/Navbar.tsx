@@ -57,9 +57,6 @@ export default function Navbar() {
               <Link href="/araclar/tavan-raporu" className="block px-4 py-2.5 text-sm text-amber-400 hover:text-amber-300 hover:bg-slate-700 flex items-center gap-1.5">
                 👑 Tavan Getiri Raporu
               </Link>
-              <Link href="/araclar/tavan-performansi" className="block px-4 py-2.5 text-sm text-amber-400 hover:text-amber-300 hover:bg-slate-700 rounded-b-xl flex items-center gap-1.5">
-                🏆 Geçmiş Tavan Performansı
-              </Link>
             </div>
           </div>
           <Link href="/haberler" className="text-slate-300 hover:text-white text-sm font-medium transition-colors">
@@ -140,7 +137,6 @@ export default function Navbar() {
             { href: "/araclar/lot-hesaplama", label: "🎯 Lot Dağıtım" },
             { href: "/araclar/kar-hesaplama", label: "💰 Net Kâr" },
             { href: "/araclar/tavan-raporu", label: "👑 Tavan Getiri Raporu" },
-            { href: "/araclar/tavan-performansi", label: "🏆 Geçmiş Tavan Performansı" },
             { href: "/hisseler", label: "📊 Hisseler" },
             { href: "/haberler", label: "📰 Haberler" },
             { href: "/blog", label: "📝 Blog" },

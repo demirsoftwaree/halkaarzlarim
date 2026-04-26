@@ -5,7 +5,7 @@ import { Ionicons } from "@expo/vector-icons";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { colors, s } from "@/lib/styles";
 
-interface Arz { id: string; slug: string; sirketAdi: string; ticker: string; arsFiyatiAlt: number; arsFiyatiUst: number; durum: string; logo?: string; }
+interface Arz { id: string; slug: string; sirketAdi: string; ticker: string; arsFiyatiAlt: number; arsFiyatiUst: number; durum: string; logo?: string; talepBaslangic?: string; talepBitis?: string; }
 
 function ArzIcon({ logo, ticker }: { logo?: string; ticker: string }) {
   const [err, setErr] = useState(false);
@@ -24,7 +24,7 @@ function ArzIcon({ logo, ticker }: { logo?: string; ticker: string }) {
 }
 
 const API = "https://halkaarzlarim.com/api/arzlar";
-const DURUMLAR = ["Tümü", "aktif", "yaklasan", "tamamlandi"];
+const DURUMLAR = ["Tümü", "aktif", "yaklasan"];
 const DURUM_LABEL: Record<string, string> = { "Tümü": "Tümü", aktif: "Aktif", yaklasan: "Yaklaşan", tamamlandi: "Tamamlandı" };
 const DURUM_COLOR: Record<string, string> = { aktif: colors.green, yaklasan: colors.blue, tamamlandi: colors.muted };
 
@@ -43,11 +43,16 @@ export default function Arzlar() {
       const json = await res.json();
       const SIRALAMA: Record<string, number> = { aktif: 0, yaklasan: 1, "basvuru-surecinde": 1, tamamlandi: 2, ertelendi: 3 };
       const data: Arz[] = (json.arzlar || [])
-        .map((a: any) => ({ ...a, id: a.id || a.slug }))
-        .sort((a: Arz, b: Arz) => {
+        .map((a: any, i: number) => ({ ...a, id: a.id || a.slug, _idx: i }))
+        .sort((a: any, b: any) => {
           const sd = (SIRALAMA[a.durum] ?? 9) - (SIRALAMA[b.durum] ?? 9);
           if (sd !== 0) return sd;
-          return (b.talepBitis || "").localeCompare(a.talepBitis || "");
+          const dA = a.talepBitis || a.borsadaIslemGormeTarihi || a.talepBaslangic || "";
+          const dB = b.talepBitis || b.borsadaIslemGormeTarihi || b.talepBaslangic || "";
+          if (!dA && !dB) return a._idx - b._idx; // ikisi de tarih yok → API sırası
+          if (!dA) return -1; // tarih yok → en başa
+          if (!dB) return 1;
+          return dB.localeCompare(dA); // yeniden eskiye
         });
       setArzlar(data); setFiltered(data);
     } catch (e) { console.error(e); }
