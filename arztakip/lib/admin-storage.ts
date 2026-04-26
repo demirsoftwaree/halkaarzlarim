@@ -34,14 +34,59 @@ export async function addArzEntry(entry: Omit<Arz, "id" | "slug">): Promise<Arz>
   return newArz;
 }
 
-export async function updateArzEntry(slug: string, updates: Partial<Omit<Arz, "id" | "slug">>): Promise<Arz | null> {
+export async function updateArzEntry(slug: string, updates: Partial<Omit<Arz, "id" | "slug">>): Promise<Arz> {
   const { adminDb } = await import("./firebase-admin");
   const ref = adminDb.collection(COL).doc(slug);
   const snap = await ref.get();
-  if (!snap.exists) return null;
-  const updated = { ...snap.data(), ...updates, id: slug, slug } as Arz;
+  const base = snap.exists ? snap.data() : {};
+  const updated = { ...base, ...updates, id: slug, slug } as Arz;
   await ref.set(updated);
   return updated;
+}
+
+export type ArzSource = "spk" | "manuel" | "spk+manuel";
+export type ArzWithSource = Arz & { _source: ArzSource };
+
+export async function readAllArzlarAdmin(): Promise<ArzWithSource[]> {
+  try {
+    const { adminDb } = await import("./firebase-admin");
+    const [spkSnap, manuelSnap] = await Promise.all([
+      adminDb.collection("arzlar-spk").get(),
+      adminDb.collection(COL).get(),
+    ]);
+
+    const spkMap = new Map<string, Arz>();
+    for (const doc of spkSnap.docs) {
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
+      const { _cachedAt: _, ...arz } = doc.data() as Record<string, unknown>;
+      spkMap.set(doc.id, { ...arz, id: doc.id, slug: doc.id } as Arz);
+    }
+
+    const manuelMap = new Map<string, Arz>();
+    for (const doc of manuelSnap.docs) {
+      manuelMap.set(doc.id, { ...doc.data(), id: doc.id, slug: doc.id } as Arz);
+    }
+
+    const result: ArzWithSource[] = [];
+
+    for (const [slug, spkArz] of spkMap) {
+      const manuel = manuelMap.get(slug);
+      result.push(manuel
+        ? { ...spkArz, ...manuel, _source: "spk+manuel" }
+        : { ...spkArz, _source: "spk" }
+      );
+    }
+
+    for (const [slug, manuelArz] of manuelMap) {
+      if (!spkMap.has(slug)) {
+        result.push({ ...manuelArz, _source: "manuel" });
+      }
+    }
+
+    return result.sort((a, b) => a.sirketAdi.localeCompare(b.sirketAdi, "tr"));
+  } catch {
+    return readYaklasanArzlar().then(arzlar => arzlar.map(a => ({ ...a, _source: "manuel" as ArzSource })));
+  }
 }
 
 export async function deleteArzEntry(slug: string): Promise<boolean> {

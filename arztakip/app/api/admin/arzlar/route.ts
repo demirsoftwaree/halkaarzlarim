@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { cookies } from "next/headers";
 import { revalidatePath } from "next/cache";
-import { readYaklasanArzlar, addArzEntry } from "@/lib/admin-storage";
+import { readAllArzlarAdmin, addArzEntry } from "@/lib/admin-storage";
 import { adminAuth } from "@/lib/firebase-admin";
 import { sendBatchEmail } from "@/lib/email";
 import { yeniArzDuyuruEmail } from "@/lib/email-templates";
@@ -55,7 +55,7 @@ async function tumKullanicilariDuyur(arz: {
 
 export async function GET() {
   if (!(await isAuthed())) return NextResponse.json({ error: "Yetkisiz" }, { status: 401 });
-  const arzlar = await readYaklasanArzlar();
+  const arzlar = await readAllArzlarAdmin();
   return NextResponse.json(arzlar);
 }
 

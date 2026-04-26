@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { cookies } from "next/headers";
 import { revalidatePath } from "next/cache";
 import { updateArzEntry, deleteArzEntry, readYaklasanArzlar } from "@/lib/admin-storage";
+import { readSpkCache } from "@/lib/spk-cache";
 import { adminAuth, adminDb } from "@/lib/firebase-admin";
 import { sendEmail } from "@/lib/email";
 import { arzBasladiEmail } from "@/lib/email-templates";
@@ -43,13 +44,16 @@ export async function PUT(req: NextRequest, { params }: { params: Promise<{ id: 
   const { id } = await params;
   const body = await req.json();
 
-  // Eski durumu al
+  // Eski durumu al — önce manuel, yoksa SPK cache'den bak
   const eskiArzlar = await readYaklasanArzlar();
-  const eskiArz = eskiArzlar.find(a => a.slug === id);
+  let eskiArz = eskiArzlar.find(a => a.slug === id);
+  if (!eskiArz) {
+    const spkCache = await readSpkCache();
+    eskiArz = spkCache.find(a => a.slug === id);
+  }
   const eskiDurum = eskiArz?.durum;
 
   const updated = await updateArzEntry(id, body);
-  if (!updated) return NextResponse.json({ error: "Bulunamadı" }, { status: 404 });
 
   revalidatePath("/api/arzlar");
   revalidatePath("/halka-arz/[slug]", "page");

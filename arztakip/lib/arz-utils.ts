@@ -2,12 +2,13 @@ import { Arz } from "./types";
 import { fetchSpkIpoData } from "./spk-service";
 import { yaklasanArzlar } from "./yaklasan-arzlar";
 import { readYaklasanArzlar } from "./admin-storage";
+import { readSpkCache, writeSpkCache } from "./spk-cache";
 
 /**
  * Tüm halka arz verisini döndürür:
  *  - SPK API: tamamlanan 2026 arzları
  *  - Firestore + yaklasan-arzlar.ts: manuel girilen aktif/yaklaşan arzlar
- *  SPK düşerse mock yerine Firestore verisi kullanılır.
+ *  SPK düşerse arzlar-spk Firestore cache'i kullanılır.
  */
 export async function getArzlar(): Promise<{ arzlar: Arz[]; source: string }> {
   let spkArzlar: Arz[] = [];
@@ -18,10 +19,14 @@ export async function getArzlar(): Promise<{ arzlar: Arz[]; source: string }> {
     if (data && data.length > 0) {
       spkArzlar = data;
       source = "spk.gov.tr";
+      // Firestore cache'e yaz (fire-and-forget — response'u bloklamaz)
+      writeSpkCache(spkArzlar).catch(() => {});
     }
   } catch {
-    // SPK erişilemezse Firestore verisiyle devam et
-    console.warn("[arz-utils] SPK API erişilemedi, Firestore fallback kullanılıyor");
+    // SPK erişilemezse Firestore cache'den oku
+    console.warn("[arz-utils] SPK API erişilemedi, Firestore cache kullanılıyor");
+    spkArzlar = await readSpkCache();
+    if (spkArzlar.length > 0) source = "spk-cache";
   }
 
   const spkSluglar = new Set(spkArzlar.map(a => a.slug));

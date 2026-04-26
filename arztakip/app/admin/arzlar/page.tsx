@@ -3,6 +3,9 @@
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import type { Arz, ArzDurum, TahsisatGrubu } from "@/lib/types";
+import type { ArzSource } from "@/lib/admin-storage";
+
+type ArzWithSource = Arz & { _source?: ArzSource };
 import AdminLayout from "@/components/AdminLayout";
 
 const SEKTORLER = [
@@ -62,7 +65,7 @@ const EMPTY: Omit<Arz, "id" | "slug"> = {
 
 export default function AdminArzlarPage() {
   const router = useRouter();
-  const [arzlar, setArzlar] = useState<Arz[]>([]);
+  const [arzlar, setArzlar] = useState<ArzWithSource[]>([]);
   const [loading, setLoading] = useState(true);
   const [form, setForm] = useState<Omit<Arz, "id" | "slug">>(EMPTY);
   const [editSlug, setEditSlug] = useState<string | null>(null);
@@ -85,8 +88,8 @@ export default function AdminArzlarPage() {
     setTimeout(() => setMsg(null), 3000);
   }
 
-  function startEdit(arz: Arz) {
-    const { id: _i, slug: _s, ...rest } = arz;
+  function startEdit(arz: ArzWithSource) {
+    const { id: _i, slug: _s, _source: _src, ...rest } = arz;
     setForm(rest);
     setEditSlug(arz.slug);
     setShowForm(true);
@@ -205,7 +208,7 @@ export default function AdminArzlarPage() {
   return (
     <AdminLayout
       title="Arz Yönetimi"
-      subtitle={`${arzlar.length} arz kayıtlı`}
+      subtitle={`${arzlar.length} arz (SPK + Manuel)`}
       actions={topbarActions}
     >
       <div className="text-white">
@@ -447,6 +450,15 @@ export default function AdminArzlarPage() {
                     <span className={`text-xs px-2 py-0.5 rounded-full ${durumRenk[arz.durum] || "bg-gray-500/20 text-gray-400"}`}>
                       {DURUM_LABEL[arz.durum] || arz.durum}
                     </span>
+                    {arz._source === "spk" && (
+                      <span className="text-xs px-2 py-0.5 rounded-full bg-blue-500/20 text-blue-400 border border-blue-500/30">SPK</span>
+                    )}
+                    {arz._source === "spk+manuel" && (
+                      <span className="text-xs px-2 py-0.5 rounded-full bg-yellow-500/20 text-yellow-400 border border-yellow-500/30">SPK+Manuel</span>
+                    )}
+                    {arz._source === "manuel" && (
+                      <span className="text-xs px-2 py-0.5 rounded-full bg-emerald-500/20 text-emerald-400 border border-emerald-500/30">Manuel</span>
+                    )}
                   </div>
                   <div className="text-sm text-gray-400 flex flex-wrap gap-x-4 gap-y-1">
                     <span>{arz.sektor}</span>
@@ -468,12 +480,14 @@ export default function AdminArzlarPage() {
                   >
                     Düzenle
                   </button>
-                  <button
-                    onClick={() => handleDelete(arz.slug, arz.sirketAdi)}
-                    className="text-sm px-3 py-1.5 rounded-lg border border-red-500/30 text-red-400 hover:bg-red-500/10 transition-colors"
-                  >
-                    Sil
-                  </button>
+                  {arz._source !== "spk" && (
+                    <button
+                      onClick={() => handleDelete(arz.slug, arz.sirketAdi)}
+                      className="text-sm px-3 py-1.5 rounded-lg border border-red-500/30 text-red-400 hover:bg-red-500/10 transition-colors"
+                    >
+                      Sil
+                    </button>
+                  )}
                 </div>
               </div>
             ))}
