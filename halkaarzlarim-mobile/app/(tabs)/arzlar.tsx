@@ -1,9 +1,11 @@
 import { useEffect, useState } from "react";
-import { View, Text, ScrollView, TouchableOpacity, TextInput, ActivityIndicator, RefreshControl, Image } from "react-native";
+import { View, Text, ScrollView, TouchableOpacity, TextInput, ActivityIndicator, RefreshControl, Image, Alert } from "react-native";
 import { useRouter } from "expo-router";
 import { Ionicons } from "@expo/vector-icons";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { colors, s } from "@/lib/styles";
+import { useWatchlist } from "@/lib/use-watchlist";
+import { useAuth } from "@/lib/auth-context";
 
 interface Arz { id: string; slug: string; sirketAdi: string; ticker: string; arsFiyatiAlt: number; arsFiyatiUst: number; durum: string; logo?: string; talepBaslangic?: string; talepBitis?: string; }
 
@@ -36,6 +38,17 @@ export default function Arzlar() {
   const [refreshing, setRefreshing] = useState(false);
   const [search, setSearch] = useState("");
   const [durum, setDurum] = useState("Tümü");
+  const { user } = useAuth();
+  const { isFollowing, toggle } = useWatchlist();
+
+  async function handleToggle(arz: Arz) {
+    const result = await toggle({ slug: arz.slug, sirketAdi: arz.sirketAdi, ticker: arz.ticker });
+    if (result === "not_logged_in") {
+      router.push("/giris");
+    } else if (result === "limit_reached") {
+      Alert.alert("Limit Doldu", "Ücretsiz hesapla en fazla 5 halka arz takip edebilirsin. Premium'a geç!");
+    }
+  }
 
   async function fetchData() {
     try {
@@ -104,11 +117,16 @@ export default function Arzlar() {
                   <Text style={s.caption}>{arz.ticker}</Text>
                 </View>
               </View>
-              {arz.durum !== "tamamlandi" && (
-                <View style={[s.badge, { backgroundColor: `${DURUM_COLOR[arz.durum] || colors.muted}20` }]}>
-                  <Text style={[s.badgeText, { color: DURUM_COLOR[arz.durum] || colors.muted }]}>{DURUM_LABEL[arz.durum] || arz.durum}</Text>
-                </View>
-              )}
+              <View style={[s.row, { gap: 8, alignItems: "center" }]}>
+                {arz.durum !== "tamamlandi" && (
+                  <View style={[s.badge, { backgroundColor: `${DURUM_COLOR[arz.durum] || colors.muted}20` }]}>
+                    <Text style={[s.badgeText, { color: DURUM_COLOR[arz.durum] || colors.muted }]}>{DURUM_LABEL[arz.durum] || arz.durum}</Text>
+                  </View>
+                )}
+                <TouchableOpacity onPress={() => handleToggle(arz)} hitSlop={{ top: 8, bottom: 8, left: 8, right: 8 }}>
+                  <Ionicons name={isFollowing(arz.slug) ? "star" : "star-outline"} size={20} color={isFollowing(arz.slug) ? colors.amber : colors.dim} />
+                </TouchableOpacity>
+              </View>
             </View>
           </TouchableOpacity>
         ))}

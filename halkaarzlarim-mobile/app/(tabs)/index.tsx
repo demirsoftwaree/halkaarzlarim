@@ -2,12 +2,14 @@ import { useEffect, useRef, useState } from "react";
 import {
   View, Text, ScrollView, TouchableOpacity, RefreshControl,
   ActivityIndicator, Image, Animated, Easing, TextInput,
-  KeyboardAvoidingView, Platform, Modal, FlatList,
+  KeyboardAvoidingView, Platform, Modal, FlatList, Alert,
 } from "react-native";
 import { useRouter } from "expo-router";
 import { Ionicons } from "@expo/vector-icons";
 import { SafeAreaView, useSafeAreaInsets } from "react-native-safe-area-context";
 import { colors, s } from "@/lib/styles";
+import { useWatchlist } from "@/lib/use-watchlist";
+import { useAuth } from "@/lib/auth-context";
 
 // ─── Types ───────────────────────────────────────────────────
 interface Arz {
@@ -232,7 +234,10 @@ const BADGE_COLOR: Record<string, string> = { aktif: colors.green, yaklasan: col
 const BORDER_COLOR: Record<string, string> = { aktif: colors.green, yaklasan: colors.blue, "basvuru-surecinde": colors.blue, tamamlandi: colors.amber };
 
 // ─── ArzKart ──────────────────────────────────────────────────
-function ArzKart({ arz, onPress }: { arz: Arz; onPress: () => void }) {
+function ArzKart({ arz, onPress, isFollowing, onToggle }: {
+  arz: Arz; onPress: () => void;
+  isFollowing: boolean; onToggle: () => void;
+}) {
   const fiyat = arz.arsFiyatiAlt || arz.arsFiyatiUst
     ? arz.arsFiyatiAlt === arz.arsFiyatiUst ? `₺${arz.arsFiyatiUst}` : `₺${arz.arsFiyatiAlt} – ₺${arz.arsFiyatiUst}`
     : "";
@@ -250,11 +255,16 @@ function ArzKart({ arz, onPress }: { arz: Arz; onPress: () => void }) {
             <Text style={s.caption}>{arz.ticker}</Text>
           </View>
         </View>
-        {badgeLabel && (
-          <View style={[s.badge, { backgroundColor: `${badgeColor}20` }]}>
-            <Text style={[s.badgeText, { color: badgeColor }]}>{badgeLabel}</Text>
-          </View>
-        )}
+        <View style={[s.row, { gap: 8, alignItems: "center" }]}>
+          {badgeLabel && (
+            <View style={[s.badge, { backgroundColor: `${badgeColor}20` }]}>
+              <Text style={[s.badgeText, { color: badgeColor }]}>{badgeLabel}</Text>
+            </View>
+          )}
+          <TouchableOpacity onPress={onToggle} hitSlop={{ top: 8, bottom: 8, left: 8, right: 8 }}>
+            <Ionicons name={isFollowing ? "star" : "star-outline"} size={20} color={isFollowing ? colors.amber : colors.dim} />
+          </TouchableOpacity>
+        </View>
       </View>
       {fiyat ? (
         <View style={[s.row, { justifyContent: "space-between" }]}>
@@ -275,6 +285,17 @@ export default function AnaSayfa() {
   const [loading, setLoading] = useState(true);
   const [refreshing, setRefreshing] = useState(false);
   const [chatOpen, setChatOpen] = useState(false);
+  const { user } = useAuth();
+  const { isFollowing, toggle } = useWatchlist();
+
+  async function handleToggle(arz: Arz) {
+    const result = await toggle({ slug: arz.slug, sirketAdi: arz.sirketAdi, ticker: arz.ticker });
+    if (result === "not_logged_in") {
+      router.push("/giris");
+    } else if (result === "limit_reached") {
+      Alert.alert("Limit Doldu", "Ücretsiz hesapla en fazla 5 halka arz takip edebilirsin. Premium'a geç!");
+    }
+  }
 
   async function fetchData() {
     try {
@@ -360,7 +381,7 @@ export default function AnaSayfa() {
               <Ionicons name="time-outline" size={32} color={colors.dim} />
               <Text style={[s.bodyMuted, { marginTop: 8, textAlign: "center" }]}>Şu an aktif halka arz yok.</Text>
             </View>
-          ) : aktif.map(a => <ArzKart key={a.id} arz={a} onPress={() => router.push(`/arz/${a.slug}`)} />)}
+          ) : aktif.map(a => <ArzKart key={a.id} arz={a} onPress={() => router.push(`/arz/${a.slug}`)} isFollowing={isFollowing(a.slug)} onToggle={() => handleToggle(a)} />)}
         </View>
 
         {/* Son Halka Arzlar */}
@@ -371,7 +392,7 @@ export default function AnaSayfa() {
               <Text style={{ color: colors.green, fontSize: 14 }}>Tümünü Gör</Text>
             </TouchableOpacity>
           </View>
-          {son.map(a => <ArzKart key={a.id} arz={a} onPress={() => router.push(`/arz/${a.slug}`)} />)}
+          {son.map(a => <ArzKart key={a.id} arz={a} onPress={() => router.push(`/arz/${a.slug}`)} isFollowing={isFollowing(a.slug)} onToggle={() => handleToggle(a)} />)}
         </View>
       </ScrollView>
 
