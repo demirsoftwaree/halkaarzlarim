@@ -4,12 +4,35 @@ import {
   ActivityIndicator, Image, Animated, Easing, TextInput,
   KeyboardAvoidingView, Platform, Modal, FlatList, Alert,
 } from "react-native";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useRouter } from "expo-router";
 import { Ionicons } from "@expo/vector-icons";
 import { SafeAreaView, useSafeAreaInsets } from "react-native-safe-area-context";
 import { colors, s } from "@/lib/styles";
 import { useWatchlist } from "@/lib/use-watchlist";
 import { useAuth } from "@/lib/auth-context";
+import AdBanner from "@/components/AdBanner";
+
+const FREE_AI_LIMIT = 3;
+const AI_STORAGE_KEY = "ai_chat_daily";
+
+async function getTodayCount(): Promise<number> {
+  try {
+    const raw = await AsyncStorage.getItem(AI_STORAGE_KEY);
+    if (!raw) return 0;
+    const { date, count } = JSON.parse(raw);
+    const today = new Date().toISOString().slice(0, 10);
+    return date === today ? count : 0;
+  } catch { return 0; }
+}
+
+async function incrementTodayCount(): Promise<void> {
+  try {
+    const current = await getTodayCount();
+    const today = new Date().toISOString().slice(0, 10);
+    await AsyncStorage.setItem(AI_STORAGE_KEY, JSON.stringify({ date: today, count: current + 1 }));
+  } catch {}
+}
 
 // ─── Types ───────────────────────────────────────────────────
 interface Arz {
@@ -83,14 +106,21 @@ function TickerBant() {
 }
 
 // ─── ARZ AI Chat ──────────────────────────────────────────────
-function ChatModal({ visible, onClose }: { visible: boolean; onClose: () => void }) {
+function ChatModal({ visible, onClose, isPremium }: { visible: boolean; onClose: () => void; isPremium: boolean }) {
+  const router = useRouter();
   const insets = useSafeAreaInsets();
   const [messages, setMessages] = useState<ChatMsg[]>([
     { role: "assistant", content: "Merhaba! Ben ARZ AI. Halka arz, lot dağıtımı, SPK mevzuatı veya BIST hakkında sorularını yanıtlayabilirim. Ne öğrenmek istersin?" },
   ]);
   const [input, setInput] = useState("");
   const [loading, setLoading] = useState(false);
+  const [dailyCount, setDailyCount] = useState(0);
   const flatRef = useRef<FlatList>(null);
+
+  // Modal açılınca günlük sayacı yükle
+  useEffect(() => {
+    if (visible) getTodayCount().then(setDailyCount);
+  }, [visible]);
 
   useEffect(() => {
     if (visible && messages.length > 1) {
@@ -98,15 +128,32 @@ function ChatModal({ visible, onClose }: { visible: boolean; onClose: () => void
     }
   }, [messages, visible]);
 
-  function send() {
+  const limitReached = !isPremium && dailyCount >= FREE_AI_LIMIT;
+  const remaining = Math.max(0, FREE_AI_LIMIT - dailyCount);
+
+  async function send() {
     const text = input.trim();
     if (!text || loading) return;
+
+    if (limitReached) {
+      setMessages(prev => [...prev,
+        { role: "assistant", content: `Günlük ${FREE_AI_LIMIT} soru hakkını kullandın. Premium'a geçerek sınırsız soru sorabilirsin. 🚀` }
+      ]);
+      return;
+    }
+
     const next: ChatMsg[] = [...messages, { role: "user", content: text }];
     setMessages(next);
     setInput("");
     setLoading(true);
 
-    // React Native'de ReadableStream güvenilmez — XHR ile streaming
+    // Sayacı artır (ücretsiz kullanıcı)
+    if (!isPremium) {
+      const newCount = dailyCount + 1;
+      setDailyCount(newCount);
+      await incrementTodayCount();
+    }
+
     setMessages(prev => [...prev, { role: "assistant", content: "" }]);
     const xhr = new XMLHttpRequest();
     xhr.open("POST", API_CHAT);
@@ -145,7 +192,7 @@ function ChatModal({ visible, onClose }: { visible: boolean; onClose: () => void
     <Modal visible={visible} animationType="slide" transparent onRequestClose={onClose}>
       <View style={{ flex: 1, justifyContent: "flex-end", backgroundColor: "rgba(0,0,0,0.5)" }}>
         <KeyboardAvoidingView behavior={Platform.OS === "ios" ? "padding" : "height"}>
-          <View style={{ backgroundColor: "#0f172a", borderTopLeftRadius: 20, borderTopRightRadius: 20, borderWidth: 1, borderColor: colors.border, maxHeight: 560, paddingBottom: insets.bottom }}>
+          <View style={{ backgroundColor: "#0f172a", borderTopLeftRadius: 20, borderTopRightRadius: 20, borderWidth: 1, borderColor: colors.border, maxHeight: 580, paddingBottom: insets.bottom }}>
             {/* Header */}
             <View style={[s.row, { paddingHorizontal: 16, paddingVertical: 14, borderBottomWidth: 1, borderBottomColor: colors.border, gap: 10 }]}>
               <View style={{ width: 34, height: 34, borderRadius: 17, backgroundColor: `${colors.green}20`, borderWidth: 1, borderColor: `${colors.green}40`, alignItems: "center", justifyContent: "center" }}>
@@ -155,17 +202,38 @@ function ChatModal({ visible, onClose }: { visible: boolean; onClose: () => void
                 <Text style={[s.body, { fontWeight: "700" }]}>ARZ AI</Text>
                 <Text style={s.caption}>Halka arz asistanı</Text>
               </View>
-              <TouchableOpacity onPress={onClose}>
+              {/* Ücretsiz kullanıcı için kalan hak göstergesi */}
+              {!isPremium && (
+                <TouchableOpacity onPress={() => { onClose(); router.push("/premium"); }}
+                  style={{ backgroundColor: limitReached ? `${colors.red}20` : `${colors.amber}15`, borderRadius: 8, paddingHorizontal: 8, paddingVertical: 4, borderWidth: 1, borderColor: limitReached ? `${colors.red}40` : `${colors.amber}30` }}>
+                  <Text style={{ fontSize: 11, fontWeight: "700", color: limitReached ? colors.red : colors.amber }}>
+                    {limitReached ? "Limit doldu" : `${remaining}/${FREE_AI_LIMIT} hak`}
+                  </Text>
+                </TouchableOpacity>
+              )}
+              <TouchableOpacity onPress={onClose} style={{ marginLeft: 4 }}>
                 <Ionicons name="close" size={22} color={colors.muted} />
               </TouchableOpacity>
             </View>
+
+            {/* Limit doldu banner */}
+            {limitReached && (
+              <TouchableOpacity onPress={() => { onClose(); router.push("/premium"); }}
+                style={{ margin: 12, marginBottom: 0, backgroundColor: `${colors.amber}12`, borderRadius: 10, borderWidth: 1, borderColor: `${colors.amber}30`, padding: 10, flexDirection: "row", alignItems: "center", gap: 8 }}>
+                <Ionicons name="star" size={16} color={colors.amber} />
+                <Text style={{ flex: 1, fontSize: 12, color: colors.amber, fontWeight: "600" }}>
+                  Günlük {FREE_AI_LIMIT} soru hakkın bitti. Premium ile sınırsız sor!
+                </Text>
+                <Text style={{ fontSize: 11, color: colors.amber }}>Geç →</Text>
+              </TouchableOpacity>
+            )}
 
             {/* Messages */}
             <FlatList
               ref={flatRef}
               data={messages}
               keyExtractor={(_, i) => String(i)}
-              style={{ maxHeight: 360, paddingHorizontal: 16, paddingTop: 12 }}
+              style={{ maxHeight: 340, paddingHorizontal: 16, paddingTop: 12 }}
               onContentSizeChange={() => flatRef.current?.scrollToEnd({ animated: true })}
               renderItem={({ item }) => (
                 <View style={{ flexDirection: item.role === "user" ? "row-reverse" : "row", gap: 8, marginBottom: 12 }}>
@@ -174,7 +242,7 @@ function ChatModal({ visible, onClose }: { visible: boolean; onClose: () => void
                   </View>
                   <View style={{ maxWidth: "78%", backgroundColor: item.role === "assistant" ? colors.card : `${colors.green}25`, paddingHorizontal: 12, paddingVertical: 8, borderRadius: 16, borderTopLeftRadius: item.role === "assistant" ? 4 : 16, borderTopRightRadius: item.role === "user" ? 4 : 16 }}>
                     {item.content ? (
-                      <Text style={{ fontSize: 13, color: item.role === "assistant" ? colors.text : colors.text, lineHeight: 20 }}>{item.content}</Text>
+                      <Text style={{ fontSize: 13, color: colors.text, lineHeight: 20 }}>{item.content}</Text>
                     ) : (
                       <ActivityIndicator size="small" color={colors.green} />
                     )}
@@ -189,15 +257,15 @@ function ChatModal({ visible, onClose }: { visible: boolean; onClose: () => void
                 <TextInput
                   value={input}
                   onChangeText={setInput}
-                  placeholder="Halka arz hakkında sor..."
+                  placeholder={limitReached ? "Günlük limit doldu..." : "Halka arz hakkında sor..."}
                   placeholderTextColor={colors.dim}
-                  style={{ flex: 1, backgroundColor: colors.card, borderWidth: 1, borderColor: colors.border, borderRadius: 14, paddingHorizontal: 14, paddingVertical: 10, fontSize: 13, color: colors.text }}
+                  style={{ flex: 1, backgroundColor: colors.card, borderWidth: 1, borderColor: limitReached ? `${colors.red}30` : colors.border, borderRadius: 14, paddingHorizontal: 14, paddingVertical: 10, fontSize: 13, color: colors.text }}
                   onSubmitEditing={send}
                   returnKeyType="send"
-                  editable={!loading}
+                  editable={!loading && !limitReached}
                 />
-                <TouchableOpacity onPress={send} disabled={loading || !input.trim()}
-                  style={{ width: 42, height: 42, borderRadius: 14, backgroundColor: loading || !input.trim() ? colors.border : colors.green, alignItems: "center", justifyContent: "center" }}>
+                <TouchableOpacity onPress={send} disabled={loading || !input.trim() || limitReached}
+                  style={{ width: 42, height: 42, borderRadius: 14, backgroundColor: loading || !input.trim() || limitReached ? colors.border : colors.green, alignItems: "center", justifyContent: "center" }}>
                   {loading
                     ? <ActivityIndicator size="small" color="#fff" />
                     : <Ionicons name="send" size={18} color="#fff" />}
@@ -384,8 +452,11 @@ export default function AnaSayfa() {
           ) : aktif.map(a => <ArzKart key={a.id} arz={a} onPress={() => router.push(`/arz/${a.slug}`)} isFollowing={isFollowing(a.slug)} onToggle={() => handleToggle(a)} />)}
         </View>
 
+        {/* Reklam — sadece ücretsiz kullanıcılara */}
+        <AdBanner />
+
         {/* Son Halka Arzlar */}
-        <View style={[s.px4, { marginTop: 24, marginBottom: 100 }]}>
+        <View style={[s.px4, { marginTop: 16, marginBottom: 100 }]}>
           <View style={[s.row, { justifyContent: "space-between", marginBottom: 12 }]}>
             <Text style={s.heading}>Son Halka Arzlar</Text>
             <TouchableOpacity onPress={() => router.push("/(tabs)/arzlar")}>
@@ -421,7 +492,7 @@ export default function AnaSayfa() {
         <Text style={{ color: "#fff", fontWeight: "700", fontSize: 13 }}>Yapay Zekaya Sor</Text>
       </TouchableOpacity>
 
-      <ChatModal visible={chatOpen} onClose={() => setChatOpen(false)} />
+      <ChatModal visible={chatOpen} onClose={() => setChatOpen(false)} isPremium={isPremium} />
     </View>
   );
 }
