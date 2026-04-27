@@ -311,21 +311,12 @@ export default function AnaSayfa() {
       </SafeAreaView>
 
       {/* Status Bar */}
-      <View style={{ flexDirection: "row", alignItems: "center", justifyContent: "space-between", paddingHorizontal: 20, paddingVertical: 10, borderBottomWidth: 1, borderBottomColor: colors.border }}>
-        <View style={{ flexDirection: "row", alignItems: "center", gap: 10 }}>
-          <Text style={{ fontSize: 42, fontWeight: "800", color: colors.green, lineHeight: 48 }}>{aktif.length}</Text>
-          <View>
-            <Text style={{ fontSize: 10, fontWeight: "600", color: colors.muted }}>Aktif</Text>
-            <Text style={{ fontSize: 10, fontWeight: "600", color: colors.muted }}>Halka Arz</Text>
-          </View>
+      <View style={{ flexDirection: "row", alignItems: "center", paddingHorizontal: 20, paddingVertical: 10, borderBottomWidth: 1, borderBottomColor: colors.border }}>
+        <Text style={{ fontSize: 42, fontWeight: "800", color: colors.green, lineHeight: 48 }}>{aktif.length}</Text>
+        <View style={{ marginLeft: 10 }}>
+          <Text style={{ fontSize: 10, fontWeight: "600", color: colors.muted }}>Aktif</Text>
+          <Text style={{ fontSize: 10, fontWeight: "600", color: colors.muted }}>Halka Arz</Text>
         </View>
-        <TouchableOpacity
-          onPress={() => setChatOpen(true)}
-          style={{ flexDirection: "row", alignItems: "center", gap: 6, backgroundColor: `${colors.green}15`, borderWidth: 1, borderColor: `${colors.green}30`, borderRadius: 10, paddingHorizontal: 12, paddingVertical: 8 }}
-        >
-          <Ionicons name="sparkles" size={14} color={colors.green} />
-          <Text style={{ fontSize: 12, fontWeight: "700", color: colors.green }}>ARZ AI</Text>
-        </TouchableOpacity>
       </View>
 
       <ScrollView
