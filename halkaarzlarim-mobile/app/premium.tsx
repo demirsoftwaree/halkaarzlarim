@@ -6,7 +6,6 @@ import {
 import { SafeAreaView } from "react-native-safe-area-context";
 import { useRouter } from "expo-router";
 import { Ionicons } from "@expo/vector-icons";
-import { PurchasesPackage } from "react-native-purchases";
 import { useAuth } from "@/lib/auth-context";
 import { colors } from "@/lib/styles";
 import {
