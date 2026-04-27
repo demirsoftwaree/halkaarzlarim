@@ -218,7 +218,7 @@ export default function ArzDetay() {
         const found = (json.arzlar || []).find((a: any) => a.slug === id || a.id === id);
         if (found) setArz({ ...found, id: found.id || found.slug });
       })
-      .catch(e => console.error(e))
+      .catch(() => {})
       .finally(() => setLoading(false));
   }, [id]);
 

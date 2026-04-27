@@ -5,6 +5,7 @@ import { collection, getDocs, query, orderBy, limit } from "firebase/firestore";
 import { db } from "@/lib/firebase";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { colors, s } from "@/lib/styles";
+import AdBanner from "@/components/AdBanner";
 
 interface Haber { id: string; baslik: string; ozet?: string; gorsel?: string; kategori?: string; tarih?: any; slug?: string; yayinda?: boolean; }
 
@@ -40,7 +41,7 @@ export default function Haberler() {
           .map(d => ({ id: d.id, ...d.data() } as Haber))
           .filter(h => h.yayinda !== false)
       );
-    } catch (e) { console.error(e); }
+    } catch {}
     finally { setLoading(false); setRefreshing(false); }
   }
 
@@ -53,6 +54,7 @@ export default function Haberler() {
       <View style={[s.px4, { paddingTop: 16, paddingBottom: 8 }]}>
         <Text style={s.title}>Haberler & Blog</Text>
       </View>
+      <AdBanner style={{ marginTop: 0, marginBottom: 4 }} />
       <ScrollView style={{ flex: 1, paddingHorizontal: 16 }} refreshControl={<RefreshControl refreshing={refreshing} onRefresh={() => { setRefreshing(true); fetchData(); }} tintColor={colors.green} />} showsVerticalScrollIndicator={false}>
         {haberler.map((h, i) => (
           <TouchableOpacity key={h.id} onPress={() => router.push(`/haber/${h.slug || h.id}`)} style={[i === 0 ? s.card : s.cardSm, s.mb3, { overflow: "hidden", padding: 0 }]}>

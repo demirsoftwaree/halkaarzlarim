@@ -353,7 +353,7 @@ export default function AnaSayfa() {
   const [loading, setLoading] = useState(true);
   const [refreshing, setRefreshing] = useState(false);
   const [chatOpen, setChatOpen] = useState(false);
-  const { user } = useAuth();
+  const { user, isPremium } = useAuth();
   const { isFollowing, toggle } = useWatchlist();
 
   async function handleToggle(arz: Arz) {
@@ -384,7 +384,7 @@ export default function AnaSayfa() {
         });
       setAktif(all.filter(a => a.durum === "aktif"));
       setSon(all.filter(a => a.durum !== "aktif").slice(0, 8));
-    } catch (e) { console.error(e); }
+    } catch {}
     finally { setLoading(false); setRefreshing(false); }
   }
 

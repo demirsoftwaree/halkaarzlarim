@@ -119,8 +119,8 @@ export default function Premium() {
   const router   = useRouter();
   const { user, isPremium } = useAuth();
 
-  const [monthly, setMonthly]   = useState<PurchasesPackage | null>(null);
-  const [yearly,  setYearly]    = useState<PurchasesPackage | null>(null);
+  const [monthly, setMonthly]   = useState<any>(null);
+  const [yearly,  setYearly]    = useState<any>(null);
   const [selected, setSelected] = useState<"monthly" | "yearly">("yearly");
   const [loading,  setLoading]  = useState(false);
   const [restoring, setRestoring] = useState(false);

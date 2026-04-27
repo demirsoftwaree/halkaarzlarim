@@ -68,7 +68,7 @@ export default function Arzlar() {
           return dB.localeCompare(dA); // yeniden eskiye
         });
       setArzlar(data); setFiltered(data);
-    } catch (e) { console.error(e); }
+    } catch {}
     finally { setLoading(false); setRefreshing(false); }
   }
 
