@@ -246,16 +246,16 @@ function ArzKart({ arz, onPress, isFollowing, onToggle }: {
   const borderL = BORDER_COLOR[arz.durum] || colors.dim;
   const isDone = arz.durum === "tamamlandi";
   return (
-    <TouchableOpacity onPress={onPress} style={[s.card, s.mb3, { borderLeftWidth: 3, borderLeftColor: borderL, opacity: isDone ? 0.65 : 1 }]}>
+    <TouchableOpacity onPress={onPress} style={[s.card, s.mb3, { borderLeftWidth: 3, borderLeftColor: borderL }]}>
       <View style={[s.row, { justifyContent: "space-between", marginBottom: fiyat ? 8 : 0 }]}>
         <View style={[s.row, s.gap3, { flex: 1 }]}>
           <ArzIcon logo={arz.logo} ticker={arz.ticker} />
-          <View style={{ flex: 1 }}>
+          <View style={{ flex: 1, opacity: isDone ? 0.55 : 1 }}>
             <Text style={s.body} numberOfLines={1}>{arz.sirketAdi}</Text>
             <Text style={s.caption}>{arz.ticker}</Text>
           </View>
         </View>
-        <View style={[s.row, { gap: 8, alignItems: "center" }]}>
+        <View style={[s.row, { gap: 8, alignItems: "center", opacity: isDone ? 0.55 : 1 }]}>
           {badgeLabel && (
             <View style={[s.badge, { backgroundColor: `${badgeColor}20` }]}>
               <Text style={[s.badgeText, { color: badgeColor }]}>{badgeLabel}</Text>
@@ -267,7 +267,7 @@ function ArzKart({ arz, onPress, isFollowing, onToggle }: {
         </View>
       </View>
       {fiyat ? (
-        <View style={[s.row, { justifyContent: "space-between" }]}>
+        <View style={[s.row, { justifyContent: "space-between", opacity: isDone ? 0.55 : 1 }]}>
           <Text style={s.caption}>Fiyat Aralığı</Text>
           <Text style={[s.caption, { color: colors.text }]}>{fiyat}</Text>
         </View>
