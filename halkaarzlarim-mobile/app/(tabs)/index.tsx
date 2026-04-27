@@ -229,6 +229,7 @@ function ArzIcon({ logo, ticker }: { logo?: string; ticker: string }) {
 
 const BADGE_LABEL: Record<string, string> = { aktif: "Aktif", yaklasan: "Yaklaşan", "basvuru-surecinde": "Başvuru" };
 const BADGE_COLOR: Record<string, string> = { aktif: colors.green, yaklasan: colors.blue, "basvuru-surecinde": colors.blue };
+const BORDER_COLOR: Record<string, string> = { aktif: colors.green, yaklasan: colors.blue, "basvuru-surecinde": colors.blue, tamamlandi: colors.amber };
 
 // ─── ArzKart ──────────────────────────────────────────────────
 function ArzKart({ arz, onPress }: { arz: Arz; onPress: () => void }) {
@@ -237,8 +238,10 @@ function ArzKart({ arz, onPress }: { arz: Arz; onPress: () => void }) {
     : "";
   const badgeLabel = BADGE_LABEL[arz.durum];
   const badgeColor = BADGE_COLOR[arz.durum];
+  const borderL = BORDER_COLOR[arz.durum] || colors.dim;
+  const isDone = arz.durum === "tamamlandi";
   return (
-    <TouchableOpacity onPress={onPress} style={[s.card, s.mb3]}>
+    <TouchableOpacity onPress={onPress} style={[s.card, s.mb3, { borderLeftWidth: 3, borderLeftColor: borderL, opacity: isDone ? 0.65 : 1 }]}>
       <View style={[s.row, { justifyContent: "space-between", marginBottom: fiyat ? 8 : 0 }]}>
         <View style={[s.row, s.gap3, { flex: 1 }]}>
           <ArzIcon logo={arz.logo} ticker={arz.ticker} />
@@ -307,26 +310,34 @@ export default function AnaSayfa() {
         <TickerBant />
       </SafeAreaView>
 
+      {/* Status Bar */}
+      <View style={{ flexDirection: "row", alignItems: "center", justifyContent: "space-between", paddingHorizontal: 20, paddingVertical: 10, borderBottomWidth: 1, borderBottomColor: colors.border }}>
+        <View style={{ flexDirection: "row", alignItems: "center", gap: 10 }}>
+          <Text style={{ fontSize: 42, fontWeight: "800", color: colors.green, lineHeight: 48 }}>{aktif.length}</Text>
+          <View>
+            <Text style={{ fontSize: 10, fontWeight: "600", color: colors.muted }}>Aktif</Text>
+            <Text style={{ fontSize: 10, fontWeight: "600", color: colors.muted }}>Halka Arz</Text>
+          </View>
+        </View>
+        <TouchableOpacity
+          onPress={() => setChatOpen(true)}
+          style={{ flexDirection: "row", alignItems: "center", gap: 6, backgroundColor: `${colors.green}15`, borderWidth: 1, borderColor: `${colors.green}30`, borderRadius: 10, paddingHorizontal: 12, paddingVertical: 8 }}
+        >
+          <Ionicons name="sparkles" size={14} color={colors.green} />
+          <Text style={{ fontSize: 12, fontWeight: "700", color: colors.green }}>ARZ AI</Text>
+        </TouchableOpacity>
+      </View>
+
       <ScrollView
         refreshControl={<RefreshControl refreshing={refreshing} onRefresh={() => { setRefreshing(true); fetchData(); }} tintColor={colors.green} />}
         showsVerticalScrollIndicator={false}
       >
         {/* Hero */}
-        <View style={{ paddingHorizontal: 20, paddingTop: 28, paddingBottom: 24, borderBottomWidth: 1, borderBottomColor: colors.border }}>
-          {/* Badge */}
-          <View style={{ flexDirection: "row", marginBottom: 16 }}>
-            <View style={{ flexDirection: "row", alignItems: "center", gap: 6, paddingHorizontal: 12, paddingVertical: 5, borderRadius: 999, borderWidth: 1, borderColor: `${colors.green}40`, backgroundColor: `${colors.green}10` }}>
-              <View style={{ width: 6, height: 6, borderRadius: 3, backgroundColor: aktif.length > 0 ? colors.green : colors.muted }} />
-              <Text style={{ fontSize: 12, color: aktif.length > 0 ? colors.green : colors.muted, fontWeight: "600" }}>
-                {aktif.length > 0 ? `Şu an ${aktif.length} aktif halka arz var` : "Şu an aktif halka arz yok"}
-              </Text>
-            </View>
-          </View>
-
+        <View style={{ paddingHorizontal: 20, paddingTop: 16, paddingBottom: 20, borderBottomWidth: 1, borderBottomColor: colors.border }}>
           {/* Başlık */}
-          <Text style={{ fontSize: 26, fontWeight: "800", color: colors.text, lineHeight: 34 }}>
+          <Text style={{ fontSize: 24, fontWeight: "800", color: colors.text, lineHeight: 32 }}>
             Halka Arzı Takip Et,{"\n"}
-            <Text style={{ color: colors.green }}>Kazancını Hesapla.</Text>
+            <Text style={{ color: colors.green, fontStyle: "italic" }}>Kazancını Hesapla.</Text>
           </Text>
           <Text style={[s.bodyMuted, { marginTop: 10, lineHeight: 22 }]}>
             Takvim, tavan simülatörü ve lot hesaplama araçları — hepsi bir arada.

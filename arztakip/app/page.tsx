@@ -76,31 +76,34 @@ export default async function AnaSayfa() {
       <TickerBar />
 
       {/* Hero */}
-      <section className="bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 border-b border-slate-800 py-12 px-4 relative overflow-hidden">
-        <div className="absolute inset-0" style={{ background: "radial-gradient(ellipse at top right, rgba(16,185,129,0.08), transparent 60%)" }} />
-        <div className="max-w-7xl mx-auto text-center relative">
-          <div className="inline-flex items-center gap-2 text-emerald-400 text-xs font-medium px-3 py-1.5 rounded-full mb-4 border border-emerald-500/20" style={{ background: "rgba(16,185,129,0.1)" }}>
-            <span className="w-1.5 h-1.5 bg-emerald-400 rounded-full animate-pulse" />
-            Şu an {aktifArzlar.length} aktif halka arz var
-          </div>
-          <h1 className="text-3xl sm:text-4xl md:text-5xl font-extrabold text-white mb-3 leading-tight">
-            Halka Arzı Takip Et,<br />
-            <span className="text-emerald-400">Kazancını Hesapla.</span>
-          </h1>
-          <p className="text-slate-400 text-base max-w-2xl mx-auto mb-3">
-            Takvim, tavan simülatörü ve lot hesaplama araçları — hepsi bir arada.
-          </p>
-          <div className="inline-flex items-center gap-2 bg-violet-500/10 border border-violet-500/20 text-violet-300 text-xs font-medium px-3 py-1.5 rounded-full mb-6">
-            <span>✨</span>
-            Yapay Zeka Asistan ile sorularını anında yanıtla — sağ alttaki butona tıkla
-          </div>
-          <div className="flex flex-col sm:flex-row gap-3 justify-center">
-            <Link href="/halka-arzlar" className="bg-emerald-500 hover:bg-emerald-400 text-white font-semibold px-8 py-3 rounded-xl transition-colors flex items-center gap-2 justify-center">
-              Takvimi Gör <ArrowRight size={18} />
-            </Link>
-            <Link href="#araclar" className="bg-slate-700 hover:bg-slate-600 text-white font-semibold px-8 py-3 rounded-xl transition-colors">
-              Araçları Dene
-            </Link>
+      <section className="border-b border-slate-800 py-10 px-4 relative overflow-hidden" style={{ background: "#080d14" }}>
+        <div className="absolute inset-0 pointer-events-none" style={{ backgroundImage: "repeating-linear-gradient(0deg,transparent,transparent 39px,rgba(255,255,255,0.025) 39px,rgba(255,255,255,0.025) 40px),repeating-linear-gradient(90deg,transparent,transparent 39px,rgba(255,255,255,0.025) 39px,rgba(255,255,255,0.025) 40px)" }} />
+        <div className="absolute -top-24 right-0 w-96 h-96 rounded-full pointer-events-none" style={{ background: "radial-gradient(circle,rgba(16,185,129,0.1),transparent 65%)" }} />
+        <div className="max-w-7xl mx-auto relative">
+          <div className="flex flex-col sm:flex-row items-center gap-6 sm:gap-12">
+            <div className="flex-shrink-0 text-center sm:border-r sm:border-slate-800 sm:pr-12">
+              <div className="leading-none font-bold tabular-nums" style={{ fontSize: "clamp(72px,10vw,100px)", color: "#10b981", textShadow: "0 0 40px rgba(16,185,129,0.3)", fontFamily: "'Geist Mono',monospace" }}>
+                {aktifArzlar.length}
+              </div>
+              <div className="text-xs tracking-widest uppercase text-slate-500 mt-2">Aktif Arz</div>
+            </div>
+            <div>
+              <h1 className="text-2xl sm:text-3xl md:text-4xl font-bold text-white mb-3 leading-tight">
+                Halka Arzı Takip Et,<br />
+                <span className="text-emerald-400 italic" style={{ fontFamily: "'Instrument Serif',serif" }}>Kazancını Hesapla.</span>
+              </h1>
+              <p className="text-slate-400 text-sm sm:text-base mb-6 max-w-lg">
+                Takvim, tavan simülatörü ve lot hesaplama araçları — hepsi bir arada.
+              </p>
+              <div className="flex flex-col sm:flex-row gap-3">
+                <Link href="/halka-arzlar" className="bg-emerald-500 hover:bg-emerald-400 text-white font-semibold px-6 py-2.5 rounded-xl transition-colors flex items-center gap-2 justify-center text-sm">
+                  Takvimi Gör <ArrowRight size={16} />
+                </Link>
+                <Link href="#araclar" className="bg-slate-800 hover:bg-slate-700 border border-slate-700 text-white font-semibold px-6 py-2.5 rounded-xl transition-colors text-sm text-center">
+                  Araçları Dene
+                </Link>
+              </div>
+            </div>
           </div>
         </div>
       </section>
@@ -149,7 +152,7 @@ export default async function AnaSayfa() {
                   : "Fiyat bekleniyor";
                 return (
                   <Link key={arz.id} href={`/halka-arz/${arz.slug}`}>
-                    <div className="bg-slate-800/40 border border-slate-700/50 rounded-xl px-4 py-3.5 flex items-center gap-3 hover:border-blue-500/30 transition-all group">
+                    <div className="bg-slate-800/40 border border-slate-700/50 border-l-[3px] border-l-slate-700 rounded-xl px-4 py-3.5 flex items-center gap-3 hover:border-l-blue-500 hover:bg-slate-800/70 transition-all group">
                       {/* İkon */}
                       <ArzLogo logo={arz.logo} ticker={arz.ticker || arz.sirketAdi} size="sm" />
 
@@ -201,10 +204,10 @@ export default async function AnaSayfa() {
                 Tümünü gör <ArrowRight size={14} />
               </Link>
             </div>
-            <div className="bg-slate-800/40 border border-slate-700/50 rounded-2xl overflow-hidden">
+            <div className="bg-slate-800/40 border border-slate-700/50 border-l-[3px] border-l-amber-500/30 rounded-2xl overflow-hidden">
               {sonTamamlanan.map((arz, i) => (
                 <Link key={arz.id} href={`/halka-arz/${arz.slug}`}>
-                  <div className={`flex items-center gap-4 px-5 py-4 hover:bg-slate-700/30 transition-all group ${i !== 0 ? "border-t border-slate-700/50" : ""}`}>
+                  <div className={`flex items-center gap-4 px-5 py-4 hover:bg-slate-700/30 transition-all group opacity-60 hover:opacity-100 ${i !== 0 ? "border-t border-slate-700/50" : ""}`}>
                     {/* Logo / Ticker */}
                     <ArzLogo logo={arz.logo} ticker={arz.ticker || arz.sirketAdi} isDone size="sm" />
                     {/* Bilgi */}
