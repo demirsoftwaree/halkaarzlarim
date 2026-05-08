@@ -1,10 +1,9 @@
 "use client";
 import { useState } from "react";
-import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { deleteUser, reauthenticateWithPopup, GoogleAuthProvider, EmailAuthProvider, reauthenticateWithCredential } from "firebase/auth";
 import { collection, getDocs, deleteDoc, doc } from "firebase/firestore";
-import { auth, db } from "@/lib/firebase";
+import { db } from "@/lib/firebase";
 import { useAuth } from "@/lib/auth-context";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
@@ -21,7 +20,6 @@ async function deleteUserData(uid: string) {
 
 export default function HesapSilPage() {
   const { user } = useAuth();
-  const router = useRouter();
   const [step, setStep] = useState<"idle" | "confirm" | "password" | "loading" | "done" | "error">("idle");
   const [password, setPassword] = useState("");
   const [errorMsg, setErrorMsg] = useState("");
