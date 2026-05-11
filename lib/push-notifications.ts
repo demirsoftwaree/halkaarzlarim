@@ -1,7 +1,7 @@
-import { db } from "@/lib/firebase-admin";
+import { adminDb } from "@/lib/firebase-admin";
 
 export async function sendPushToAll(title: string, body: string, data?: Record<string, string>) {
-  const snap = await db.collection("push_tokens").get();
+  const snap = await adminDb.collection("push_tokens").get();
   const tokens: string[] = snap.docs.map((d) => d.data().token).filter(Boolean);
 
   if (tokens.length === 0) return { sent: 0 };
