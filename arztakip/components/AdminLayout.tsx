@@ -2,13 +2,14 @@
 
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
-import { TrendingUp, ListOrdered, Users, LogOut, ExternalLink, ChevronRight, Newspaper, LayoutDashboard } from "lucide-react";
+import { TrendingUp, ListOrdered, Users, LogOut, ExternalLink, ChevronRight, Newspaper, LayoutDashboard, Bell } from "lucide-react";
 
 const navItems = [
   { href: "/admin",              label: "Dashboard",      icon: LayoutDashboard, desc: "Genel bakış",    exact: true },
   { href: "/admin/arzlar",      label: "Arz Yönetimi",   icon: ListOrdered,     desc: "Arz ekle, düzenle" },
   { href: "/admin/kullanicilar", label: "Üye Yönetimi",  icon: Users,           desc: "Üyeler & premium" },
   { href: "/admin/haberler",    label: "Haber Yönetimi", icon: Newspaper,       desc: "Manuel haberler" },
+  { href: "/admin/bildirim",    label: "Bildirim Gönder", icon: Bell,           desc: "Push bildirim" },
 ];
 
 interface Props {

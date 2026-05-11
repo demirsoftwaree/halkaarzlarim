@@ -1,64 +1,16 @@
 "use client";
 import { useState } from "react";
+import Link from "next/link";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
-import { TrendingUp } from "lucide-react";
+import { TrendingUp, BarChart3, DollarSign, Crown, Medal } from "lucide-react";
 import AdBanner from "@/components/AdBanner";
 
-const faqJsonLd = {
-  "@context": "https://schema.org",
-  "@type": "FAQPage",
-  mainEntity: [
-    {
-      "@type": "Question",
-      name: "Halka arz kaç gün tavan yapar?",
-      acceptedAnswer: {
-        "@type": "Answer",
-        text: "Halka arzlarda tavan gün sayısı şirketten şirkete değişir. Tarihsel verilere göre BIST'te halka arz olan hisseler ortalama 3–7 gün tavan yapabilir. Bazı arzlar yalnızca 1–2 tavan yaparken, talep fazlası yüksek arzlarda 10 güne kadar tavan görülebilir.",
-      },
-    },
-    {
-      "@type": "Question",
-      name: "Halka arz en fazla kaç tavan yapabilir?",
-      acceptedAnswer: {
-        "@type": "Answer",
-        text: "BIST'te teorik tavan sınırı yoktur. Pratikte en yüksek tavan sayısı 10 gün civarında gerçekleşmiştir. Geçmiş arzların tavan performansı piyasa koşullarına ve şirketin sektörüne bağlıdır.",
-      },
-    },
-    {
-      "@type": "Question",
-      name: "Halka arz tavan getirisi nasıl hesaplanır?",
-      acceptedAnswer: {
-        "@type": "Answer",
-        text: "Her tavan günü önceki kapanış fiyatının %10 üstünde oluşur. Arz fiyatı 100 ₺ ise: 1. tavan 110 ₺, 2. tavan 121 ₺, 3. tavan 133,1 ₺ şeklinde bileşik artar.",
-      },
-    },
-    {
-      "@type": "Question",
-      name: "5 tavan yapan hisse ne kadar kazandırır?",
-      acceptedAnswer: {
-        "@type": "Answer",
-        text: "5 tavan yapan bir hisse, arz fiyatının %61,1 üstünde kapanır. Örneğin 100 TL'den alınan hisse 5 tavanda 161,05 TL değerine ulaşır. Brüt kâr 61,05 TL / lot'tur.",
-      },
-    },
-    {
-      "@type": "Question",
-      name: "10 tavan yapan hisse kaç kat kazandırır?",
-      acceptedAnswer: {
-        "@type": "Answer",
-        text: "10 tavan yapan bir hisse arz fiyatının 2,59 katına çıkar, yani %159,4 brüt getiri sağlar. 100 TL'den alınan hisse 10 tavanda 259,37 TL değerine ulaşır.",
-      },
-    },
-    {
-      "@type": "Question",
-      name: "Tavan simülatörü komisyon hesaplıyor mu?",
-      acceptedAnswer: {
-        "@type": "Answer",
-        text: "Tavan simülatörü brüt kâr göstermektedir. Komisyon ve stopaj hesaplamak için HalkaArzlarım'ın Net Kâr Hesaplayıcı aracını kullanabilirsiniz.",
-      },
-    },
-  ],
-};
+const diger_araclar = [
+  { icon: BarChart3,  baslik: "Lot Dağıtım Hesaplayıcı",  href: "/araclar/lot-hesaplama",    renk: "text-blue-400",   bg: "bg-blue-500/10" },
+  { icon: DollarSign, baslik: "Net Kâr Hesaplayıcı",      href: "/araclar/kar-hesaplama",    renk: "text-amber-400",  bg: "bg-amber-500/10" },
+  { icon: Crown,      baslik: "Tavan Getiri Raporu",      href: "/araclar/tavan-raporu",     renk: "text-yellow-400", bg: "bg-yellow-500/10" },
+];
 
 function formatMoney(n: number) {
   return new Intl.NumberFormat("tr-TR", { minimumFractionDigits: 2, maximumFractionDigits: 2 }).format(n);
@@ -84,12 +36,28 @@ export default function TavanSimulatoruPage() {
 
   return (
     <div className="min-h-screen flex flex-col">
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(faqJsonLd) }}
-      />
       <Navbar />
       <main className="flex-1 max-w-3xl mx-auto w-full px-4 sm:px-6 py-10">
+
+        {/* Diğer Araçlar */}
+        <div className="mb-8">
+          <h2 className="text-xs font-semibold text-slate-500 uppercase tracking-wider mb-3">Hesaplama Araçları</h2>
+          <div className="grid grid-cols-2 sm:grid-cols-4 gap-2">
+            <div className="bg-emerald-500/10 border border-emerald-500/30 rounded-xl p-3 flex items-center gap-2">
+              <TrendingUp size={16} className="text-emerald-400 shrink-0" />
+              <span className="text-emerald-400 text-xs font-medium truncate">Tavan Simülatörü</span>
+            </div>
+            {diger_araclar.map(({ icon: Icon, baslik, href, renk, bg }) => (
+              <Link key={href} href={href}>
+                <div className={`${bg} border border-slate-700/50 hover:border-slate-600 rounded-xl p-3 flex items-center gap-2 transition-all cursor-pointer`}>
+                  <Icon size={16} className={`${renk} shrink-0`} />
+                  <span className={`${renk} text-xs font-medium truncate`}>{baslik}</span>
+                </div>
+              </Link>
+            ))}
+          </div>
+        </div>
+
         <div className="flex items-center gap-3 mb-8">
           <div className="w-10 h-10 bg-emerald-500/10 rounded-xl flex items-center justify-center">
             <TrendingUp size={20} className="text-emerald-400" />
@@ -220,65 +188,6 @@ export default function TavanSimulatoruPage() {
         <p className="text-xs text-slate-600 mt-3 text-center">
           ⚠️ Brüt kâr gösterilmektedir. Komisyon ve stopaj dahil değildir. Yatırım tavsiyesi değildir.
         </p>
-
-        {/* SEO / SSS Bloğu */}
-        <div className="mt-10 space-y-4">
-          <h2 className="text-lg font-bold text-white">Sık Sorulan Sorular</h2>
-          <div className="space-y-3">
-            {[
-              {
-                soru: "Halka arz kaç gün tavan yapar?",
-                cevap: "Halka arzlarda tavan gün sayısı şirketten şirkete değişir. Tarihsel verilere göre BIST'te halka arz olan hisseler ortalama 3–7 gün tavan yapabilir. Bazı arzlar yalnızca 1–2 tavan yaparken, talep fazlası yüksek arzlarda 10 güne kadar tavan görülebilir. Kesin bir sayı yoktur; piyasa koşulları, şirketin sektörü ve halka arz fiyatı belirleyicidir.",
-              },
-              {
-                soru: "Halka arz en fazla kaç tavan yapabilir?",
-                cevap: "BIST'te teorik sınır yoktur. Pratikte en yüksek tavan sayısı 10 gün civarında gerçekleşmiştir. Geçmiş arzların tavan performansını görmek için Geçmiş Tavan Performansı sayfamızı inceleyebilirsiniz.",
-              },
-              {
-                soru: "Halka arz tavan getirisi nasıl hesaplanır?",
-                cevap: "Her tavan günü önceki kapanış fiyatının %10 üstünde oluşur. Örneğin arz fiyatı 100 ₺ ise: 1. tavan 110 ₺, 2. tavan 121 ₺, 3. tavan 133,1 ₺ şeklinde bileşik olarak artar. Yukarıdaki simülatör bu hesabı otomatik yapar.",
-              },
-              {
-                soru: "5 tavan yapan hisse ne kadar kazandırır?",
-                cevap: "5 tavan yapan bir hisse arz fiyatının %61,1 üstünde kapanır. 100 TL'den alınan 10 hisse için brüt kâr = 610,51 TL'dir. Simülatöre 100 TL ve 10 hisse girip kaydırıcıyı 5 tavan konumuna getirerek görebilirsin.",
-              },
-              {
-                soru: "10 tavan yapan hisse kaç kat kazandırır?",
-                cevap: "10 tavan yapan bir hisse arz fiyatının 2,59 katına çıkar — yani %159,4 brüt getiri. 100 TL'den alınan hisse 10 tavanda 259,37 TL değerine ulaşır.",
-              },
-              {
-                soru: "Tavan simülatörü komisyon hesaplıyor mu?",
-                cevap: "Simülatör yalnızca brüt kâr göstermektedir. Komisyon ve %10 stopaj dahil net kazancınızı hesaplamak için Net Kâr Hesaplayıcı aracımızı kullanabilirsiniz.",
-              },
-            ].map(({ soru, cevap }) => (
-              <div key={soru} className="bg-slate-800/40 border border-slate-700/50 rounded-xl p-4">
-                <h3 className="text-sm font-semibold text-white mb-2">{soru}</h3>
-                <p className="text-slate-400 text-sm leading-relaxed">{cevap}</p>
-              </div>
-            ))}
-          </div>
-
-          {/* İlgili sayfalar */}
-          <div className="mt-6 pt-6 border-t border-slate-800">
-            <p className="text-slate-500 text-xs font-medium uppercase tracking-widest mb-3">İlgili Rehberler</p>
-            <div className="flex flex-wrap gap-2">
-              {[
-                { href: "/tavan-nedir", label: "Tavan Nedir?" },
-                { href: "/ipo-nedir", label: "IPO Nedir?" },
-                { href: "/araclar/kar-hesaplama", label: "Net Kâr Hesaplayıcı" },
-                { href: "/halka-arz-nasil-yapilir", label: "Halka Arza Nasıl Katılınır?" },
-              ].map(({ href, label }) => (
-                <a
-                  key={href}
-                  href={href}
-                  className="text-xs text-slate-400 hover:text-emerald-400 border border-slate-700/50 hover:border-emerald-500/30 px-3 py-1.5 rounded-full transition-all"
-                >
-                  {label}
-                </a>
-              ))}
-            </div>
-          </div>
-        </div>
       </main>
       <div className="max-w-2xl mx-auto w-full px-4 sm:px-6 pb-6">
         <AdBanner slot="horizontal" />

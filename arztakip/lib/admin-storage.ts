@@ -1,10 +1,8 @@
-/**
- * Arz depolama — Firestore tabanlı
- * Koleksiyon: "arzlar-manuel"
- * Vercel read-only filesystem nedeniyle JSON dosyası yerine Firestore kullanılır.
- */
-
+import fs from "fs";
+import path from "path";
 import type { Arz } from "./types";
+
+const DATA_FILE = path.join(process.cwd(), "data", "yaklasan-arzlar.json");
 
 function slugify(s: string): string {
   return s
@@ -14,86 +12,43 @@ function slugify(s: string): string {
     .replace(/[^a-z0-9]/g, "-").replace(/-+/g, "-").replace(/^-|-$/g, "");
 }
 
-const COL = "arzlar-manuel";
-
-export async function readYaklasanArzlar(): Promise<Arz[]> {
+export function readYaklasanArzlar(): Arz[] {
   try {
-    const { adminDb } = await import("./firebase-admin");
-    const snap = await adminDb.collection(COL).get();
-    return snap.docs.map(d => ({ ...d.data(), id: d.id, slug: d.id } as Arz));
+    const raw = fs.readFileSync(DATA_FILE, "utf-8");
+    return JSON.parse(raw) as Arz[];
   } catch {
     return [];
   }
 }
 
-export async function addArzEntry(entry: Omit<Arz, "id" | "slug">): Promise<Arz> {
-  const { adminDb } = await import("./firebase-admin");
+export function writeYaklasanArzlar(data: Arz[]): void {
+  fs.mkdirSync(path.dirname(DATA_FILE), { recursive: true });
+  fs.writeFileSync(DATA_FILE, JSON.stringify(data, null, 2), "utf-8");
+}
+
+export function addArzEntry(entry: Omit<Arz, "id" | "slug">): Arz {
+  const existing = readYaklasanArzlar();
   const slug = slugify(entry.ticker || entry.sirketAdi);
   const newArz: Arz = { ...entry, id: slug, slug };
-  await adminDb.collection(COL).doc(slug).set(newArz);
+  const filtered = existing.filter((a) => a.slug !== slug);
+  writeYaklasanArzlar([newArz, ...filtered]);
   return newArz;
 }
 
-export async function updateArzEntry(slug: string, updates: Partial<Omit<Arz, "id" | "slug">>): Promise<Arz> {
-  const { adminDb } = await import("./firebase-admin");
-  const ref = adminDb.collection(COL).doc(slug);
-  const snap = await ref.get();
-  const base = snap.exists ? snap.data() : {};
-  const updated = { ...base, ...updates, id: slug, slug } as Arz;
-  await ref.set(updated);
+export function updateArzEntry(slug: string, updates: Partial<Omit<Arz, "id" | "slug">>): Arz | null {
+  const existing = readYaklasanArzlar();
+  const idx = existing.findIndex((a) => a.slug === slug);
+  if (idx === -1) return null;
+  const updated = { ...existing[idx], ...updates };
+  existing[idx] = updated;
+  writeYaklasanArzlar(existing);
   return updated;
 }
 
-export type ArzSource = "spk" | "manuel" | "spk+manuel";
-export type ArzWithSource = Arz & { _source: ArzSource };
-
-export async function readAllArzlarAdmin(): Promise<ArzWithSource[]> {
-  try {
-    const { adminDb } = await import("./firebase-admin");
-    const [spkSnap, manuelSnap] = await Promise.all([
-      adminDb.collection("arzlar-spk").get(),
-      adminDb.collection(COL).get(),
-    ]);
-
-    const spkMap = new Map<string, Arz>();
-    for (const doc of spkSnap.docs) {
-      // eslint-disable-next-line @typescript-eslint/no-unused-vars
-      const { _cachedAt: _, ...arz } = doc.data() as Record<string, unknown>;
-      spkMap.set(doc.id, { ...arz, id: doc.id, slug: doc.id } as Arz);
-    }
-
-    const manuelMap = new Map<string, Arz>();
-    for (const doc of manuelSnap.docs) {
-      manuelMap.set(doc.id, { ...doc.data(), id: doc.id, slug: doc.id } as Arz);
-    }
-
-    const result: ArzWithSource[] = [];
-
-    for (const [slug, spkArz] of spkMap) {
-      const manuel = manuelMap.get(slug);
-      result.push(manuel
-        ? { ...spkArz, ...manuel, _source: "spk+manuel" }
-        : { ...spkArz, _source: "spk" }
-      );
-    }
-
-    for (const [slug, manuelArz] of manuelMap) {
-      if (!spkMap.has(slug)) {
-        result.push({ ...manuelArz, _source: "manuel" });
-      }
-    }
-
-    return result.sort((a, b) => a.sirketAdi.localeCompare(b.sirketAdi, "tr"));
-  } catch {
-    return readYaklasanArzlar().then(arzlar => arzlar.map(a => ({ ...a, _source: "manuel" as ArzSource })));
-  }
-}
-
-export async function deleteArzEntry(slug: string): Promise<boolean> {
-  const { adminDb } = await import("./firebase-admin");
-  const ref = adminDb.collection(COL).doc(slug);
-  const snap = await ref.get();
-  if (!snap.exists) return false;
-  await ref.delete();
+export function deleteArzEntry(slug: string): boolean {
+  const existing = readYaklasanArzlar();
+  const next = existing.filter((a) => a.slug !== slug);
+  if (next.length === existing.length) return false;
+  writeYaklasanArzlar(next);
   return true;
 }

@@ -1,10 +1,8 @@
-"use client";
 import Link from "next/link";
 import { TrendingUp } from "lucide-react";
 import { Arz } from "@/lib/types";
 import { durumRenk, durumEtiket } from "@/lib/mock-data";
 import WatchlistButton from "./WatchlistButton";
-import ArzLogo from "./ArzLogo";
 
 interface Props { arz: Arz }
 
@@ -23,6 +21,7 @@ function daysLeft(dateStr: string) {
   return Math.round(diff / 86400000);
 }
 
+// İlk aracı kurumu kısalt
 function ilkAraciKurum(araciKurum: string): string {
   if (!araciKurum) return "–";
   const ilk = araciKurum.split(/[,·\-–]/)[0].trim();
@@ -45,10 +44,18 @@ export default function ArzCard({ arz }: Props) {
           : "border-slate-700/50 hover:border-emerald-500/30 hover:shadow-emerald-500/5"
       }`}>
 
-        {/* ── Üst satır: logo + şirket + durum + watchlist ── */}
+        {/* ── Üst satır: ikon + şirket + durum + watchlist ── */}
         <div className="flex items-center gap-3 mb-3">
-          <ArzLogo logo={arz.logo} ticker={arz.ticker || arz.sirketAdi} isDone={isDone} size="sm" />
+          {/* Ticker ikonu */}
+          <div className={`w-10 h-10 rounded-xl flex items-center justify-center font-bold text-xs shrink-0 ${
+            isDone
+              ? "bg-slate-700/50 text-slate-400"
+              : "bg-gradient-to-br from-emerald-500/20 to-slate-700 text-emerald-400"
+          }`}>
+            {(arz.ticker || arz.sirketAdi).slice(0, 2).toUpperCase()}
+          </div>
 
+          {/* Şirket bilgisi */}
           <div className="flex-1 min-w-0">
             <div className="flex items-center gap-2 flex-wrap">
               {arz.ticker && (
@@ -82,6 +89,7 @@ export default function ArzCard({ arz }: Props) {
             </div>
           </div>
 
+          {/* Sağ: tarih veya gün sayacı */}
           {isDone ? (
             arz.borsadaIslemGormeTarihi ? (
               <div className="text-right">

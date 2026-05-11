@@ -6,7 +6,6 @@ import Footer from "@/components/Footer";
 import AdBanner from "@/components/AdBanner";
 import StockChart from "@/components/StockChart";
 import { durumRenk, durumEtiket } from "@/lib/mock-data";
-import ArzLogo from "@/components/ArzLogo";
 import { getArzlar } from "@/lib/arz-utils";
 import type { Metadata } from "next";
 
@@ -121,12 +120,9 @@ export default async function ArzDetayPage({ params }: { params: Promise<{ slug:
         {/* ── HEADER ── */}
         <div className="bg-slate-800/60 border border-slate-700/50 rounded-2xl p-6 mb-6">
           <div className="flex items-start gap-4">
-            <ArzLogo
-              logo={arz.logo}
-              ticker={arz.ticker || arz.sirketAdi}
-              isDone={arz.durum === "tamamlandi"}
-              size="lg"
-            />
+            <div className="w-14 h-14 bg-gradient-to-br from-emerald-500/20 to-blue-500/10 border border-emerald-500/20 rounded-2xl flex items-center justify-center text-emerald-400 font-bold text-base shrink-0">
+              {(arz.ticker || arz.sirketAdi).slice(0, 2).toUpperCase()}
+            </div>
             <div className="flex-1 min-w-0">
               <div className="flex items-center gap-2 flex-wrap mb-1">
                 {arz.ticker && (
@@ -200,11 +196,8 @@ export default async function ArzDetayPage({ params }: { params: Promise<{ slug:
                   <InfoRow label="Pazar" value={arz.pazar} />
                 )}
 
-                {arz.talepBaslangic && (
-                  <InfoRow
-                    label="BIST İlk İşlem Tarihi"
-                    value={arz.borsadaIslemGormeTarihi ? fmt(arz.borsadaIslemGormeTarihi) : "Belirlenmedi"}
-                  />
+                {arz.borsadaIslemGormeTarihi && arz.talepBaslangic && (
+                  <InfoRow label="BIST İlk İşlem Tarihi" value={fmt(arz.borsadaIslemGormeTarihi)} />
                 )}
               </div>
             </div>
@@ -213,24 +206,6 @@ export default async function ArzDetayPage({ params }: { params: Promise<{ slug:
             {tamamlandi && arz.tahsisatSonuclari && arz.tahsisatSonuclari.length > 0 && (
               <div className="bg-slate-800/60 border border-slate-700/50 rounded-2xl p-6">
                 <h2 className="font-bold text-white text-base mb-4">{arz.ticker} Halka Arz Sonuçları</h2>
-                {/* Dağıtılan Pay Özeti — Bireysel grubu varsa hesapla */}
-                {(() => {
-                  const bireysel = arz.tahsisatSonuclari!.find(t => t.grup.toLowerCase().includes("bireysel"));
-                  if (!bireysel || bireysel.kisi === 0) return null;
-                  const lotBasina = Math.floor(bireysel.lot / bireysel.kisi);
-                  const maliyet = lotBasina * arsFiyati;
-                  return (
-                    <div className="bg-emerald-500/10 border border-emerald-500/20 rounded-xl px-4 py-3 mb-4 text-sm">
-                      <span className="text-slate-400">Dağıtılan Pay Miktarı: </span>
-                      <span className="text-white font-medium">
-                        {new Intl.NumberFormat("tr-TR").format(bireysel.kisi)} katılım
-                        {" – "}{new Intl.NumberFormat("tr-TR").format(lotBasina)} Lot
-                        {maliyet > 0 && <span className="text-emerald-400"> ({new Intl.NumberFormat("tr-TR", { maximumFractionDigits: 0 }).format(maliyet)} TL)</span>}
-                      </span>
-                      <span className="text-slate-500 text-xs ml-1">* Bireysel Yatırımcı Grubu</span>
-                    </div>
-                  );
-                })()}
                 <div className="overflow-x-auto">
                   <table className="w-full text-sm">
                     <thead>

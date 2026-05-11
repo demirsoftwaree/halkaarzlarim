@@ -8,7 +8,7 @@ interface AdBannerProps {
 }
 
 // AdSense client ID — canlıya alınca buraya yapıştır
-const ADSENSE_CLIENT = "ca-pub-2543281289393255";
+const ADSENSE_CLIENT = ""; // örn: "ca-pub-XXXXXXXXXXXXXXXX"
 // Her slot için AdSense slot ID — canlıya alınca doldur
 const SLOT_IDS: Record<AdBannerProps["slot"], string> = {
   horizontal: "",   // 728x90 leaderboard

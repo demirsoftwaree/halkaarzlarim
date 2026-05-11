@@ -53,13 +53,6 @@ export const metadata: Metadata = {
   alternates: {
     canonical: BASE_URL,
   },
-  icons: {
-    icon: [
-      { url: "/icon", type: "image/png", sizes: "32x32" },
-    ],
-    shortcut: "/icon",
-    apple: "/apple-icon",
-  },
 };
 
 export default function RootLayout({
@@ -70,9 +63,6 @@ export default function RootLayout({
   return (
     <html lang="tr" className="h-full">
       <head>
-        <link rel="preconnect" href="https://fonts.googleapis.com" />
-        <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Geist+Mono:wght@400;600;700&display=swap" rel="stylesheet" />
-        <meta name="google-adsense-account" content="ca-pub-2543281289393255" />
         <script
           async
           src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-2543281289393255"

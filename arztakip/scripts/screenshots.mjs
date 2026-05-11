@@ -23,22 +23,6 @@ const pages = [
   { name: "14-giris",                  url: "http://localhost:3000/giris",                        w: 1280, h: 900 },
   { name: "15-premium-mobile",         url: "http://localhost:3000/premium",                      w: 390,  h: 844 },
   { name: "16-haberler-mobile",        url: "http://localhost:3000/haberler",                     w: 390,  h: 844 },
-  // Yeni SEO sayfaları
-  { name: "17-takvim-mobile",          url: "http://localhost:3000/halka-arzlar",                  w: 390,  h: 844 },
-  { name: "18-takip-listem-mobile",    url: "http://localhost:3000/hesabim/takip-listem",           w: 390,  h: 844 },
-  { name: "19-portfoy-mobile",         url: "http://localhost:3000/hesabim/portfoy",               w: 390,  h: 844 },
-  { name: "20-tavan-mobile",           url: "http://localhost:3000/araclar/tavan-simulatoru",      w: 390,  h: 844 },
-  { name: "21-chatbot-mobile",         url: "http://localhost:3000",                               w: 390,  h: 844 },
-  // SSS video için
-  { name: "22-sss-desktop",            url: "http://localhost:3000/sss",                           w: 1280, h: 900 },
-  { name: "23-sss-mobile",             url: "http://localhost:3000/sss",                           w: 390,  h: 844 },
-  { name: "24-ipo-nedir-desktop",      url: "http://localhost:3000/ipo-nedir",                     w: 1280, h: 900 },
-  { name: "25-ipo-nedir-mobile",       url: "http://localhost:3000/ipo-nedir",                     w: 390,  h: 844 },
-  { name: "26-nasil-yapilir-desktop",  url: "http://localhost:3000/halka-arz-nasil-yapilir",       w: 1280, h: 900 },
-  { name: "27-nasil-yapilir-mobile",   url: "http://localhost:3000/halka-arz-nasil-yapilir",       w: 390,  h: 844 },
-  { name: "28-tavan-nedir-desktop",    url: "http://localhost:3000/tavan-nedir",                   w: 1280, h: 900 },
-  { name: "29-tavan-nedir-mobile",     url: "http://localhost:3000/tavan-nedir",                   w: 390,  h: 844 },
-  { name: "30-istatistikler-desktop",  url: "http://localhost:3000/istatistikler",                 w: 1280, h: 900 },
 ];
 
 // Eski ekran görüntülerini temizle
@@ -55,7 +39,7 @@ const browser = await puppeteer.launch({ headless: true, args: ["--no-sandbox"] 
 for (const pg of pages) {
   const page = await browser.newPage();
   await page.setViewport({ width: pg.w, height: pg.h, deviceScaleFactor: 2 });
-  await page.goto(pg.url, { waitUntil: "networkidle2", timeout: 45000 });
+  await page.goto(pg.url, { waitUntil: "networkidle0", timeout: 20000 });
 
   if (pg.mobileMenu) {
     const btn = await page.$("nav button[aria-label]");

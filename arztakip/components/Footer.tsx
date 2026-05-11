@@ -53,14 +53,11 @@ export default function Footer() {
             </ul>
           </div>
 
-          {/* Rehber */}
+          {/* Legal */}
           <div>
-            <h4 className="text-white font-semibold text-sm mb-4">Rehber & Yasal</h4>
+            <h4 className="text-white font-semibold text-sm mb-4">Yasal</h4>
             <ul className="space-y-2.5">
               {[
-                ["Sık Sorulan Sorular (SSS)", "/sss"],
-                ["Blog", "/blog"],
-                ["İstatistikler", "/istatistikler"],
                 ["İletişim", "/iletisim"],
                 ["Gizlilik Politikası", "/gizlilik-politikasi"],
                 ["Kullanım Koşulları", "/kullanim-kosullari"],

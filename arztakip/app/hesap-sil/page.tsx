@@ -65,7 +65,6 @@ export default function HesapSilPage() {
       <Navbar />
       <main className="flex-1 flex items-center justify-center px-4 py-16">
         <div className="w-full max-w-md">
-
           {step === "done" ? (
             <div className="bg-slate-800/60 border border-slate-700/50 rounded-2xl p-8 text-center">
               <CheckCircle2 className="mx-auto mb-4 text-emerald-400" size={48} />
@@ -118,14 +117,12 @@ export default function HesapSilPage() {
                   <p className="text-slate-400 text-sm">Verileriniz kalıcı olarak kaldırılır</p>
                 </div>
               </div>
-
               <div className="bg-red-500/10 border border-red-500/20 rounded-xl p-4 mb-6">
                 <p className="text-red-300 text-sm font-medium mb-1">Bu işlem geri alınamaz</p>
                 <p className="text-slate-400 text-xs leading-relaxed">
                   Hesabınız, portföyünüz, takip listeniz ve tüm kişisel verileriniz kalıcı olarak silinir.
                 </p>
               </div>
-
               {!user ? (
                 <div className="text-center">
                   <p className="text-slate-400 text-sm mb-4">Hesabınızı silmek için önce giriş yapmalısınız.</p>
@@ -136,16 +133,10 @@ export default function HesapSilPage() {
               ) : step === "confirm" ? (
                 <div className="space-y-3">
                   <p className="text-slate-300 text-sm text-center mb-2">Emin misiniz? Bu işlem geri alınamaz.</p>
-                  <button
-                    onClick={handleDelete}
-                    className="w-full bg-red-500 hover:bg-red-600 text-white font-semibold py-2.5 rounded-xl transition-colors"
-                  >
+                  <button onClick={handleDelete} className="w-full bg-red-500 hover:bg-red-600 text-white font-semibold py-2.5 rounded-xl transition-colors">
                     Evet, hesabımı kalıcı olarak sil
                   </button>
-                  <button
-                    onClick={() => setStep("idle")}
-                    className="w-full bg-slate-700 hover:bg-slate-600 text-white font-semibold py-2.5 rounded-xl transition-colors"
-                  >
+                  <button onClick={() => setStep("idle")} className="w-full bg-slate-700 hover:bg-slate-600 text-white font-semibold py-2.5 rounded-xl transition-colors">
                     Vazgeç
                   </button>
                 </div>

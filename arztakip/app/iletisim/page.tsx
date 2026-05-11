@@ -6,6 +6,10 @@ import Footer from "@/components/Footer";
 import TickerBar from "@/components/TickerBar";
 import { Send, Mail, MessageSquare, CheckCircle, AlertCircle } from "lucide-react";
 
+// Formspree form ID — formspree.io'dan aldıktan sonra buraya yapıştır
+
+const FORMSPREE_ID = "xpqopndj";
+
 const konular = [
   "Genel Soru",
   "Teknik Sorun",
@@ -25,11 +29,15 @@ export default function IletisimPage() {
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
+    if (!FORMSPREE_ID) {
+      setDurum("error");
+      return;
+    }
     setDurum("loading");
     try {
-      const res = await fetch("/api/email/iletisim", {
+      const res = await fetch(`https://formspree.io/f/${FORMSPREE_ID}`, {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
+        headers: { "Content-Type": "application/json", Accept: "application/json" },
         body: JSON.stringify(form),
       });
       if (res.ok) {
@@ -164,7 +172,9 @@ export default function IletisimPage() {
                   {durum === "error" && (
                     <div className="flex items-center gap-2 text-red-400 text-sm bg-red-500/10 border border-red-500/20 rounded-xl px-4 py-3">
                       <AlertCircle size={15} />
-                      Mesaj gönderilemedi. Lütfen tekrar deneyin veya destek@halkaarzlarim.com adresine yazın.
+                      {!FORMSPREE_ID
+                        ? "Form henüz yapılandırılmamış. Lütfen destek@halkaarzlarim.com adresine yazın."
+                        : "Mesaj gönderilemedi. Lütfen tekrar deneyin."}
                     </div>
                   )}
 
