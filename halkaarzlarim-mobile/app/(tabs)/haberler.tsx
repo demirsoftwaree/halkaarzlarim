@@ -57,17 +57,22 @@ export default function Haberler() {
       <AdBanner style={{ marginTop: 0, marginBottom: 4 }} />
       <ScrollView style={{ flex: 1, paddingHorizontal: 16 }} refreshControl={<RefreshControl refreshing={refreshing} onRefresh={() => { setRefreshing(true); fetchData(); }} tintColor={colors.green} />} showsVerticalScrollIndicator={false}>
         {haberler.map((h, i) => (
-          <TouchableOpacity key={h.id} onPress={() => router.push(`/haber/${h.slug || h.id}`)} style={[i === 0 ? s.card : s.cardSm, s.mb3, { overflow: "hidden", padding: 0 }]}>
-            {i === 0 && h.gorsel && <Image source={{ uri: h.gorsel }} style={{ width: "100%", height: 180 }} resizeMode="cover" />}
-            <View style={{ padding: i === 0 ? 16 : 12, flexDirection: i === 0 ? "column" : "row", gap: 10 }}>
-              {i !== 0 && h.gorsel && <Image source={{ uri: h.gorsel }} style={{ width: 72, height: 72, borderRadius: 10 }} resizeMode="cover" />}
+          <TouchableOpacity key={h.id} onPress={() => router.push(`/haber/${h.slug || h.id}`)} style={[s.card, s.mb3, { overflow: "hidden", padding: 0 }]}>
+            <View style={{ padding: 12, flexDirection: "row", gap: 10 }}>
+              {h.gorsel ? (
+                <Image source={{ uri: h.gorsel }} style={{ width: 72, height: 72, borderRadius: 10, backgroundColor: "#fff" }} resizeMode="contain" />
+              ) : (
+                <View style={{ width: 72, height: 72, borderRadius: 10, backgroundColor: "#1a2332", alignItems: "center", justifyContent: "center" }}>
+                  <Text style={{ color: "#10b981", fontWeight: "700", fontSize: 13 }}>{h.ticker ?? "ARZ"}</Text>
+                </View>
+              )}
               <View style={{ flex: 1 }}>
                 {h.kategori && (
                   <Text style={[s.badgeText, { marginBottom: 4 }]}>
                     {KATEGORİ_ETIKET[h.kategori] ?? h.kategori}
                   </Text>
                 )}
-                <Text style={[s.body, { fontWeight: "600", lineHeight: 20 }]} numberOfLines={i === 0 ? 3 : 2}>{h.baslik}</Text>
+                <Text style={[s.body, { fontWeight: "600", lineHeight: 20 }]} numberOfLines={3}>{h.baslik}</Text>
                 <Text style={[s.caption, { marginTop: 4 }]}>{fmt(h.tarih)}</Text>
               </View>
             </View>
