@@ -9,11 +9,7 @@ const SIDEBAR_SLOT_ID = ""; // örn: "1234567890"
 
 function AdSlot() {
   if (!ADSENSE_CLIENT || !SIDEBAR_SLOT_ID) {
-    return (
-      <div className="w-[160px] h-[600px] flex items-center justify-center bg-slate-800/20 border border-dashed border-slate-700/40 rounded-xl text-slate-600 text-xs writing-mode-vertical">
-        Reklam Alanı
-      </div>
-    );
+    return null;
   }
 
   return (
