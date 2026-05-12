@@ -51,16 +51,16 @@ export default function IstatistiklerPage() {
 
   const buYil = new Date().getFullYear();
   const buYilIpo = veri?.yillikIpo.find(y => y.yil === buYil);
-  const sonYatirimci = veri?.aylikYatirimci.at(-1);
-  const sonPiyasa = veri?.aylikPiyasa.at(-1);
+  const sonYatirimci = veri?.aylikYatirimci?.at(-1);
+  const sonPiyasa = veri?.aylikPiyasa?.at(-1);
 
-  const aylikGrafik = veri?.aylikPiyasa.map(a => ({
+  const aylikGrafik = veri?.aylikPiyasa?.map(a => ({
     donem: `${AYLAR[a.ay]} ${String(a.yil).slice(2)}`,
     "Toplam (Mlr ₺)": a.toplamPiyasaMilyarTl,
     "Halka Açık (Mlr ₺)": a.halkaAcikPiyasaMilyarTl,
   })) ?? [];
 
-  const yatirimciGrafik = veri?.aylikYatirimci.map(a => ({
+  const yatirimciGrafik = veri?.aylikYatirimci?.map(a => ({
     donem: `${AYLAR[a.ay]} ${String(a.yil).slice(2)}`,
     "Toplam Yatırımcı": a.toplamYatirimci,
     "Yerli %": a.yerliOran,
