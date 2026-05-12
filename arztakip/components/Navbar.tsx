@@ -37,8 +37,8 @@ export default function Navbar() {
           <Link href="/halka-arzlar" className="text-slate-300 hover:text-white text-sm font-medium transition-colors">
             Halka Arz Takvimi
           </Link>
-          <Link href="/hisseler" className="flex items-center gap-1 text-slate-300 hover:text-white text-sm font-medium transition-colors">
-            <BarChart2 size={14} /> Hisseler
+          <Link href="/istatistikler" className="flex items-center gap-1 text-slate-300 hover:text-white text-sm font-medium transition-colors">
+            <BarChart2 size={14} /> İstatistikler
           </Link>
 <div className="relative group">
             <Link href="/araclar/tavan-simulatoru" className="flex items-center gap-1 text-slate-300 hover:text-white text-sm font-medium transition-colors">
@@ -137,7 +137,7 @@ export default function Navbar() {
             { href: "/araclar/lot-hesaplama", label: "🎯 Lot Dağıtım" },
             { href: "/araclar/kar-hesaplama", label: "💰 Net Kâr" },
             { href: "/araclar/tavan-raporu", label: "👑 Tavan Getiri Raporu" },
-            { href: "/hisseler", label: "📊 Hisseler" },
+            { href: "/istatistikler", label: "📊 İstatistikler" },
             { href: "/haberler", label: "📰 Haberler" },
             { href: "/blog", label: "📝 Blog" },
           ].map(({ href, label }) => (
