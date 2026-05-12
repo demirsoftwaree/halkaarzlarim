@@ -26,7 +26,7 @@ export async function getArzlar(): Promise<{ arzlar: Arz[]; source: string }> {
   const spkSluglar = new Set(spkArzlar.map(a => a.slug));
 
   // JSON dosyasından + .ts hardcode'dan yaklaşan arzları al (mükerrer önleme)
-  const jsonArzlar = readYaklasanArzlar();
+  const jsonArzlar = await readYaklasanArzlar();
   const tsArzlar = yaklasanArzlar;
   const tumYaklasan = [...jsonArzlar, ...tsArzlar];
   const gorulenSluglar = new Set<string>();

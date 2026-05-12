@@ -1,8 +1,7 @@
-import fs from "fs";
-import path from "path";
+import { adminDb } from "@/lib/firebase-admin";
 import type { Arz } from "./types";
 
-const DATA_FILE = path.join(process.cwd(), "data", "yaklasan-arzlar.json");
+const COL = "arzlar";
 
 function slugify(s: string): string {
   return s
@@ -12,43 +11,31 @@ function slugify(s: string): string {
     .replace(/[^a-z0-9]/g, "-").replace(/-+/g, "-").replace(/^-|-$/g, "");
 }
 
-export function readYaklasanArzlar(): Arz[] {
-  try {
-    const raw = fs.readFileSync(DATA_FILE, "utf-8");
-    return JSON.parse(raw) as Arz[];
-  } catch {
-    return [];
-  }
+export async function readYaklasanArzlar(): Promise<Arz[]> {
+  const snap = await adminDb.collection(COL).orderBy("createdAt", "desc").get();
+  return snap.docs.map(d => d.data() as Arz);
 }
 
-export function writeYaklasanArzlar(data: Arz[]): void {
-  fs.mkdirSync(path.dirname(DATA_FILE), { recursive: true });
-  fs.writeFileSync(DATA_FILE, JSON.stringify(data, null, 2), "utf-8");
-}
-
-export function addArzEntry(entry: Omit<Arz, "id" | "slug">): Arz {
-  const existing = readYaklasanArzlar();
-  const slug = slugify(entry.ticker || entry.sirketAdi);
+export async function addArzEntry(entry: Omit<Arz, "id" | "slug">): Promise<Arz> {
+  const slug = slugify((entry.ticker || entry.sirketAdi) as string);
   const newArz: Arz = { ...entry, id: slug, slug };
-  const filtered = existing.filter((a) => a.slug !== slug);
-  writeYaklasanArzlar([newArz, ...filtered]);
+  await adminDb.collection(COL).doc(slug).set({ ...newArz, createdAt: Date.now() });
   return newArz;
 }
 
-export function updateArzEntry(slug: string, updates: Partial<Omit<Arz, "id" | "slug">>): Arz | null {
-  const existing = readYaklasanArzlar();
-  const idx = existing.findIndex((a) => a.slug === slug);
-  if (idx === -1) return null;
-  const updated = { ...existing[idx], ...updates };
-  existing[idx] = updated;
-  writeYaklasanArzlar(existing);
-  return updated;
+export async function updateArzEntry(slug: string, updates: Partial<Omit<Arz, "id" | "slug">>): Promise<Arz | null> {
+  const ref = adminDb.collection(COL).doc(slug);
+  const snap = await ref.get();
+  if (!snap.exists) return null;
+  await ref.update(updates as Record<string, unknown>);
+  const updated = await ref.get();
+  return updated.data() as Arz;
 }
 
-export function deleteArzEntry(slug: string): boolean {
-  const existing = readYaklasanArzlar();
-  const next = existing.filter((a) => a.slug !== slug);
-  if (next.length === existing.length) return false;
-  writeYaklasanArzlar(next);
+export async function deleteArzEntry(slug: string): Promise<boolean> {
+  const ref = adminDb.collection(COL).doc(slug);
+  const snap = await ref.get();
+  if (!snap.exists) return false;
+  await ref.delete();
   return true;
 }
