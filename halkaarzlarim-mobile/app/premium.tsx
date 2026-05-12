@@ -130,8 +130,8 @@ export default function Premium() {
       if (!offering) return;
       offering.availablePackages.forEach((pkg) => {
         const id = pkg.product.identifier;
-        if (id === "premium_monthly") setMonthly(pkg);
-        if (id === "premium_yearly")  setYearly(pkg);
+        if (id === "monthly") setMonthly(pkg);
+        if (id === "yearly")  setYearly(pkg);
       });
     });
   }, []);
