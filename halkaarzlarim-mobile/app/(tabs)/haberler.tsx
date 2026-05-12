@@ -58,7 +58,9 @@ export default function Haberler() {
           <TouchableOpacity key={h.id} onPress={() => router.push(`/haber/${h.slug || h.id}`)} style={[s.card, s.mb3, { overflow: "hidden", padding: 0 }]}>
             <View style={{ padding: 12, flexDirection: "row", gap: 10 }}>
               {h.gorsel ? (
-                <Image source={{ uri: h.gorsel }} style={{ width: 72, height: 72, borderRadius: 10, backgroundColor: "#fff" }} resizeMode="contain" />
+                <View style={{ width: 72, height: 72, borderRadius: 10, backgroundColor: "#fff", padding: 4, overflow: "hidden" }}>
+                  <Image source={{ uri: h.gorsel }} style={{ width: "100%", height: "100%" }} resizeMode="contain" />
+                </View>
               ) : (
                 <View style={{ width: 72, height: 72, borderRadius: 10, backgroundColor: "#1a2332", alignItems: "center", justifyContent: "center" }}>
                   <Text style={{ color: "#10b981", fontWeight: "700", fontSize: 13 }}>{h.ticker ?? "ARZ"}</Text>

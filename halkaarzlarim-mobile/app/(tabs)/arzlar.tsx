@@ -13,8 +13,8 @@ function ArzIcon({ logo, ticker }: { logo?: string; ticker: string }) {
   const [err, setErr] = useState(false);
   if (logo && !err) {
     return (
-      <View style={[s.iconBox, { backgroundColor: "#fff", overflow: "hidden" }]}>
-        <Image source={{ uri: logo }} style={{ width: 36, height: 36 }} onError={() => setErr(true)} resizeMode="contain" />
+      <View style={[s.iconBox, { backgroundColor: "#fff", overflow: "hidden", padding: 4 }]}>
+        <Image source={{ uri: logo }} style={{ width: "100%", height: "100%" }} onError={() => setErr(true)} resizeMode="contain" />
       </View>
     );
   }
