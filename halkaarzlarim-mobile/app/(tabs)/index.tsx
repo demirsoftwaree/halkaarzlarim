@@ -11,7 +11,6 @@ import { SafeAreaView, useSafeAreaInsets } from "react-native-safe-area-context"
 import { colors, s } from "@/lib/styles";
 import { useWatchlist } from "@/lib/use-watchlist";
 import { useAuth } from "@/lib/auth-context";
-import AdBanner from "@/components/AdBanner";
 
 const FREE_AI_LIMIT = 3;
 const AI_STORAGE_KEY = "ai_chat_daily";
@@ -451,9 +450,6 @@ export default function AnaSayfa() {
             </View>
           ) : aktif.map(a => <ArzKart key={a.id} arz={a} onPress={() => router.push(`/arz/${a.slug}`)} isFollowing={isFollowing(a.slug)} onToggle={() => handleToggle(a)} />)}
         </View>
-
-        {/* Reklam — sadece ücretsiz kullanıcılara */}
-        <AdBanner />
 
         {/* Son Halka Arzlar */}
         <View style={[s.px4, { marginTop: 16, marginBottom: 100 }]}>

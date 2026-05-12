@@ -4,11 +4,6 @@ import { fetchSpkIpoData } from "./spk-service";
 import { yaklasanArzlar } from "./yaklasan-arzlar";
 import { readYaklasanArzlar } from "./admin-storage";
 
-/**
- * Tüm halka arz verisini döndürür:
- *  - SPK API: tamamlanan 2026 arzları
- *  - yaklasan-arzlar.ts: manuel girilen aktif/yaklaşan arzlar
- */
 export async function getArzlar(): Promise<{ arzlar: Arz[]; source: string }> {
   let spkArzlar: Arz[] = [];
   let source = "mock";
@@ -23,20 +18,36 @@ export async function getArzlar(): Promise<{ arzlar: Arz[]; source: string }> {
     // SPK erişilemezse mock ile devam et
   }
 
-  const spkSluglar = new Set(spkArzlar.map(a => a.slug));
-
-  // JSON dosyasından + .ts hardcode'dan yaklaşan arzları al (mükerrer önleme)
+  // Manuel arzlar (logo, tarih vb. zengin veri)
   const jsonArzlar = await readYaklasanArzlar();
   const tsArzlar = yaklasanArzlar;
   const tumYaklasan = [...jsonArzlar, ...tsArzlar];
-  const gorulenSluglar = new Set<string>();
-  const ekstra = tumYaklasan.filter(a => {
-    if (spkSluglar.has(a.slug) || gorulenSluglar.has(a.slug)) return false;
-    gorulenSluglar.add(a.slug);
-    return true;
-  });
 
-  const tumu = [...ekstra, ...(spkArzlar.length > 0 ? spkArzlar : mockArzlar)];
+  // Slug → manuel arز map (mükerrer önleme)
+  const manuelMap = new Map<string, Arz>();
+  for (const a of tumYaklasan) {
+    if (!manuelMap.has(a.slug)) manuelMap.set(a.slug, a);
+  }
+
+  let tumu: Arz[];
+  let ekstraCount = 0;
+
+  if (spkArzlar.length > 0) {
+    const spkSluglar = new Set(spkArzlar.map(a => a.slug));
+    // SPK arzlarını manuel veriyle zenginleştir (logo, tarih vb. manuel'den öncelikli)
+    const spkZengin = spkArzlar.map(a => {
+      const manuel = manuelMap.get(a.slug);
+      return manuel ? { ...a, ...manuel } : a;
+    });
+    // Sadece manuel'de olan arzları ekle
+    const sadeceManuelde = [...manuelMap.values()].filter(a => !spkSluglar.has(a.slug));
+    ekstraCount = sadeceManuelde.length;
+    tumu = [...sadeceManuelde, ...spkZengin];
+  } else {
+    // SPK yoksa sadece manuel + mock
+    tumu = [...manuelMap.values(), ...mockArzlar.filter(a => !manuelMap.has(a.slug))];
+    ekstraCount = manuelMap.size;
+  }
 
   // Tarihe göre otomatik durum düzeltme
   const bugun = new Date();
@@ -46,16 +57,14 @@ export async function getArzlar(): Promise<{ arzlar: Arz[]; source: string }> {
     const baslangic = new Date(a.talepBaslangic);
     const bitis = new Date(a.talepBitis);
     bitis.setHours(23, 59, 59, 999);
-    // Süresi geçmiş aktif/yaklaşan arzları tamamlandı yap
     if (bugun > bitis && (a.durum === "aktif" || a.durum === "yaklasan" || a.durum === "basvuru-surecinde")) {
       return { ...a, durum: "tamamlandi" as const };
     }
-    // Başlangıç tarihi gelmiş yaklaşanları aktif yap
     if (bugun >= baslangic && bugun <= bitis && a.durum === "yaklasan") {
       return { ...a, durum: "aktif" as const };
     }
     return a;
   });
 
-  return { arzlar: normalize, source: ekstra.length > 0 ? source + "+manuel" : source };
+  return { arzlar: normalize, source: ekstraCount > 0 ? source + "+manuel" : source };
 }
