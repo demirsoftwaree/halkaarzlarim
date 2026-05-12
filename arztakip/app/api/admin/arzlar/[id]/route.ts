@@ -6,6 +6,7 @@ import { readSpkCache } from "@/lib/spk-cache";
 import { adminAuth, adminDb } from "@/lib/firebase-admin";
 import { sendEmail } from "@/lib/email";
 import { arzBasladiEmail } from "@/lib/email-templates";
+import { sendPushToAll } from "@/lib/push-notifications";
 
 async function isAuthed(): Promise<boolean> {
   const store = await cookies();
@@ -69,6 +70,14 @@ export async function PUT(req: NextRequest, { params }: { params: Promise<{ id: 
         : `${updated.arsFiyatiAlt.toFixed(2)}–${updated.arsFiyatiUst.toFixed(2)} ₺`
       : "Fiyat bekleniyor";
 
+    // Push bildirimi — tüm cihazlara
+    sendPushToAll(
+      "📣 Halka Arz Başladı!",
+      `${updated.sirketAdi} (${updated.ticker}) başvurusu açıldı — ${fiyat}`,
+      { slug: updated.slug, type: "arz_aktif" }
+    ).catch(() => {});
+
+    // E-posta — sadece takip listemdekilere
     bildirimGonder(
       updated.slug,
       updated.sirketAdi,

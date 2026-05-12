@@ -5,6 +5,7 @@ import { readAllArzlarAdmin, addArzEntry } from "@/lib/admin-storage";
 import { adminAuth } from "@/lib/firebase-admin";
 import { sendBatchEmail } from "@/lib/email";
 import { yeniArzDuyuruEmail } from "@/lib/email-templates";
+import { sendPushToAll } from "@/lib/push-notifications";
 
 async function isAuthed(): Promise<boolean> {
   const store = await cookies();
@@ -64,6 +65,14 @@ export async function POST(req: NextRequest) {
   revalidatePath("/api/arzlar");
   revalidatePath("/");
 
+  // Push bildirimi — tüm cihazlara
+  sendPushToAll(
+    "🔔 Yeni Halka Arz",
+    `${created.sirketAdi} (${created.ticker}) halka arzı eklendi!`,
+    { slug: created.slug, type: "yeni_arz" }
+  ).catch(() => {});
+
+  // E-posta bildirimi — sadece aktif/yaklaşan arz eklenince
   if (created.durum === "aktif" || created.durum === "yaklasan") {
     tumKullanicilariDuyur(created);
   }
