@@ -34,11 +34,11 @@ export default async function BlogPage() {
   try {
     const snap = await adminDb
       .collection("haberler")
-      .where("kategori", "==", "blog")
-      .where("yayinda", "==", true)
       .orderBy("tarih", "desc")
       .get();
-    yazilar = snap.docs.map((d) => ({ id: d.id, ...d.data() } as BlogYazisi));
+    yazilar = snap.docs
+      .map((d) => ({ id: d.id, ...d.data() } as BlogYazisi))
+      .filter((y) => y.kategori === "blog" && y.yayinda === true);
   } catch {
     yazilar = [];
   }

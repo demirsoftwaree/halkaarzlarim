@@ -125,6 +125,64 @@ function mapToArz(item: SpkIpo): Arz {
   };
 }
 
+export interface SpkYatirimci {
+  yil: number;
+  ay: number;
+  toplamYatirimci: number;
+  yerliOran: number;
+  yabanciOran: number;
+}
+
+export interface SpkPiyasa {
+  yil: number;
+  ay: number;
+  toplamPiyasaMilyarTl: number;
+  halkaAcikPiyasaMilyarTl: number;
+  sirketSayisi: number;
+}
+
+export async function fetchSpkYatirimciData(year: number): Promise<SpkYatirimci[]> {
+  const url = `${SPK_BASE}/BorclanmaAraclari/api/GetBakiyeliPaySenediYatiricimSayisiVeOranlari?yil=${year}`;
+  const res = await undiciFetch(url, { dispatcher: spkAgent, headers: { Accept: "application/json" } });
+  if (!res.ok) throw new Error(`SPK Yatirimci API ${res.status}`);
+  const data = await res.json() as Array<{
+    ay?: number | null;
+    toplamYatirimciSayisi?: number | null;
+    borsaSirketlerininHalkaAcikBolumlerininPiyasaDegerinegoreYerliOrani?: number | null;
+    borsaSirketlerininHalkaAcikBolumlerininPiyasaDegerinegoreYabanciOrani?: number | null;
+  }>;
+  return data
+    .filter(d => d.ay != null && d.toplamYatirimciSayisi != null)
+    .map(d => ({
+      yil: year,
+      ay: d.ay!,
+      toplamYatirimci: d.toplamYatirimciSayisi!,
+      yerliOran: Math.round((d.borsaSirketlerininHalkaAcikBolumlerininPiyasaDegerinegoreYerliOrani ?? 0) * 10) / 10,
+      yabanciOran: Math.round((d.borsaSirketlerininHalkaAcikBolumlerininPiyasaDegerinegoreYabanciOrani ?? 0) * 10) / 10,
+    }));
+}
+
+export async function fetchSpkPiyasaData(year: number): Promise<SpkPiyasa[]> {
+  const url = `${SPK_BASE}/BorclanmaAraclari/api/PaylariBorsadaIslemGorenSirketlerinPiyasaDegeriBilgileri?yil=${year}`;
+  const res = await undiciFetch(url, { dispatcher: spkAgent, headers: { Accept: "application/json" } });
+  if (!res.ok) throw new Error(`SPK Piyasa API ${res.status}`);
+  const data = await res.json() as Array<{
+    ay?: number | null;
+    borsaSirketSayisi?: number | null;
+    borsaSirketlerininToplamPiyasaDegeriMilyonTl?: number | null;
+    borsaSirketlerininHalkaAcikKisimlarininPiyasaDegeriAcikKisimMilyonTl?: number | null;
+  }>;
+  return data
+    .filter(d => d.ay != null)
+    .map(d => ({
+      yil: year,
+      ay: d.ay!,
+      toplamPiyasaMilyarTl: Math.round((d.borsaSirketlerininToplamPiyasaDegeriMilyonTl ?? 0) / 100) / 10,
+      halkaAcikPiyasaMilyarTl: Math.round((d.borsaSirketlerininHalkaAcikKisimlarininPiyasaDegeriAcikKisimMilyonTl ?? 0) / 100) / 10,
+      sirketSayisi: d.borsaSirketSayisi ?? 0,
+    }));
+}
+
 export async function fetchSpkIpoData(year = 2026): Promise<Arz[]> {
   const url = `${SPK_BASE}/BorclanmaAraclari/api/IlkHalkaArzVerileri?yil=${year}`;
 

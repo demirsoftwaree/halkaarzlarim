@@ -150,8 +150,13 @@ export default async function AnaSayfa() {
                   <Link key={arz.id} href={`/halka-arz/${arz.slug}`}>
                     <div className="bg-slate-800/40 border border-slate-700/50 rounded-xl px-4 py-3.5 flex items-center gap-3 hover:border-blue-500/30 transition-all group">
                       {/* İkon */}
-                      <div className="w-10 h-10 rounded-xl flex items-center justify-center text-blue-400 font-bold text-xs flex-shrink-0" style={{ background: "rgba(59,130,246,0.1)" }}>
-                        {(arz.ticker || "??").slice(0, 2)}
+                      <div className={`w-10 h-10 rounded-xl flex-shrink-0 overflow-hidden flex items-center justify-center ${arz.logo ? "bg-white p-1" : ""}`} style={!arz.logo ? { background: "rgba(59,130,246,0.1)" } : {}}>
+                        {arz.logo ? (
+                          // eslint-disable-next-line @next/next/no-img-element
+                          <img src={arz.logo} alt={arz.ticker} className="w-full h-full object-contain" />
+                        ) : (
+                          <span className="text-blue-400 font-bold text-xs">{(arz.ticker || "??").slice(0, 2)}</span>
+                        )}
                       </div>
 
                       {/* Orta: ticker + şirket adı + tarih */}
@@ -207,8 +212,13 @@ export default async function AnaSayfa() {
                 <Link key={arz.id} href={`/halka-arz/${arz.slug}`}>
                   <div className={`flex items-center gap-4 px-5 py-4 hover:bg-slate-700/30 transition-all group ${i !== 0 ? "border-t border-slate-700/50" : ""}`}>
                     {/* Logo / Ticker */}
-                    <div className="w-10 h-10 rounded-xl bg-slate-700/60 flex items-center justify-center text-slate-300 font-bold text-xs shrink-0">
-                      {arz.ticker.slice(0, 2)}
+                    <div className={`w-10 h-10 rounded-xl shrink-0 overflow-hidden flex items-center justify-center ${arz.logo ? "bg-white p-1" : "bg-slate-700/60"}`}>
+                      {arz.logo ? (
+                        // eslint-disable-next-line @next/next/no-img-element
+                        <img src={arz.logo} alt={arz.ticker} className="w-full h-full object-contain" />
+                      ) : (
+                        <span className="text-slate-300 font-bold text-xs">{arz.ticker.slice(0, 2)}</span>
+                      )}
                     </div>
                     {/* Bilgi */}
                     <div className="flex-1 min-w-0">

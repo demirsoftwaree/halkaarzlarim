@@ -57,7 +57,7 @@ export async function GET() {
     }
 
     // Aktif arz sayısı
-    const jsonArzlar = readYaklasanArzlar();
+    const jsonArzlar = await readYaklasanArzlar();
     const tumArzlar = [...jsonArzlar, ...yaklasanArzlar];
     const aktifArzlar = tumArzlar.filter(
       (a) => a.durum === "yaklasan" || a.durum === "aktif"

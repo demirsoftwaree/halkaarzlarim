@@ -46,13 +46,18 @@ export default function ArzCard({ arz }: Props) {
 
         {/* ── Üst satır: ikon + şirket + durum + watchlist ── */}
         <div className="flex items-center gap-3 mb-3">
-          {/* Ticker ikonu */}
-          <div className={`w-10 h-10 rounded-xl flex items-center justify-center font-bold text-xs shrink-0 ${
-            isDone
-              ? "bg-slate-700/50 text-slate-400"
-              : "bg-gradient-to-br from-emerald-500/20 to-slate-700 text-emerald-400"
+          {/* Ticker / Logo */}
+          <div className={`w-10 h-10 rounded-xl shrink-0 overflow-hidden flex items-center justify-center ${
+            arz.logo ? "bg-white p-1" : isDone ? "bg-slate-700/50" : "bg-gradient-to-br from-emerald-500/20 to-slate-700"
           }`}>
-            {(arz.ticker || arz.sirketAdi).slice(0, 2).toUpperCase()}
+            {arz.logo ? (
+              // eslint-disable-next-line @next/next/no-img-element
+              <img src={arz.logo} alt={arz.ticker} className="w-full h-full object-contain" />
+            ) : (
+              <span className={`font-bold text-xs ${isDone ? "text-slate-400" : "text-emerald-400"}`}>
+                {(arz.ticker || arz.sirketAdi).slice(0, 2).toUpperCase()}
+              </span>
+            )}
           </div>
 
           {/* Şirket bilgisi */}

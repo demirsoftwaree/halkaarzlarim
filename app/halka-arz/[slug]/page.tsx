@@ -7,6 +7,7 @@ import AdBanner from "@/components/AdBanner";
 import StockChart from "@/components/StockChart";
 import { durumRenk, durumEtiket } from "@/lib/mock-data";
 import { getArzlar } from "@/lib/arz-utils";
+import ArzLogo from "@/components/ArzLogo";
 import type { Metadata } from "next";
 
 export const dynamicParams = true;
@@ -120,9 +121,7 @@ export default async function ArzDetayPage({ params }: { params: Promise<{ slug:
         {/* ── HEADER ── */}
         <div className="bg-slate-800/60 border border-slate-700/50 rounded-2xl p-6 mb-6">
           <div className="flex items-start gap-4">
-            <div className="w-14 h-14 bg-gradient-to-br from-emerald-500/20 to-blue-500/10 border border-emerald-500/20 rounded-2xl flex items-center justify-center text-emerald-400 font-bold text-base shrink-0">
-              {(arz.ticker || arz.sirketAdi).slice(0, 2).toUpperCase()}
-            </div>
+            <ArzLogo logo={arz.logo} ticker={arz.ticker || arz.sirketAdi} isDone={tamamlandi} size="lg" />
             <div className="flex-1 min-w-0">
               <div className="flex items-center gap-2 flex-wrap mb-1">
                 {arz.ticker && (

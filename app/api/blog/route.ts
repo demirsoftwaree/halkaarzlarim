@@ -7,12 +7,12 @@ export async function GET() {
   try {
     const snap = await adminDb
       .collection("haberler")
-      .where("kategori", "==", "blog")
-      .where("yayinda", "==", true)
       .orderBy("tarih", "desc")
       .get();
 
-    const bloglar = snap.docs.map((d) => ({ id: d.id, ...d.data() }));
+    const bloglar = snap.docs
+      .map((d) => ({ id: d.id, ...d.data() }))
+      .filter((d) => (d as { kategori?: string; yayinda?: boolean }).kategori === "blog" && (d as { yayinda?: boolean }).yayinda === true);
     return NextResponse.json(bloglar);
   } catch {
     return NextResponse.json([], { status: 200 });

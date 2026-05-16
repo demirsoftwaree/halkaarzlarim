@@ -46,14 +46,14 @@ function SirketAvatar({ sirket, gorsel }: { sirket: string; gorsel?: string }) {
   if (gorsel) {
     return (
       // eslint-disable-next-line @next/next/no-img-element
-      <img src={gorsel} alt={sirket} className="w-10 h-10 rounded-full object-contain bg-white/5 flex-shrink-0" />
+      <img src={gorsel} alt={sirket} className="w-12 h-12 rounded-xl object-contain bg-white p-1.5 flex-shrink-0 shadow-sm" />
     );
   }
   const harf = (sirket || "?")[0].toUpperCase();
   const renkler = ["bg-emerald-500/20 text-emerald-400", "bg-blue-500/20 text-blue-400", "bg-amber-500/20 text-amber-400", "bg-purple-500/20 text-purple-400"];
   const renk = renkler[harf.charCodeAt(0) % renkler.length];
   return (
-    <div className={`w-10 h-10 rounded-full flex-shrink-0 flex items-center justify-center font-bold text-sm ${renk}`}>
+    <div className={`w-12 h-12 rounded-xl flex-shrink-0 flex items-center justify-center font-bold text-sm ${renk}`}>
       {harf}
     </div>
   );
