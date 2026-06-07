@@ -2,7 +2,7 @@ export const revalidate = 0;
 export const dynamic = "force-dynamic";
 
 import Link from "next/link";
-import { ArrowRight, Star, TrendingUp, BarChart3, DollarSign, Crown, Medal } from "lucide-react";
+import { ArrowRight, TrendingUp, BarChart3, DollarSign, Crown } from "lucide-react";
 import Navbar from "@/components/Navbar";
 import TickerBar from "@/components/TickerBar";
 import Footer from "@/components/Footer";
@@ -16,7 +16,7 @@ const araclar = [
   { icon: TrendingUp,  baslik: "Tavan Simülatörü",          aciklama: "Kaç tavan giderse kaç ₺ kazanırsın?",          href: "/araclar/tavan-simulatoru",   renk: "text-emerald-400", bg: "bg-emerald-500/10" },
   { icon: BarChart3,   baslik: "Lot Dağıtım Hesaplayıcı",   aciklama: "Kaç kişi başvurursa kaç lot düşer?",           href: "/araclar/lot-hesaplama",      renk: "text-blue-400",   bg: "bg-blue-500/10"    },
   { icon: DollarSign,  baslik: "Net Kâr Hesaplayıcı",       aciklama: "Komisyon dahil gerçek net kazancını hesapla.", href: "/araclar/kar-hesaplama",      renk: "text-amber-400",  bg: "bg-amber-500/10"   },
-  { icon: Crown,       baslik: "Tavan Getiri Raporu",       aciklama: "10 günlük tavan senaryosu — PDF olarak indir.", href: "/araclar/tavan-raporu",       renk: "text-yellow-400", bg: "bg-yellow-500/10",  premium: true },
+  { icon: Crown,       baslik: "Tavan Getiri Raporu",       aciklama: "10 günlük tavan senaryosu — PDF olarak indir.", href: "/araclar/tavan-raporu",       renk: "text-yellow-400", bg: "bg-yellow-500/10" },
 ];
 
 const spkAgent = new Agent({ connect: { rejectUnauthorized: true } });
@@ -253,12 +253,9 @@ export default async function AnaSayfa() {
             <p className="text-slate-400 text-sm mt-1">Halka arz kararlarını veriye dayalı al</p>
           </div>
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-            {araclar.map(({ icon: Icon, baslik, aciklama, href, renk, bg, ...rest }) => (
+            {araclar.map(({ icon: Icon, baslik, aciklama, href, renk, bg }) => (
               <Link key={href} href={href}>
                 <div className="bg-slate-800/40 border border-slate-700/50 rounded-2xl p-5 h-full hover:border-slate-600 transition-all group cursor-pointer relative">
-                  {"premium" in rest && (
-                    <span className="absolute top-3 right-3 text-xs px-1.5 py-0.5 rounded-full bg-amber-500/15 border border-amber-500/30 text-amber-400">PRO</span>
-                  )}
                   <div className={`w-11 h-11 ${bg} rounded-xl flex items-center justify-center mb-4`}>
                     <Icon size={22} className={renk} />
                   </div>
@@ -273,20 +270,6 @@ export default async function AnaSayfa() {
           </div>
         </section>
 
-        {/* Premium CTA */}
-        <section className="border border-amber-500/20 rounded-2xl p-8 flex flex-col sm:flex-row items-center justify-between gap-6" style={{ background: "linear-gradient(to right, rgba(245,158,11,0.1), rgba(245,158,11,0.05), transparent)" }}>
-          <div>
-            <div className="flex items-center gap-2 mb-2">
-              <Star size={18} className="text-amber-400" fill="currentColor" />
-              <span className="text-amber-400 font-semibold text-sm">Premium</span>
-            </div>
-            <h3 className="text-white text-xl font-bold mb-1">Halka Arzlarım özelliğini deneyin</h3>
-            <p className="text-slate-400 text-sm">Başvurularını takip et, portföyünü yönet, bildirimler al.</p>
-          </div>
-          <Link href="/premium" className="flex-shrink-0 bg-amber-400 hover:bg-amber-300 text-slate-900 font-bold px-6 py-3 rounded-xl transition-colors">
-            Premium&apos;u Keşfet
-          </Link>
-        </section>
       </main>
 
       <Footer />

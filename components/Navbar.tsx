@@ -65,10 +65,6 @@ export default function Navbar() {
           <Link href="/blog" className="text-slate-300 hover:text-white text-sm font-medium transition-colors">
             Blog
           </Link>
-          <Link href="/premium" className="flex items-center gap-1.5 text-amber-400 hover:text-amber-300 text-sm font-medium transition-colors">
-            <Star size={14} fill="currentColor" />
-            Premium
-          </Link>
         </div>
 
         {/* Auth Buttons */}
@@ -150,13 +146,6 @@ export default function Navbar() {
               {label}
             </Link>
           ))}
-          <Link
-            href="/premium"
-            onClick={() => setMenuOpen(false)}
-            className="block text-amber-400 hover:bg-slate-800 px-3 py-2.5 rounded-lg transition-colors text-sm font-medium"
-          >
-            ⭐ Premium
-          </Link>
           <div className="pt-3 border-t border-slate-800 mt-2">
             {user ? (
               <div className="space-y-1">
