@@ -22,7 +22,7 @@ export default function TakipListemPage() {
   if (authLoading || !user) return null;
 
   return (
-    <div className="min-h-screen flex flex-col bg-[#0a0f1a]">
+    <div className="min-h-screen flex flex-col">
       <Navbar />
       <main className="flex-1 max-w-3xl mx-auto w-full px-4 sm:px-6 py-10">
         <div className="flex items-center gap-3 mb-8">

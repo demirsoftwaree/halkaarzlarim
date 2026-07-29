@@ -68,7 +68,7 @@ export default function IstatistiklerPage() {
   })) ?? [];
 
   return (
-    <div className="min-h-screen flex flex-col bg-slate-900 text-slate-100">
+    <div className="min-h-screen flex flex-col text-slate-100">
       <TickerBar />
       <Navbar />
 

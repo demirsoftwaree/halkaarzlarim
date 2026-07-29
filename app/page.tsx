@@ -9,6 +9,8 @@ import Footer from "@/components/Footer";
 import ArzCard from "@/components/ArzCard";
 import WatchlistButton from "@/components/WatchlistButton";
 import AdBanner from "@/components/AdBanner";
+import HeroChart from "@/components/HeroChart";
+import Reveal from "@/components/Reveal";
 import { getArzlar } from "@/lib/arz-utils";
 import { Agent, fetch as undiciFetch } from "undici";
 
@@ -79,27 +81,57 @@ export default async function AnaSayfa() {
       <TickerBar />
 
       {/* Hero */}
-      <section className="bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 border-b border-slate-800 py-20 px-4 relative overflow-hidden">
-        <div className="absolute inset-0" style={{ background: "radial-gradient(ellipse at top right, rgba(16,185,129,0.08), transparent 60%)" }} />
-        <div className="max-w-7xl mx-auto text-center relative">
-          <div className="inline-flex items-center gap-2 text-emerald-400 text-xs font-medium px-3 py-1.5 rounded-full mb-6 border border-emerald-500/20" style={{ background: "rgba(16,185,129,0.1)" }}>
-            <span className="w-1.5 h-1.5 bg-emerald-400 rounded-full animate-pulse" />
-            Şu an {aktifArzlar.length} aktif halka arz var
+      <section className="border-b border-slate-800/60 py-16 lg:py-24 px-4 relative overflow-hidden">
+        <div className="absolute inset-0" style={{ background: "radial-gradient(ellipse 60% 50% at 25% 0%, rgba(16,185,129,0.09), transparent 60%), radial-gradient(ellipse 40% 45% at 90% 90%, rgba(56,189,248,0.05), transparent 60%)" }} />
+        <div className="max-w-7xl mx-auto relative grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-16 items-center">
+          {/* Sol: metin */}
+          <div>
+            <div className="anim-fade-up anim-d-1 inline-flex items-center gap-2.5 text-emerald-400 text-xs font-semibold px-3.5 py-1.5 rounded-full mb-6 border border-emerald-500/25" style={{ background: "rgba(16,185,129,0.08)" }}>
+              <span className="pulse-dot" />
+              Şu an {aktifArzlar.length} aktif halka arz — talep toplanıyor
+            </div>
+            <h1 className="anim-fade-up anim-d-2 text-3xl sm:text-4xl lg:text-5xl font-extrabold text-white mb-5 leading-[1.12] tracking-tight">
+              Halka Arzın Yapay Zekâ Destekli Merkezi<br />
+              <span className="text-grad">Takip Et. Analiz Et. Kazancını Hesapla.</span>
+            </h1>
+            <p className="anim-fade-up anim-d-3 text-slate-400 text-lg leading-relaxed max-w-xl mb-8">
+              Türkiye&apos;nin en kapsamlı halka arz platformu. Canlı halka arz takvimi, AI yatırım asistanı, lot hesaplama, tavan simülasyonu, geçmiş arz arşivi ve anlık bildirimler tek platformda.
+            </p>
+            <div className="anim-fade-up anim-d-4 flex flex-col sm:flex-row gap-4">
+              <Link href="/halka-arzlar" className="btn-glow text-white font-bold px-8 py-3.5 rounded-xl flex items-center gap-2 justify-center">
+                Takvimi Gör <ArrowRight size={18} />
+              </Link>
+              <Link href="#hesaplama-araclari" className="bg-slate-500/10 hover:bg-slate-500/20 border border-slate-700/60 hover:border-slate-600 text-white font-semibold px-8 py-3.5 rounded-xl transition-colors text-center" data-build="v2">
+                Araçları Dene
+              </Link>
+            </div>
           </div>
-          <h1 className="text-4xl sm:text-5xl md:text-6xl font-extrabold text-white mb-4 leading-tight">
-            Halka Arzı Takip Et,<br />
-            <span className="text-emerald-400">Kazancını Hesapla.</span>
-          </h1>
-          <p className="text-slate-400 text-lg max-w-2xl mx-auto mb-8">
-            Türkiye&apos;nin halka arz takvimi, tavan simülatörü ve lot hesaplama araçları — hepsi bir arada.
-          </p>
-          <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <Link href="/halka-arzlar" className="bg-emerald-500 hover:bg-emerald-400 text-white font-semibold px-8 py-3.5 rounded-xl transition-colors flex items-center gap-2 justify-center">
-              Takvimi Gör <ArrowRight size={18} />
-            </Link>
-            <Link href="#hesaplama-araclari" className="bg-slate-700 hover:bg-slate-600 text-white font-semibold px-8 py-3.5 rounded-xl transition-colors" data-build="v2">
-              Araçları Dene
-            </Link>
+
+          {/* Sağ: canlı grafik kartı */}
+          <div className="anim-fade-up anim-d-4 hidden lg:block">
+            <div className="relative rounded-2xl overflow-hidden border border-slate-700/40 shadow-2xl shadow-black/50" style={{ background: "linear-gradient(160deg, rgba(16,185,129,0.06), rgba(15,23,38,0.7) 40%)" }}>
+              <div className="flex justify-between items-center px-5 pt-4 pb-1">
+                <div className="font-mono text-sm font-bold text-white">▲ BIST <span className="text-slate-500 font-normal text-xs ml-1">Halka Arz Endeksi</span></div>
+                <div className="text-right">
+                  <div className="text-emerald-400 text-xs font-mono font-semibold">CANLI TAKİP</div>
+                </div>
+              </div>
+              <HeroChart />
+              <div className="grid grid-cols-3 border-t border-slate-700/40 text-[11.5px]">
+                <div className="px-4 py-3 border-r border-slate-700/40">
+                  <div className="text-slate-500 mb-0.5">Aktif Arz</div>
+                  <div className="text-white font-bold tabular-nums">{aktifArzlar.length}</div>
+                </div>
+                <div className="px-4 py-3 border-r border-slate-700/40">
+                  <div className="text-slate-500 mb-0.5">Yaklaşan</div>
+                  <div className="text-sky-400 font-bold tabular-nums">{yaklasanArzlar.length}</div>
+                </div>
+                <div className="px-4 py-3">
+                  <div className="text-slate-500 mb-0.5">Arşiv</div>
+                  <div className="text-emerald-400 font-bold tabular-nums">205+</div>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
       </section>
@@ -107,10 +139,12 @@ export default async function AnaSayfa() {
       <main className="flex-1 max-w-7xl mx-auto w-full px-4 sm:px-6 py-12 space-y-16">
 
         {/* Aktif Arzlar */}
+        <Reveal>
         <section>
           <div className="flex items-center justify-between mb-6">
             <div>
-              <h2 className="text-xl font-bold text-white">Aktif Halka Arzlar</h2>
+              <span className="text-[11px] font-bold tracking-[0.14em] uppercase text-emerald-500 block mb-1.5">Canlı</span>
+              <h2 className="text-2xl font-extrabold text-white tracking-tight">Aktif Halka Arzlar</h2>
               <p className="text-slate-400 text-sm mt-1">Şu an talep toplayan arzlar</p>
             </div>
             <Link href="/halka-arzlar" className="text-emerald-400 hover:text-emerald-300 text-sm font-medium flex items-center gap-1 transition-colors">
@@ -127,13 +161,16 @@ export default async function AnaSayfa() {
             </div>
           )}
         </section>
+        </Reveal>
 
         {/* Yaklaşan Arzlar */}
         {yaklasanArzlar.length > 0 && (
+          <Reveal>
           <section>
             <div className="flex items-center justify-between mb-6">
               <div>
-                <h2 className="text-xl font-bold text-white">Yaklaşan Halka Arzlar</h2>
+                <span className="text-[11px] font-bold tracking-[0.14em] uppercase text-sky-500 block mb-1.5">Takvim</span>
+                <h2 className="text-2xl font-extrabold text-white tracking-tight">Yaklaşan Halka Arzlar</h2>
                 <p className="text-slate-400 text-sm mt-1">Yakında başlayacak arzlar</p>
               </div>
             </div>
@@ -190,6 +227,7 @@ export default async function AnaSayfa() {
               })}
             </div>
           </section>
+          </Reveal>
         )}
 
         {/* Reklam — yaklaşan ile tamamlanan arasına */}
@@ -197,10 +235,12 @@ export default async function AnaSayfa() {
 
         {/* Son Tamamlanan Arzlar */}
         {sonTamamlanan.length > 0 && (
+          <Reveal>
           <section>
             <div className="flex items-center justify-between mb-6">
               <div>
-                <h2 className="text-xl font-bold text-white">Son Halka Arzlar</h2>
+                <span className="text-[11px] font-bold tracking-[0.14em] uppercase text-slate-500 block mb-1.5">Arşiv</span>
+                <h2 className="text-2xl font-extrabold text-white tracking-tight">Son Halka Arzlar</h2>
                 <p className="text-slate-400 text-sm mt-1">Son tamamlanan halka arzlar</p>
               </div>
               <Link href="/halka-arzlar" className="text-emerald-400 hover:text-emerald-300 text-sm font-medium flex items-center gap-1 transition-colors">
@@ -244,18 +284,21 @@ export default async function AnaSayfa() {
               ))}
             </div>
           </section>
+          </Reveal>
         )}
 
         {/* Araçlar */}
+        <Reveal>
         <section id="hesaplama-araclari">
           <div className="mb-6">
-            <h2 className="text-xl font-bold text-white">Hesaplama Araçları</h2>
-            <p className="text-slate-400 text-sm mt-1">Halka arz kararlarını veriye dayalı al</p>
+            <span className="text-[11px] font-bold tracking-[0.14em] uppercase text-amber-500 block mb-1.5">Araçlar</span>
+            <h2 className="text-2xl font-extrabold text-white tracking-tight">Hesaplama Araçları</h2>
+            <p className="text-slate-400 text-sm mt-1">Halka arz kararlarını veriye dayalı al — tamamen ücretsiz</p>
           </div>
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
             {araclar.map(({ icon: Icon, baslik, aciklama, href, renk, bg }) => (
               <Link key={href} href={href}>
-                <div className="bg-slate-800/40 border border-slate-700/50 rounded-2xl p-5 h-full hover:border-slate-600 transition-all group cursor-pointer relative">
+                <div className="card-lift bg-slate-800/40 backdrop-blur-sm border border-slate-700/50 rounded-2xl p-5 h-full hover:border-slate-600 group cursor-pointer">
                   <div className={`w-11 h-11 ${bg} rounded-xl flex items-center justify-center mb-4`}>
                     <Icon size={22} className={renk} />
                   </div>
@@ -269,6 +312,7 @@ export default async function AnaSayfa() {
             ))}
           </div>
         </section>
+        </Reveal>
 
       </main>
 

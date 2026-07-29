@@ -35,7 +35,6 @@ function slugify(s: string): string {
   //   lotBuyuklugu:    100,
   //   araciKurum:      "Garanti Yatırım",
   //   toplamArzLot:    0,
-  //   bireyselPayYuzde: 25,
   //   aciklama:        "KAP bildirimi veya basın açıklaması özeti.",
   //   kapLinki:        "https://www.kap.org.tr/...",
   //   piyasaDegeri:    undefined,

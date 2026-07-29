@@ -4,7 +4,7 @@ import Link from "next/link";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import AdBanner from "@/components/AdBanner";
-import { RefreshCw, Megaphone } from "lucide-react";
+import { RefreshCw, Megaphone, TrendingUp, BarChart2, Users, Activity, DollarSign, Building2, Bell, BookOpen } from "lucide-react";
 import type { Haber } from "@/app/api/haberler/route";
 
 const KATEGORİ_RENK: Record<string, string> = {
@@ -42,19 +42,23 @@ function formatTarihSaat(tarih: string, saat?: string) {
   return saat ? `${d} ${saat}` : d;
 }
 
-function SirketAvatar({ sirket, gorsel }: { sirket: string; gorsel?: string }) {
-  if (gorsel) {
-    return (
-      // eslint-disable-next-line @next/next/no-img-element
-      <img src={gorsel} alt={sirket} className="w-12 h-12 rounded-xl object-contain bg-white p-1.5 flex-shrink-0 shadow-sm" />
-    );
-  }
-  const harf = (sirket || "?")[0].toUpperCase();
-  const renkler = ["bg-emerald-500/20 text-emerald-400", "bg-blue-500/20 text-blue-400", "bg-amber-500/20 text-amber-400", "bg-purple-500/20 text-purple-400"];
-  const renk = renkler[harf.charCodeAt(0) % renkler.length];
+const KATEGORİ_İKON: Record<string, { icon: React.ElementType; bg: string; renk: string }> = {
+  "halka-arz":     { icon: TrendingUp,  bg: "bg-emerald-500/15", renk: "text-emerald-400" },
+  "sermaye":       { icon: BarChart2,   bg: "bg-blue-500/15",    renk: "text-blue-400"    },
+  "genel-kurul":   { icon: Users,       bg: "bg-purple-500/15",  renk: "text-purple-400"  },
+  "borsa":         { icon: Activity,    bg: "bg-amber-500/15",   renk: "text-amber-400"   },
+  "temettu":       { icon: DollarSign,  bg: "bg-pink-500/15",    renk: "text-pink-400"    },
+  "sirket-haberi": { icon: Building2,   bg: "bg-orange-500/15",  renk: "text-orange-400"  },
+  "blog":          { icon: BookOpen,    bg: "bg-violet-500/15",  renk: "text-violet-400"  },
+  "duyuru":        { icon: Bell,        bg: "bg-slate-500/15",   renk: "text-slate-400"   },
+};
+
+function KategoriIkon({ kategori }: { kategori: string }) {
+  const cfg = KATEGORİ_İKON[kategori] ?? KATEGORİ_İKON["duyuru"];
+  const Icon = cfg.icon;
   return (
-    <div className={`w-12 h-12 rounded-xl flex-shrink-0 flex items-center justify-center font-bold text-sm ${renk}`}>
-      {harf}
+    <div className={`w-10 h-10 rounded-xl flex-shrink-0 flex items-center justify-center ${cfg.bg}`}>
+      <Icon size={18} className={cfg.renk} />
     </div>
   );
 }
@@ -145,8 +149,8 @@ export default function HaberlerPage() {
                   href={haber.link}
                   className="flex items-center gap-4 px-5 py-4 hover:bg-slate-700/30 transition-colors group"
                 >
-                  {/* Şirket avatarı */}
-                  <SirketAvatar sirket={haber.sirket} gorsel={haber.gorsel} />
+                  {/* Kategori ikonu */}
+                  <KategoriIkon kategori={haber.kategori} />
 
                   {/* İçerik */}
                   <div className="flex-1 min-w-0">

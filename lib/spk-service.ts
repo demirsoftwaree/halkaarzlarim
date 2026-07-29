@@ -113,7 +113,6 @@ function mapToArz(item: SpkIpo): Arz {
     lotBuyuklugu: 1,
     araciKurum,
     toplamArzLot: toplamLot,
-    bireyselPayYuzde: item.halkaArzOrani ?? 0,
     kapLinki,
     aciklama: item.halkaArzSekli ?? "",
     piyasaDegeri,

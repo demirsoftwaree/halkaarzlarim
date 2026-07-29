@@ -90,10 +90,10 @@ export default function ChatWidget() {
       <button
         onClick={() => setOpen(v => !v)}
         className="fixed bottom-6 right-6 z-50 flex items-center gap-2 bg-emerald-500 hover:bg-emerald-400 text-white font-semibold px-4 py-3 rounded-full shadow-lg transition-all hover:scale-105 active:scale-95"
-        aria-label="Yapay zekaya sor"
+        aria-label="Yapay Zeka Asistanı"
       >
         {open ? <X size={20} /> : <MessageCircle size={20} />}
-        {!open && <span className="text-sm hidden sm:inline">Yapay Zekaya Sor</span>}
+        {!open && <span className="text-sm hidden sm:inline">Yapay Zeka Asistanı</span>}
       </button>
 
       {/* Chat Panel */}

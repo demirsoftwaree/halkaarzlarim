@@ -86,11 +86,11 @@ export default function GirisPage() {
 
   // Auth yükleniyorsa veya kullanıcı var, ekran gösterme
   if (authLoading || user) {
-    return <div className="min-h-screen bg-[#0a0f1a]" />;
+    return <div className="min-h-screen" />;
   }
 
   return (
-    <div className="min-h-screen bg-[#0a0f1a] flex items-center justify-center px-4">
+    <div className="min-h-screen flex items-center justify-center px-4">
       <div className="w-full max-w-sm">
         {/* Logo */}
         <Link href="/" className="flex items-center justify-center gap-2 mb-8">

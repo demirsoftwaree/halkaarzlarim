@@ -61,7 +61,7 @@ export default function HesapSilPage() {
   }
 
   return (
-    <div className="min-h-screen flex flex-col bg-[#0a0f1a]">
+    <div className="min-h-screen flex flex-col">
       <Navbar />
       <main className="flex-1 flex items-center justify-center px-4 py-16">
         <div className="w-full max-w-md">

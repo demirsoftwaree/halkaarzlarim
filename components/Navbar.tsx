@@ -20,7 +20,7 @@ export default function Navbar() {
 
   return (
     <>
-    <nav className="sticky top-0 z-50 bg-slate-900/95 backdrop-blur border-b border-slate-800">
+    <nav className="sticky top-0 z-50 bg-[#05080f]/75 backdrop-blur-xl border-b border-slate-700/30">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 flex items-center justify-between h-16">
         {/* Logo */}
         <Link href="/" className="flex items-center gap-2">
@@ -34,17 +34,35 @@ export default function Navbar() {
 
         {/* Desktop Menu */}
         <div className="hidden md:flex items-center gap-6">
-          <Link href="/halka-arzlar" className="text-slate-300 hover:text-white text-sm font-medium transition-colors">
-            Halka Arz Takvimi
-          </Link>
+          {/* Halka Arzlar Dropdown */}
+          <div className="relative group">
+            <button className="flex items-center gap-1 text-slate-300 hover:text-white text-sm font-medium transition-colors">
+              Halka Arzlar <ChevronDown size={14} />
+            </button>
+            <div className="absolute top-full left-0 mt-2 w-56 bg-slate-800 border border-slate-700 rounded-xl shadow-xl opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all z-50">
+              <Link href="/halka-arzlar" className="flex items-center gap-2 px-4 py-2.5 text-sm text-slate-300 hover:text-white hover:bg-slate-700 rounded-t-xl">
+                📅 <span>Aktif &amp; Yaklaşan</span>
+              </Link>
+              <div className="border-t border-slate-700/50 mx-3 my-1" />
+              <div className="px-4 py-1 text-[10px] font-semibold text-slate-500 uppercase tracking-wider">Geçmiş Yıllar</div>
+              {[2025, 2024, 2023, 2022, 2021, 2020].map((yil) => (
+                <Link key={yil} href={`/gecmis-halka-arzlar/${yil}`} className="flex items-center gap-2 px-4 py-2 text-sm text-slate-300 hover:text-white hover:bg-slate-700 last:rounded-b-xl">
+                  📂 <span>{yil} Halka Arzları</span>
+                </Link>
+              ))}
+            </div>
+          </div>
+
           <Link href="/istatistikler" className="flex items-center gap-1 text-slate-300 hover:text-white text-sm font-medium transition-colors">
             <BarChart2 size={14} /> İstatistikler
           </Link>
-<div className="relative group">
-            <Link href="/araclar/tavan-simulatoru" className="flex items-center gap-1 text-slate-300 hover:text-white text-sm font-medium transition-colors">
+
+          {/* Araçlar Dropdown */}
+          <div className="relative group">
+            <button className="flex items-center gap-1 text-slate-300 hover:text-white text-sm font-medium transition-colors">
               Araçlar <ChevronDown size={14} />
-            </Link>
-            <div className="absolute top-full left-0 mt-2 w-52 bg-slate-800 border border-slate-700 rounded-xl shadow-xl opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all">
+            </button>
+            <div className="absolute top-full left-0 mt-2 w-52 bg-slate-800 border border-slate-700 rounded-xl shadow-xl opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all z-50">
               <Link href="/araclar/tavan-simulatoru" className="block px-4 py-2.5 text-sm text-slate-300 hover:text-white hover:bg-slate-700 rounded-t-xl">
                 📈 Tavan Simülatörü
               </Link>
@@ -54,11 +72,12 @@ export default function Navbar() {
               <Link href="/araclar/kar-hesaplama" className="block px-4 py-2.5 text-sm text-slate-300 hover:text-white hover:bg-slate-700">
                 💰 Net Kâr Hesaplayıcı
               </Link>
-              <Link href="/araclar/tavan-raporu" className="block px-4 py-2.5 text-sm text-amber-400 hover:text-amber-300 hover:bg-slate-700 flex items-center gap-1.5">
+              <Link href="/araclar/tavan-raporu" className="block px-4 py-2.5 text-sm text-amber-400 hover:text-amber-300 hover:bg-slate-700 rounded-b-xl">
                 👑 Tavan Getiri Raporu
               </Link>
             </div>
           </div>
+
           <Link href="/haberler" className="text-slate-300 hover:text-white text-sm font-medium transition-colors">
             Haberler
           </Link>
@@ -106,7 +125,7 @@ export default function Navbar() {
           ) : (
             <>
               <Link href="/giris" className="text-sm text-slate-300 hover:text-white transition-colors">Giriş Yap</Link>
-              <Link href="/giris" className="bg-emerald-500 hover:bg-emerald-400 text-white text-sm font-medium px-4 py-2 rounded-lg transition-colors">
+              <Link href="/giris" className="btn-glow text-white text-sm font-semibold px-5 py-2 rounded-lg">
                 Üye Ol
               </Link>
             </>
@@ -128,7 +147,13 @@ export default function Navbar() {
       {menuOpen && (
         <div className="md:hidden border-t border-slate-800 bg-slate-900 px-4 py-4 space-y-1">
           {[
-            { href: "/halka-arzlar", label: "📅 Halka Arz Takvimi" },
+            { href: "/halka-arzlar", label: "📅 Aktif & Yaklaşan Arzlar" },
+            { href: "/gecmis-halka-arzlar/2025", label: "📂 2025 Halka Arzları" },
+            { href: "/gecmis-halka-arzlar/2024", label: "📂 2024 Halka Arzları" },
+            { href: "/gecmis-halka-arzlar/2023", label: "📂 2023 Halka Arzları" },
+            { href: "/gecmis-halka-arzlar/2022", label: "📂 2022 Halka Arzları" },
+            { href: "/gecmis-halka-arzlar/2021", label: "📂 2021 Halka Arzları" },
+            { href: "/gecmis-halka-arzlar/2020", label: "📂 2020 Halka Arzları" },
             { href: "/araclar/tavan-simulatoru", label: "📈 Tavan Simülatörü" },
             { href: "/araclar/lot-hesaplama", label: "🎯 Lot Dağıtım" },
             { href: "/araclar/kar-hesaplama", label: "💰 Net Kâr" },

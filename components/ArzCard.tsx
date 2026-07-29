@@ -1,5 +1,4 @@
 import Link from "next/link";
-import { TrendingUp } from "lucide-react";
 import { Arz } from "@/lib/types";
 import { durumRenk, durumEtiket } from "@/lib/mock-data";
 import WatchlistButton from "./WatchlistButton";
@@ -38,10 +37,10 @@ export default function ArzCard({ arz }: Props) {
 
   return (
     <Link href={`/halka-arz/${arz.slug}`}>
-      <div className={`bg-slate-800/60 border rounded-2xl p-4 transition-all cursor-pointer group hover:shadow-lg ${
+      <div className={`bg-slate-800/50 backdrop-blur-sm border rounded-2xl p-4 cursor-pointer group ${
         isDone
-          ? "border-slate-700/30 hover:border-slate-600/50 opacity-80 hover:opacity-100"
-          : "border-slate-700/50 hover:border-emerald-500/30 hover:shadow-emerald-500/5"
+          ? "card-lift border-slate-700/30 hover:border-slate-600/50 opacity-80 hover:opacity-100"
+          : "card-lift border-slate-700/50 hover:border-emerald-500/40"
       }`}>
 
         {/* ── Üst satır: ikon + şirket + durum + watchlist ── */}
@@ -68,7 +67,7 @@ export default function ArzCard({ arz }: Props) {
                   {arz.ticker}
                 </span>
               )}
-              <span className={`text-xs px-2 py-0.5 rounded-full border font-medium ${durumRenk[arz.durum]}`}>
+              <span className={`text-xs px-2 py-0.5 rounded-full border font-medium ${durumRenk[arz.durum]} ${isActive ? "chip-live" : ""}`}>
                 {durumEtiket[arz.durum]}
               </span>
             </div>
@@ -124,16 +123,7 @@ export default function ArzCard({ arz }: Props) {
             <span className="text-xs font-semibold text-amber-400 bg-amber-400/10 border border-amber-400/20 px-2 py-0.5 rounded-full shrink-0">
               {days === 0 ? "Son gün!" : `${days} gün kaldı`}
             </span>
-          ) : isDone ? (
-            <span className="text-xs text-slate-500 shrink-0 flex items-center gap-1">
-              <TrendingUp size={11} />
-              %{(arz.bireyselPayYuzde ?? 0).toFixed(0)} arz
-            </span>
-          ) : (
-            <span className="text-xs text-slate-500 shrink-0">
-              %{arz.bireyselPayYuzde} bireysel
-            </span>
-          )}
+          ) : null}
         </div>
       </div>
     </Link>

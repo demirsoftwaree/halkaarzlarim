@@ -95,14 +95,12 @@ async function parseCompanyPage(
     const rawPrice   = data["Halka Arz Fiyatı/Aralığı"] ?? data["Fiyat Aralığı"] ?? data["Fiyat"] ?? "";
     const rawLot     = data["Pay"]                     ?? data["Toplam Lot"] ?? "";
     const rawBroker  = data["Aracı Kurum"]             ?? "";
-    const rawPctStr  = data["Fiili Dolaşımdaki Pay Oranı (%)"] ?? data["Bireysel Pay Oranı"] ?? "";
     const rawBorsaKod = data["Bist Kodu"]              ?? ticker;
 
 
     const { start, end } = parseDateRange(rawDate);
     const { low, high }  = parsePrice(rawPrice);
     const totalLots      = parseLot(rawLot);
-    const bireyselPct    = rawPctStr ? parsePct(rawPctStr) : 50;
 
     // Şirket hakkında kısa açıklama
     const aciklama = $(".entry-content p, .post-content p, .sirket-hakkinda p").first().text().trim()
@@ -137,7 +135,6 @@ async function parseCompanyPage(
       lotBuyuklugu:    100,
       araciKurum:      rawBroker,
       toplamArzLot:    totalLots,
-      bireyselPayYuzde: bireyselPct,
       kapLinki:        "https://www.kap.org.tr",
       aciklama:        aciklama.slice(0, 500),
     };

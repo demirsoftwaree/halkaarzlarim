@@ -14,7 +14,7 @@ import {
   type PortfoyKayit,
 } from "@/lib/portfolyo-service";
 import type { Arz } from "@/lib/types";
-import { PlusCircle, Trash2, Pencil, TrendingUp, TrendingDown, Crown, X, Check } from "lucide-react";
+import { PlusCircle, Trash2, Pencil, TrendingUp, TrendingDown, X, Check } from "lucide-react";
 import AdBanner from "@/components/AdBanner";
 
 function fmt(n: number, dec = 2) {
@@ -53,7 +53,7 @@ const BOSH_FORM: FormState = {
 };
 
 export default function PortfoyPage() {
-  const { user, isPremium, loading: authLoading } = useAuth();
+  const { user, loading: authLoading } = useAuth();
   const router = useRouter();
   const [kayitlar, setKayitlar] = useState<PortfoyKayit[]>([]);
   const [arzlar, setArzlar] = useState<Arz[]>([]);
@@ -78,8 +78,8 @@ export default function PortfoyPage() {
       router.push("/giris");
       return;
     }
-    if (user && isPremium) yukle();
-  }, [user, isPremium, authLoading, router, yukle]);
+    if (user) yukle();
+  }, [user, authLoading, router, yukle]);
 
   useEffect(() => {
     fetch("/api/arzlar")
@@ -179,30 +179,8 @@ export default function PortfoyPage() {
 
   if (authLoading) return null;
 
-  // Premium gate
-  if (user && !isPremium) {
-    return (
-      <div className="min-h-screen flex flex-col bg-[#0a0f1a]">
-        <Navbar />
-        <main className="flex-1 flex items-center justify-center px-4">
-          <div className="bg-slate-800 border border-slate-700 rounded-2xl p-8 text-center max-w-sm w-full shadow-2xl">
-            <div className="w-14 h-14 rounded-full bg-amber-500/10 border border-amber-500/20 flex items-center justify-center mx-auto mb-4">
-              <Crown size={24} className="text-amber-400" />
-            </div>
-            <h3 className="text-white font-semibold text-lg mb-2">Premium Özellik</h3>
-            <p className="text-slate-400 text-sm mb-6">Portföy Takibi premium üyelere özel bir özelliktir.</p>
-            <Link href="/premium" className="block w-full bg-amber-500/20 hover:bg-amber-500/30 border border-amber-500/30 text-amber-400 font-medium py-2.5 rounded-xl text-sm transition-colors text-center">
-              Premium&apos;a Geç
-            </Link>
-          </div>
-        </main>
-        <Footer />
-      </div>
-    );
-  }
-
   return (
-    <div className="min-h-screen flex flex-col bg-[#0a0f1a]">
+    <div className="min-h-screen flex flex-col">
       <Navbar />
       <main className="flex-1 max-w-4xl mx-auto w-full px-4 sm:px-6 py-10">
 
@@ -215,9 +193,6 @@ export default function PortfoyPage() {
             <div className="min-w-0">
               <div className="flex items-center gap-2 flex-wrap">
                 <h1 className="text-xl font-bold text-white">Portföy Takibi</h1>
-                <span className="text-xs px-2 py-0.5 rounded-full bg-amber-500/15 border border-amber-500/30 text-amber-400 font-medium flex items-center gap-1">
-                  <Crown size={10} /> Premium
-                </span>
               </div>
               <p className="text-slate-400 text-sm hidden sm:block">Halka arz yatırımlarını takip et, kâr/zarar hesapla.</p>
             </div>

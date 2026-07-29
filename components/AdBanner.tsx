@@ -1,7 +1,5 @@
 "use client";
 
-import { useAuth } from "@/lib/auth-context";
-
 interface AdBannerProps {
   slot: "horizontal" | "square" | "rectangle";
   className?: string;
@@ -17,11 +15,6 @@ const SLOT_IDS: Record<AdBannerProps["slot"], string> = {
 };
 
 export default function AdBanner({ slot, className = "" }: AdBannerProps) {
-  const { isPremium } = useAuth();
-
-  // Premium kullanıcıya reklam gösterme
-  if (isPremium) return null;
-
   // AdSense henüz yapılandırılmamış — gizle
   if (!ADSENSE_CLIENT || !SLOT_IDS[slot]) {
     return null;

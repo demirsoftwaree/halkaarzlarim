@@ -25,6 +25,26 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     blogUrls = [];
   }
 
+  let arzUrls: MetadataRoute.Sitemap = [];
+  try {
+    const [spkSnap, manuelSnap] = await Promise.all([
+      adminDb.collection("arzlar-spk").get(),
+      adminDb.collection("arzlar-manuel").get(),
+    ]);
+    const allSlugs = new Set([
+      ...spkSnap.docs.map((d) => d.id),
+      ...manuelSnap.docs.map((d) => d.id),
+    ]);
+    arzUrls = Array.from(allSlugs).map((slug) => ({
+      url: `${BASE_URL}/halka-arz/${slug}`,
+      lastModified: bugun,
+      changeFrequency: "weekly" as const,
+      priority: 0.85,
+    }));
+  } catch {
+    arzUrls = [];
+  }
+
   return [
     {
       url: BASE_URL,
@@ -68,6 +88,12 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       changeFrequency: "daily",
       priority: 0.9,
     },
+    ...[2025, 2024, 2023, 2022, 2021, 2020].map((yil) => ({
+      url: `${BASE_URL}/gecmis-halka-arzlar/${yil}`,
+      lastModified: bugun,
+      changeFrequency: "monthly" as const,
+      priority: 0.85,
+    })),
     {
       url: `${BASE_URL}/istatistikler`,
       lastModified: bugun,
@@ -99,12 +125,6 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       priority: 0.7,
     },
     {
-      url: `${BASE_URL}/premium`,
-      lastModified: "2026-01-01",
-      changeFrequency: "monthly",
-      priority: 0.6,
-    },
-    {
       url: `${BASE_URL}/haberler`,
       lastModified: bugun,
       changeFrequency: "daily",
@@ -134,6 +154,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       changeFrequency: "yearly",
       priority: 0.2,
     },
+    ...arzUrls,
     ...blogUrls,
   ];
 }

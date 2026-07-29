@@ -1,7 +1,5 @@
 "use client";
 
-import { useAuth } from "@/lib/auth-context";
-
 // AdSense client ID — canlıya alınca buraya yapıştır
 const ADSENSE_CLIENT = ""; // örn: "ca-pub-XXXXXXXXXXXXXXXX"
 // Sidebar slot ID — canlıya alınca doldur (160x600 wide skyscraper)
@@ -26,9 +24,6 @@ function AdSlot() {
 }
 
 export default function SideAds() {
-  const { isPremium } = useAuth();
-  if (isPremium) return null;
-
   return (
     <>
       {/* Sol sidebar reklam — sadece 2xl+ ekranlarda görünür */}

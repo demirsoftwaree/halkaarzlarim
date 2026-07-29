@@ -9,12 +9,10 @@ import {
   WatchlistItem,
 } from "./watchlist-service";
 
-export const FREE_WATCHLIST_LIMIT = 5;
-
-export type ToggleResult = "ok" | "limit_reached" | "not_logged_in";
+export type ToggleResult = "ok" | "not_logged_in";
 
 export function useWatchlist() {
-  const { user, isPremium } = useAuth();
+  const { user } = useAuth();
   const [items, setItems] = useState<WatchlistItem[]>([]);
   const [loading, setLoading] = useState(false);
 
@@ -40,11 +38,6 @@ export function useWatchlist() {
       await removeFromWatchlist(user.uid, item.slug);
       setItems((prev) => prev.filter((i) => i.slug !== item.slug));
       return "ok";
-    }
-
-    // Free kullanıcı limiti
-    if (!isPremium && items.length >= FREE_WATCHLIST_LIMIT) {
-      return "limit_reached";
     }
 
     await addToWatchlist(user.uid, item);

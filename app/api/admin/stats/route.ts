@@ -10,27 +10,6 @@ export async function GET() {
     const users = listResult.users;
     const toplamKullanici = users.length;
 
-    const now = new Date();
-    const premiumKullanici = users.filter((u) => {
-      const claims = u.customClaims;
-      return claims?.premium === true;
-    }).length;
-
-    // Firestore'dan premium sayısı (customClaims yoksa users koleksiyonundan bak)
-    let premiumFirestore = 0;
-    try {
-      const snap = await adminDb
-        .collection("users")
-        .where("premium", "==", true)
-        .get();
-      premiumFirestore = snap.docs.filter((d) => {
-        const bitis = d.data().premiumBitis?.toDate?.();
-        return !bitis || bitis > now;
-      }).length;
-    } catch {
-      premiumFirestore = premiumKullanici;
-    }
-
     // Son 5 kayıt
     const sonKayitlar = [...users]
       .sort((a, b) => {
@@ -75,7 +54,6 @@ export async function GET() {
 
     return NextResponse.json({
       toplamKullanici,
-      premiumKullanici: premiumFirestore || premiumKullanici,
       toplamHaber,
       yayindaHaber,
       aktifArzlar,

@@ -34,7 +34,6 @@ export interface Arz {
   lotBuyuklugu: number;
   araciKurum: string;
   toplamArzLot: number;
-  bireyselPayYuzde: number;
   piyasaDegeri?: number;
 
   // Genişletilmiş alanlar (halkarz.com benzeri şablon)

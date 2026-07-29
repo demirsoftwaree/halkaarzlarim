@@ -5,6 +5,8 @@
  */
 
 import type { Arz } from "./types";
+import { sendPushToAll } from "./push-notifications";
+import { notificationTemplates } from "./notification-templates";
 
 function slugify(s: string): string {
   return s
@@ -31,6 +33,13 @@ export async function addArzEntry(entry: Omit<Arz, "id" | "slug">): Promise<Arz>
   const slug = slugify(entry.ticker || entry.sirketAdi);
   const newArz: Arz = { ...entry, id: slug, slug };
   await adminDb.collection(COL).doc(slug).set(newArz);
+
+  // Geçmiş/tamamlanmış girişlerde bildirim gönderme (toplu geçmiş veri eklerken spam olmasın)
+  if (newArz.durum !== "tamamlandi" && newArz.durum !== "ertelendi") {
+    const { title, body, data } = notificationTemplates.yeniArz(newArz);
+    sendPushToAll(title, body, data).catch(() => {});
+  }
+
   return newArz;
 }
 
@@ -38,9 +47,22 @@ export async function updateArzEntry(slug: string, updates: Partial<Omit<Arz, "i
   const { adminDb } = await import("./firebase-admin");
   const ref = adminDb.collection(COL).doc(slug);
   const snap = await ref.get();
-  const base = snap.exists ? snap.data() : {};
+  const base = (snap.exists ? snap.data() : {}) as Partial<Arz>;
   const updated = { ...base, ...updates, id: slug, slug } as Arz;
   await ref.set(updated);
+
+  // Yeni bilgi eklendiğinde otomatik bildirim — sadece alan boştan doluya geçtiğinde (tekrar tekrar gönderilmesin)
+  const sonuclarYeniEklendi = !base.tahsisatSonuclari?.length && (updated.tahsisatSonuclari?.length ?? 0) > 0;
+  const islemTarihiYeniEklendi = !base.borsadaIslemGormeTarihi && !!updated.borsadaIslemGormeTarihi;
+
+  if (sonuclarYeniEklendi) {
+    const { title, body, data } = notificationTemplates.arzSonuclariAciklandi(updated);
+    sendPushToAll(title, body, data).catch(() => {});
+  } else if (islemTarihiYeniEklendi) {
+    const { title, body, data } = notificationTemplates.islemGormeTarihiBelirlendi(updated);
+    sendPushToAll(title, body, data).catch(() => {});
+  }
+
   return updated;
 }
 

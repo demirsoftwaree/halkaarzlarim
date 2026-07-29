@@ -5,7 +5,6 @@ import Footer from "@/components/Footer";
 import ArzCard from "@/components/ArzCard";
 import AdBanner from "@/components/AdBanner";
 import ArzTakvim from "@/components/ArzTakvim";
-import { mockArzlar } from "@/lib/mock-data";
 import { Arz, ArzDurum } from "@/lib/types";
 import { RefreshCw, List, CalendarDays } from "lucide-react";
 
@@ -48,7 +47,7 @@ type Goruntule = "liste" | "takvim";
 
 export default function HalkaArzlarPage() {
   const [aktifFiltre, setAktifFiltre] = useState<ArzDurum | "hepsi">("hepsi");
-  const [arzlar, setArzlar] = useState<Arz[]>(mockArzlar);
+  const [arzlar, setArzlar] = useState<Arz[]>([]);
   const [loading, setLoading] = useState(true);
   const [goruntule, setGoruntule] = useState<Goruntule>("liste");
   const [takvimAy, setTakvimAy] = useState(new Date());

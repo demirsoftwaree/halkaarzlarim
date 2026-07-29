@@ -1,11 +1,9 @@
 "use client";
 
 import { useState, useEffect, useRef } from "react";
-import Link from "next/link";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
-import { useAuth } from "@/lib/auth-context";
-import { FileDown, Lock, TrendingUp, Crown } from "lucide-react";
+import { FileDown, TrendingUp } from "lucide-react";
 import type { Arz } from "@/lib/types";
 
 function fmt(n: number, decimals = 2) {
@@ -16,7 +14,6 @@ function fmtInt(n: number) {
 }
 
 export default function TavanRaporuPage() {
-  const { user, isPremium, loading: authLoading } = useAuth();
   const [arzlar, setArzlar] = useState<Arz[]>([]);
   const [seciliSlug, setSeciliSlug] = useState("");
   const [lotSayisi, setLotSayisi] = useState("100");
@@ -85,76 +82,25 @@ export default function TavanRaporuPage() {
     if (win) { win.document.write(html); win.document.close(); }
   }
 
-  const isLocked = authLoading ? false : !isPremium;
-
   return (
-    <div className="min-h-screen flex flex-col bg-[#0a0f1a]">
+    <div className="min-h-screen flex flex-col">
       <Navbar />
 
       <main className="flex-1 max-w-3xl mx-auto w-full px-4 sm:px-6 py-10">
 
         {/* Başlık */}
         <div className="flex items-center gap-3 mb-8 print:hidden">
-          <div className="w-10 h-10 rounded-xl bg-amber-500/10 flex items-center justify-center">
-            <Crown size={20} className="text-amber-400" />
+          <div className="w-10 h-10 rounded-xl bg-emerald-500/10 flex items-center justify-center">
+            <TrendingUp size={20} className="text-emerald-400" />
           </div>
           <div>
-            <div className="flex items-center gap-2">
-              <h1 className="text-xl font-bold text-white">Tavan Getiri Raporu</h1>
-              <span className="text-xs px-2 py-0.5 rounded-full bg-amber-500/15 border border-amber-500/30 text-amber-400 font-medium">Premium</span>
-            </div>
+            <h1 className="text-xl font-bold text-white">Tavan Getiri Raporu</h1>
             <p className="text-slate-400 text-sm">Seçtiğin arzın 10 günlük tavan senaryosunu hesapla ve PDF olarak indir.</p>
           </div>
         </div>
 
-        {/* Premium Kilit */}
-        {isLocked && (
-          <div className="relative">
-            {/* Bulanık önizleme */}
-            <div className="filter blur-sm pointer-events-none select-none opacity-40">
-              <div className="bg-slate-800/60 border border-slate-700/50 rounded-2xl p-6 mb-6">
-                <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-                  <div className="sm:col-span-2 h-10 bg-slate-700 rounded-xl" />
-                  <div className="h-10 bg-slate-700 rounded-xl" />
-                </div>
-              </div>
-              <div className="bg-slate-800/60 border border-slate-700/50 rounded-2xl p-6">
-                <div className="space-y-3">
-                  {Array.from({ length: 5 }).map((_, i) => (
-                    <div key={i} className="h-8 bg-slate-700 rounded-lg" />
-                  ))}
-                </div>
-              </div>
-            </div>
-            {/* Kilit overlay */}
-            <div className="absolute inset-0 flex flex-col items-center justify-center">
-              <div className="bg-slate-900/95 border border-slate-700 rounded-2xl p-8 text-center max-w-sm mx-4 shadow-2xl">
-                <div className="w-14 h-14 rounded-full bg-amber-500/10 border border-amber-500/20 flex items-center justify-center mx-auto mb-4">
-                  <Lock size={24} className="text-amber-400" />
-                </div>
-                <h3 className="text-white font-semibold text-lg mb-2">Premium Özellik</h3>
-                <p className="text-slate-400 text-sm mb-6">
-                  Bu aracı kullanmak için{" "}
-                  {!user ? "giriş yapman ve " : ""}
-                  premium üye olman gerekiyor.
-                </p>
-                <div className="flex flex-col gap-3">
-                  {!user && (
-                    <Link href="/giris" className="w-full bg-emerald-500 hover:bg-emerald-400 text-white font-medium py-2.5 rounded-xl text-sm transition-colors text-center">
-                      Giriş Yap
-                    </Link>
-                  )}
-                  <Link href="/premium" className="w-full bg-amber-500/20 hover:bg-amber-500/30 border border-amber-500/30 text-amber-400 font-medium py-2.5 rounded-xl text-sm transition-colors text-center">
-                    Premium&apos;a Geç
-                  </Link>
-                </div>
-              </div>
-            </div>
-          </div>
-        )}
-
-        {/* İçerik — sadece premium kullanıcıya göster */}
-        {!isLocked && (
+        {/* Girişler */}
+        <>
           <>
             {/* Girişler */}
             <div className="bg-slate-800/60 border border-slate-700/50 rounded-2xl p-6 mb-6 print:hidden">
@@ -270,7 +216,7 @@ export default function TavanRaporuPage() {
               </div>
             </div>
           </>
-        )}
+        </>
 
       </main>
 

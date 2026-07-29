@@ -139,7 +139,7 @@ export default function TavanNedirPage() {
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
       />
-      <div className="min-h-screen flex flex-col bg-slate-900 text-slate-100">
+      <div className="min-h-screen flex flex-col text-slate-100">
         <TickerBar />
         <Navbar />
 

@@ -1,8 +1,8 @@
 @import "tailwindcss";
 
 :root {
-  --background: #0f172a;
-  --foreground: #f1f5f9;
+  --background: #05080f;
+  --foreground: #eef2f7;
 }
 
 html {
@@ -12,13 +12,34 @@ html {
 body {
   background: var(--background);
   color: var(--foreground);
-  font-family: system-ui, -apple-system, sans-serif;
+  font-family: system-ui, -apple-system, "Segoe UI", sans-serif;
+  -webkit-font-smoothing: antialiased;
+  /* Kendi stacking context'ini oluşturur — ::before'ın negatif z-index'i
+     bu context içinde kalır, "position: fixed" kullanan alt bileşenleri (Navbar, ChatWidget, SideAds) etkilemez */
+  isolation: isolate;
+}
+
+::selection { background: rgba(16, 185, 129, 0.3); }
+
+/* ── İnce grid dokusu — tüm sayfalarda trading-terminal hissi ── */
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: -1;
+  background-image:
+    linear-gradient(rgba(94, 118, 155, 0.045) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(94, 118, 155, 0.045) 1px, transparent 1px);
+  background-size: 48px 48px;
+  mask-image: radial-gradient(ellipse 90% 60% at 50% 0%, black 40%, transparent 90%);
+  -webkit-mask-image: radial-gradient(ellipse 90% 60% at 50% 0%, black 40%, transparent 90%);
 }
 
 /* Custom scrollbar */
 ::-webkit-scrollbar { width: 6px; }
-::-webkit-scrollbar-track { background: #1e293b; }
-::-webkit-scrollbar-thumb { background: #334155; border-radius: 3px; }
+::-webkit-scrollbar-track { background: #0e1524; }
+::-webkit-scrollbar-thumb { background: #26334a; border-radius: 3px; }
 ::-webkit-scrollbar-thumb:hover { background: #10b981; }
 
 /* Ticker animation */
@@ -36,4 +57,106 @@ body {
 
 .card-glow:hover {
   box-shadow: 0 0 0 1px rgba(16, 185, 129, 0.3), 0 4px 24px rgba(16, 185, 129, 0.1);
+}
+
+/* ── Modern tasarım yardımcıları ── */
+
+/* Gradyan başlık metni */
+.text-grad {
+  background: linear-gradient(100deg, #34d399 10%, #10b981 45%, #38bdf8 95%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+/* Kart hover: yükselme + emerald parlama + üst çizgi */
+.card-lift {
+  position: relative;
+  overflow: hidden;
+  transition: transform 0.25s, border-color 0.25s, box-shadow 0.25s;
+}
+.card-lift::before {
+  content: "";
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 2px;
+  background: linear-gradient(90deg, transparent, #10b981, transparent);
+  opacity: 0;
+  transition: opacity 0.25s;
+}
+.card-lift:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 16px 48px rgba(0, 0, 0, 0.4), 0 0 0 1px rgba(16, 185, 129, 0.1);
+}
+.card-lift:hover::before { opacity: 1; }
+
+/* Nabız atan nokta (canlı rozetler) */
+.pulse-dot {
+  width: 7px; height: 7px;
+  border-radius: 50%;
+  background: #34d399;
+  position: relative;
+  display: inline-block;
+}
+.pulse-dot::after {
+  content: "";
+  position: absolute;
+  inset: -4px;
+  border-radius: 50%;
+  border: 1.5px solid #34d399;
+  animation: pingDot 1.8s ease-out infinite;
+}
+@keyframes pingDot {
+  from { transform: scale(0.5); opacity: 1; }
+  to { transform: scale(1.6); opacity: 0; }
+}
+
+/* Aktif rozet parlaması */
+@keyframes chipGlow {
+  0%, 100% { box-shadow: 0 0 0 rgba(16, 185, 129, 0); }
+  50% { box-shadow: 0 0 14px rgba(16, 185, 129, 0.35); }
+}
+.chip-live { animation: chipGlow 2.4s ease-in-out infinite; }
+
+/* Sayfa giriş animasyonu */
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(22px); }
+  to { opacity: 1; transform: none; }
+}
+.anim-fade-up { animation: fadeUp 0.7s both; }
+.anim-d-1 { animation-delay: 0.1s; }
+.anim-d-2 { animation-delay: 0.2s; }
+.anim-d-3 { animation-delay: 0.3s; }
+.anim-d-4 { animation-delay: 0.4s; }
+.anim-d-5 { animation-delay: 0.5s; }
+
+/* Scroll ile belirme */
+.reveal {
+  opacity: 0;
+  transform: translateY(28px);
+  transition: opacity 0.7s, transform 0.7s cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+.reveal.reveal-in {
+  opacity: 1;
+  transform: none;
+}
+
+/* Birincil buton — gradyan + glow */
+.btn-glow {
+  background: linear-gradient(135deg, #10b981, #0d9668);
+  box-shadow: 0 4px 24px rgba(16, 185, 129, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.18);
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+.btn-glow:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 32px rgba(16, 185, 129, 0.55);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .ticker-animate,
+  .pulse-dot::after,
+  .chip-live,
+  .anim-fade-up { animation: none !important; }
+  .reveal { opacity: 1; transform: none; transition: none; }
+  .card-lift, .btn-glow { transition: none; }
 }

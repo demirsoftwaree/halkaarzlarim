@@ -1,21 +1,42 @@
 import { Arz } from "./types";
-import { mockArzlar } from "./mock-data";
 import { fetchSpkIpoData } from "./spk-service";
+import { writeSpkCache } from "./spk-cache";
+import { sendPushToAll } from "./push-notifications";
+import { notificationTemplates } from "./notification-templates";
 import { yaklasanArzlar } from "./yaklasan-arzlar";
 import { readYaklasanArzlar } from "./admin-storage";
 
+// Bellek içi kısa süreli önbellek — bot taramalarının Firestore kotasını tüketmesini önler
+let arzOnbellek: { data: { arzlar: Arz[]; source: string }; at: number } | null = null;
+const ONBELLEK_TTL = 5 * 60 * 1000;
+
 export async function getArzlar(): Promise<{ arzlar: Arz[]; source: string }> {
+  if (arzOnbellek && Date.now() - arzOnbellek.at < ONBELLEK_TTL) {
+    return arzOnbellek.data;
+  }
+
   let spkArzlar: Arz[] = [];
-  let source = "mock";
+  let source = "manuel";
 
   try {
     const data = await fetchSpkIpoData(2026);
     if (data && data.length > 0) {
       spkArzlar = data;
       source = "spk.gov.tr";
+      // SPK verisini Firestore'a yaz; yeni eklenenler döner
+      writeSpkCache(data).then(yeniArzlar => {
+        // Tamamlanmamış yeni arzlar için push bildirimi gönder
+        const bildirimGondekilecek = yeniArzlar.filter(
+          a => a.durum !== "tamamlandi" && a.durum !== "ertelendi"
+        );
+        for (const arz of bildirimGondekilecek) {
+          const { title, body, data } = notificationTemplates.yeniArz(arz);
+          sendPushToAll(title, body, data).catch(() => {});
+        }
+      }).catch(() => {});
     }
   } catch {
-    // SPK erişilemezse mock ile devam et
+    // SPK erişilemezse manuel verilerle devam et
   }
 
   // Manuel arzlar (logo, tarih vb. zengin veri)
@@ -44,8 +65,8 @@ export async function getArzlar(): Promise<{ arzlar: Arz[]; source: string }> {
     ekstraCount = sadeceManuelde.length;
     tumu = [...sadeceManuelde, ...spkZengin];
   } else {
-    // SPK yoksa sadece manuel + mock
-    tumu = [...manuelMap.values(), ...mockArzlar.filter(a => !manuelMap.has(a.slug))];
+    // SPK yoksa sadece manuel veriler
+    tumu = [...manuelMap.values()];
     ekstraCount = manuelMap.size;
   }
 
@@ -66,5 +87,7 @@ export async function getArzlar(): Promise<{ arzlar: Arz[]; source: string }> {
     return a;
   });
 
-  return { arzlar: normalize, source: ekstraCount > 0 ? source + "+manuel" : source };
+  const sonuc = { arzlar: normalize, source: ekstraCount > 0 ? source + "+manuel" : source };
+  arzOnbellek = { data: sonuc, at: Date.now() };
+  return sonuc;
 }

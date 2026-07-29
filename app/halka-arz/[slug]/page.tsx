@@ -8,9 +8,27 @@ import StockChart from "@/components/StockChart";
 import { durumRenk, durumEtiket } from "@/lib/mock-data";
 import { getArzlar } from "@/lib/arz-utils";
 import ArzLogo from "@/components/ArzLogo";
+import WatchlistButton from "@/components/WatchlistButton";
 import type { Metadata } from "next";
 
 export const dynamicParams = true;
+export const revalidate = 300; // 5 dakikada bir yenile
+
+async function getArzBySlug(slug: string) {
+  const { arzlar } = await getArzlar();
+  let arz = arzlar.find((a) => a.slug === slug);
+  if (!arz) {
+    try {
+      const { adminDb } = await import("@/lib/firebase-admin");
+      const snap = await adminDb.collection("arzlar-spk").doc(slug).get();
+      if (snap.exists) {
+        const data = snap.data() as Record<string, unknown>;
+        arz = { ...data, id: slug, slug } as (typeof arzlar)[0];
+      }
+    } catch {}
+  }
+  return arz;
+}
 
 export async function generateMetadata({
   params,
@@ -18,8 +36,7 @@ export async function generateMetadata({
   params: Promise<{ slug: string }>;
 }): Promise<Metadata> {
   const { slug } = await params;
-  const { arzlar } = await getArzlar();
-  const arz = arzlar.find((a) => a.slug === slug);
+  const arz = await getArzBySlug(slug);
 
   if (!arz) return { title: "Halka Arz Bulunamadı" };
 
@@ -90,8 +107,7 @@ function OzetBolum({ baslik, icerik }: { baslik: string; icerik: string }) {
 
 export default async function ArzDetayPage({ params }: { params: Promise<{ slug: string }> }) {
   const { slug } = await params;
-  const { arzlar } = await getArzlar();
-  const arz = arzlar.find((a) => a.slug === slug);
+  const arz = await getArzBySlug(slug);
   if (!arz) notFound();
 
   const tamamlandi = arz.durum === "tamamlandi";
@@ -108,8 +124,39 @@ export default async function ArzDetayPage({ params }: { params: Promise<{ slug:
     return { gun, fiyat, deger, brut, roi };
   });
 
+  const BASE_URL = "https://www.halkaarzlarim.com";
+  const pageUrl = `${BASE_URL}/halka-arz/${arz.slug}`;
+  const jsonLd = {
+    "@context": "https://schema.org",
+    "@graph": [
+      {
+        "@type": "BreadcrumbList",
+        itemListElement: [
+          { "@type": "ListItem", position: 1, name: "Ana Sayfa", item: BASE_URL },
+          { "@type": "ListItem", position: 2, name: "Halka Arzlar", item: `${BASE_URL}/halka-arzlar` },
+          { "@type": "ListItem", position: 3, name: `${arz.sirketAdi} Halka Arz`, item: pageUrl },
+        ],
+      },
+      {
+        "@type": "FinancialProduct",
+        name: `${arz.sirketAdi}${arz.ticker ? ` (${arz.ticker})` : ""} Halka Arz`,
+        description: arz.sirketHakkinda || arz.aciklama || `${arz.sirketAdi} halka arz detayları, fiyat bilgisi ve tavan simülatörü.`,
+        url: pageUrl,
+        provider: { "@type": "Organization", name: "HalkaArzlarım", url: BASE_URL },
+        ...(arz.arsFiyatiUst > 0 && {
+          offers: {
+            "@type": "Offer",
+            price: arz.arsFiyatiUst.toFixed(2),
+            priceCurrency: "TRY",
+          },
+        }),
+      },
+    ],
+  };
+
   return (
-    <div className="min-h-screen flex flex-col bg-[#0a0f1a]">
+    <div className="min-h-screen flex flex-col">
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
       <Navbar />
 
       <main className="flex-1 max-w-5xl mx-auto w-full px-4 sm:px-6 py-8">
@@ -349,19 +396,13 @@ export default async function ArzDetayPage({ params }: { params: Promise<{ slug:
               </div>
             </Link>
 
-            {/* Premium */}
-            <div className="bg-amber-500/5 border border-amber-500/20 rounded-xl p-4">
-              <div className="text-amber-400 text-xs font-semibold mb-3">⭐ Premium Özellikler</div>
-              <div className="space-y-2">
-                {["Takip Listeme Ekle", "Başvurdum Olarak İşaretle", "Not Ekle"].map((f) => (
-                  <button key={f} className="w-full text-left text-xs text-slate-500 hover:text-slate-300 transition-colors flex items-center gap-2">
-                    <span className="text-amber-400">🔒</span> {f}
-                  </button>
-                ))}
+            {/* Takip */}
+            <div className="bg-slate-800/60 border border-slate-700/50 rounded-xl p-4">
+              <div className="text-slate-300 text-xs font-semibold mb-3">Bu Arzı Takip Et</div>
+              <div className="flex items-center gap-3">
+                <WatchlistButton slug={arz.slug} sirketAdi={arz.sirketAdi} ticker={arz.ticker || ""} className="flex-1 justify-center py-2 rounded-lg text-sm" />
+                <span className="text-slate-500 text-xs">Takip listene ekle</span>
               </div>
-              <Link href="/premium" className="mt-3 block text-center bg-amber-400 hover:bg-amber-300 text-slate-900 font-bold text-xs py-2.5 rounded-lg transition-colors">
-                Premium&apos;a Geç
-              </Link>
             </div>
           </div>
         </div>

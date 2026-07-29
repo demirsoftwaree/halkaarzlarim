@@ -51,7 +51,10 @@ export default function TickerBar() {
   const doubled = [...ticker, ...ticker];
 
   return (
-    <div className="bg-slate-800/60 border-b border-slate-700/50 overflow-hidden relative">
+    <div className="bg-[#080d17] border-b border-slate-700/30 overflow-hidden relative">
+      {/* Kenar solmaları */}
+      <div className="absolute left-0 top-0 bottom-0 w-16 z-10 pointer-events-none bg-gradient-to-r from-[#080d17] to-transparent" />
+      <div className="absolute right-0 top-0 bottom-0 w-16 z-10 pointer-events-none bg-gradient-to-l from-[#080d17] to-transparent" />
       <div
         className="ticker-animate flex"
         style={{ width: `${doubled.length * 180}px` }}
@@ -59,15 +62,15 @@ export default function TickerBar() {
         {doubled.map((item, i) => (
           <div
             key={i}
-            className="flex items-center gap-2 px-5 py-2 whitespace-nowrap"
+            className="flex items-center gap-2 px-5 py-2 whitespace-nowrap font-mono"
             style={{ minWidth: "180px" }}
           >
             <span className="text-xs font-semibold text-slate-400">{item.symbol}</span>
-            <span className={`text-xs font-medium ${loading ? "text-slate-600" : "text-white"}`}>
+            <span className={`text-xs font-medium tabular-nums ${loading ? "text-slate-600" : "text-white"}`}>
               {item.value}
             </span>
             {item.change !== "…" && (
-              <span className={`text-xs font-semibold ${item.positive ? "text-emerald-400" : "text-red-400"}`}>
+              <span className={`text-xs font-semibold tabular-nums ${item.positive ? "text-emerald-400" : "text-red-400"}`}>
                 {item.change}
               </span>
             )}

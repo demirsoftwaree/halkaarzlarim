@@ -41,7 +41,6 @@ const EMPTY: Omit<Arz, "id" | "slug"> = {
   lotBuyuklugu: 100,
   araciKurum: "",
   toplamArzLot: 0,
-  bireyselPayYuzde: 0,
   kapLinki: "",
   aciklama: "",
   borsadaIslemGormeTarihi: undefined,
@@ -109,7 +108,6 @@ export default function AdminArzlarPage() {
       arsFiyatiUst: Number(form.arsFiyatiUst),
       lotBuyuklugu: Number(form.lotBuyuklugu),
       toplamArzLot: Number(form.toplamArzLot),
-      bireyselPayYuzde: Number(form.bireyselPayYuzde),
       fiiliDolasimdakiPay: form.fiiliDolasimdakiPay ? Number(form.fiiliDolasimdakiPay) : undefined,
       fiiliDolasimdakiPayOrani: form.fiiliDolasimdakiPayOrani ? Number(form.fiiliDolasimdakiPayOrani) : undefined,
       halkaAciklik: form.halkaAciklik ? Number(form.halkaAciklik) : undefined,
@@ -274,9 +272,6 @@ export default function AdminArzlarPage() {
                   <Field label="Aracı Kurum">
                     <input value={form.araciKurum} onChange={e => set("araciKurum", e.target.value)} className={input} placeholder="Garanti Yatırım" />
                   </Field>
-                  <Field label="Halka Arz Oranı — Bireysel (%)">
-                    <input type="number" min={0} max={100} value={form.bireyselPayYuzde || ""} onChange={e => set("bireyselPayYuzde", e.target.value)} className={input} placeholder="25" />
-                  </Field>
                   <Field label="Pay (Lot Adedi)">
                     <input type="number" min={0} value={form.toplamArzLot || ""} onChange={e => set("toplamArzLot", e.target.value)} className={input} placeholder="18900000" />
                   </Field>
@@ -333,7 +328,7 @@ export default function AdminArzlarPage() {
                 <div className="space-y-4">
                   <p className="text-xs text-gray-400">Halka Arz Şekli, Fonun Kullanım Yeri, Tahsisat Grupları vb. serbest bölümler ekleyin.</p>
                   {(form.ozetBolumler || []).map((b, i) => (
-                    <div key={i} className="bg-[#0a0f1a] border border-white/10 rounded-xl p-4 space-y-3">
+                    <div key={i} className="border border-white/10 rounded-xl p-4 space-y-3">
                       <div className="flex justify-between items-center">
                         <span className="text-xs text-gray-400">Bölüm {i + 1}</span>
                         <button type="button" onClick={() => removeBolum(i)} className="text-red-400 hover:text-red-300 text-xs">Sil</button>
@@ -364,7 +359,7 @@ export default function AdminArzlarPage() {
                 <div className="space-y-4">
                   <p className="text-xs text-gray-400">İzahnameden gelen tahsisat grubu sonuçlarını girin (tamamlanan arzlar için).</p>
                   {/* Tavan sayısı */}
-                  <div className="bg-[#0a0f1a] border border-white/10 rounded-xl p-4">
+                  <div className="border border-white/10 rounded-xl p-4">
                     <label className="block text-xs text-gray-400 mb-2">Üst Üste Tavan Sayısı</label>
                     <input
                       type="number"
@@ -378,7 +373,7 @@ export default function AdminArzlarPage() {
                     <p className="text-xs text-gray-500 mt-1.5">Halka arz sonrası üst üste kaç gün tavan yaptığını girin. Geçmiş Tavan Performansı sayfasında gösterilir.</p>
                   </div>
                   {(form.tahsisatSonuclari || []).map((t, i) => (
-                    <div key={i} className="bg-[#0a0f1a] border border-white/10 rounded-xl p-4">
+                    <div key={i} className="border border-white/10 rounded-xl p-4">
                       <div className="flex justify-between items-center mb-3">
                         <span className="text-xs text-gray-400">Grup {i + 1}</span>
                         <button type="button" onClick={() => removeTahsisat(i)} className="text-red-400 hover:text-red-300 text-xs">Sil</button>
@@ -493,4 +488,4 @@ function Field({ label, children, className = "" }: { label: string; children: R
   );
 }
 
-const input = "w-full bg-[#0a0f1a] border border-white/10 rounded-lg px-3 py-2.5 text-white text-sm placeholder-gray-600 focus:outline-none focus:border-emerald-500 transition-colors";
+const input = "w-full border border-white/10 rounded-lg px-3 py-2.5 text-white text-sm placeholder-gray-600 focus:outline-none focus:border-emerald-500 transition-colors";

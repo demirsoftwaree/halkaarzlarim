@@ -4,13 +4,12 @@ import { useEffect, useState } from "react";
 import Link from "next/link";
 import {
   Users, TrendingUp, Newspaper, ListOrdered,
-  UserPlus, Star, ArrowRight, RefreshCw, Clock,
+  UserPlus, ArrowRight, RefreshCw, Clock,
 } from "lucide-react";
 import AdminLayout from "@/components/AdminLayout";
 
 interface Stats {
   toplamKullanici: number;
-  premiumKullanici: number;
   toplamHaber: number;
   yayindaHaber: number;
   aktifArzlar: number;
@@ -84,14 +83,6 @@ export default function AdminDashboard() {
       icon: Users,
       color: "text-blue-400",
       bg: "bg-blue-500/10 border-blue-500/20",
-      href: "/admin/kullanicilar",
-    },
-    {
-      label: "Premium Üye",
-      value: stats?.premiumKullanici ?? "–",
-      icon: Star,
-      color: "text-amber-400",
-      bg: "bg-amber-500/10 border-amber-500/20",
       href: "/admin/kullanicilar",
     },
     {

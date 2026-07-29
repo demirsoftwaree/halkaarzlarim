@@ -1,9 +1,14 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import "./globals.css";
 import { AuthProvider } from "@/lib/auth-context";
-import ChatWidget from "@/components/ChatWidget";
+import ChatWidgetGate from "@/components/ChatWidgetGate";
+
 
 const BASE_URL = "https://www.halkaarzlarim.com";
+
+export const viewport: Viewport = {
+  themeColor: "#10b981",
+};
 
 export const metadata: Metadata = {
   metadataBase: new URL(BASE_URL),
@@ -69,10 +74,10 @@ export default function RootLayout({
           crossOrigin="anonymous"
         />
       </head>
-      <body className="min-h-full flex flex-col bg-slate-900 text-slate-100">
+      <body className="min-h-full flex flex-col text-slate-100">
         <AuthProvider>
           {children}
-          <ChatWidget />
+          <ChatWidgetGate />
         </AuthProvider>
       </body>
     </html>

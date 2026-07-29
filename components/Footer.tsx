@@ -3,7 +3,7 @@ import { TrendingUp } from "lucide-react";
 
 export default function Footer() {
   return (
-    <footer className="bg-slate-900 border-t border-slate-800 mt-auto">
+    <footer className="bg-[#080d17]/80 backdrop-blur-sm border-t border-slate-700/30 mt-auto">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 py-12">
         <div className="grid grid-cols-1 md:grid-cols-4 gap-8 mb-10">
           {/* Brand */}
@@ -25,7 +25,6 @@ export default function Footer() {
             <ul className="space-y-2.5">
               {[
                 ["Halka Arz Takvimi", "/halka-arzlar"],
-                ["Hisseler", "/hisseler"],
                 ["Haberler", "/haberler"],
               ].map(([label, href]) => (
                 <li key={href}>
